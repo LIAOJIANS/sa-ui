@@ -1,5 +1,11 @@
 import { createApp } from 'vue'
 
+import SaUi from '../packages'
+
 import App from './App'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+
+app.mount('#app')
+
+app.use(SaUi)

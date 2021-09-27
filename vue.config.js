@@ -1,6 +1,5 @@
 const path = require('path')
 const resolve = dir => path.join(__dirname, './', dir)
-
 module.exports = {
   publicPath: '/sa-ui/',
   outputDir: resolve('lib'),
@@ -29,7 +28,7 @@ module.exports = {
 
     config.resolve.alias
         .set('examples', resolve('examples'))
-        .set('sa-ui', resolve('packages'))
+        .set('packages', resolve('packages'))
 
     const fontRule = config.module.rule('fonts')
     fontRule.uses.clear()
