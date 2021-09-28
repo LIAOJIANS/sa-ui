@@ -13,6 +13,15 @@ module.exports = {
       chunks: ['chunk-vendors', 'chunk-common', 'index']
     }
   },
+
+  css: {
+    sourceMap: false,
+    loaderOptions: {
+        sass: {
+            prependData: `@import "packages/style/global-import";`
+        }
+    }
+  },
   
   chainWebpack: config => {
     config.plugins

@@ -26,11 +26,11 @@ html, body {
   padding: 0 80px 0 40px;
 }
 
-// @include theme {
-//   .app-head {
-//     color: $colorPrimary;
-//   }
-// }
+@include theme {
+  .app-head {
+    color: $colorPrimary;
+  }
+}
 
 .app-menu {
   position: fixed;
@@ -101,13 +101,13 @@ html, body {
   }
 }
 
-// @include theme {
-//   .app-menu {
-//     .app-menu-item {
-//       &:hover {
-//         background-color: rgba($colorPrimary, 0.1);
-//         text-decoration: underline;
-//       }
-//     }
-//   }
-// }
+@include theme {
+  .app-menu {
+    .app-menu-item {
+      &:hover {
+        background-color: rgba($colorPrimary, 0.1);
+        text-decoration: underline;
+      }
+    }
+  }
+}

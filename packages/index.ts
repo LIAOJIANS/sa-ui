@@ -1,10 +1,10 @@
 
-import Input from "./SaInput";
+import SaInput from "./SaInput";
 
 import { App } from 'vue'
 
 const plugins = [
-  Input
+  SaInput
 ]
 
 const install = (app: App) => {
@@ -18,5 +18,5 @@ export default {
 export {
   install,
 
-  Input
+  SaInput
 }

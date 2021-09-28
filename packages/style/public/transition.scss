@@ -1,0 +1,120 @@
+$transition: cubic-bezier(0.23, 1, 0.32, 1);
+
+/*---------------------------------------scale-------------------------------------------*/
+
+.sa-transition-scale-enter {
+    opacity: 0;
+    transform: scale(0.75);
+}
+
+.sa-transition-scale-enter-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.sa-transition-scale-exit {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.sa-transition-scale-exit-active {
+    opacity: 0;
+    transform: scale(0.75);
+}
+
+.sa-transition-scale-enter-active, .sa-transition-scale-exit-active {
+    transition: opacity 300ms linear, transform 300ms $transition;
+}
+
+/*---------------------------------------scale-y-------------------------------------------*/
+
+.sa-transition-scale-y-enter {
+    transform: scaleY(0);
+    opacity: 0;
+}
+
+.sa-transition-scale-y-enter-active {
+    transform: scaleY(1);
+    opacity: 1;
+}
+
+.sa-transition-scale-y-exit {
+    transform: scaleY(1);
+    opacity: 1;
+}
+
+.sa-transition-scale-y-exit-active {
+    transform: scaleY(0);
+    opacity: 0;
+}
+
+.sa-transition-scale-y-enter-active, .sa-transition-scale-y-exit-active {
+    transform-origin: top;
+    transition: opacity 300ms linear, transform 300ms $transition;
+}
+
+/*---------------------------------------fade-------------------------------------------*/
+
+.sa-transition-fade-enter-active, .sa-transition-fade-exit-active {
+    transition: opacity 300ms linear;
+}
+
+/*fade*/
+.sa-transition-fade-enter-active, .sa-transition-fade-leave-active {
+    opacity: 1;
+}
+
+.sa-transition-fade-enter-from, .sa-transition-fade-leave-to {
+    opacity: 0;
+}
+
+/*---------------------------------------slider-------------------------------------------*/
+
+[direction=horizontal] {
+
+    /*horizontal next*/
+    &.sa-transition-slide-next-enter {
+        transform: translate3d(100%, 0, 0);
+    }
+
+    &.sa-transition-slide-next-enter-active {
+        transform: translate3d(0, 0, 0);
+        transition: transform 150ms linear;
+    }
+
+    /*horizontal prev*/
+    &.sa-transition-slide-prev-enter {
+        transform: translate3d(-100%, 0, 0);
+    }
+
+    &.sa-transition-slide-prev-enter-active {
+        transform: translate3d(0, 0, 0);
+        transition: transform 150ms linear;
+    }
+}
+
+[direction=vertical] {
+
+    /*vertical next*/
+    &.sa-transition-slide-next-enter {
+        transform: translate3d(0, 100%, 0);
+    }
+
+    &.sa-transition-slide-next-enter-active {
+        transform: translate3d(0, 0, 0);
+    }
+
+    /*horizontal prev*/
+    &.sa-transition-slide-prev-enter {
+        transform: translate3d(0, -100%, 0);
+    }
+
+    &.sa-transition-slide-prev-enter-active {
+        transform: translate3d(0, 0, 0);
+        transition: transform 150ms linear;
+    }
+}
+
+.sa-collapse-transition {
+    transition: 0.3s height linear, 0.3s padding-top linear, 0.3s padding-bottom linear;
+}

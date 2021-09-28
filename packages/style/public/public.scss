@@ -1,0 +1,38 @@
+@import "./normalize";
+@import "./transition";
+
+@include theme {
+  font-family: $font;
+
+  .sa-text-primary {color: $colorPrimary;}
+  .sa-text-success {color: $colorSuccess;}
+  .sa-text-warn {color: $colorWarn;}
+  .sa-text-error {color: $colorError;}
+  .sa-text-info {color: $colorInfo;}
+
+  .sa-background-primary {background-color: $colorPrimary;}
+  .sa-background-success {background-color: $colorSuccess;}
+  .sa-background-warn {background-color: $colorWarn;}
+  .sa-background-error {background-color: $colorError;}
+  .sa-background-info {background-color: $colorInfo;}
+
+  .sa-background-disabled{background-color: $disabled;}
+  .sa-background-disabled-light {background-color: $disabledLight;}
+  .sa-background-disabled-deep {background-color: $disabledDeep;}
+  .sa-background-disabled-text {color: $disabledText;}
+
+  .sa-border-radius-fillet{border-radius: $shapeFillet;}
+  .sa-border-radius-round{border-radius: $shapeRound;}
+  .sa-border-radius-none{border-radius: $shapeNone;}
+
+  .sa-border-color{border-color: $ibc}
+  .sa-border-color-light{border-color: $ibl}
+
+  .sa-text-color{color: $itc}
+  .sa-text-color-light{color: $itl}
+  .sa-title-color{color: $ihc}
+  .sa-placeholder-color{color: $ipc}
+  .sa-icon-color{color: $icc}
+
+  .sa-boxshadow{box-shadow: $boxshadow}
+}

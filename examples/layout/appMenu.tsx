@@ -22,7 +22,6 @@ export default defineComponent({
                   <div class="app-menu-item" key={ `item_${ menu.name }`}  onClick={ () => Menu.openMenu(menu) } >
                     <span>{ menu.name }</span>
                     <span>{ menu.title }</span>
-
                     {
                       !!menu.complete && (
                         <div class="app-menu-item-is-done"> 
