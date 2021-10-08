@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 
-import SaUi from '../packages'
+import SaUi from '../src/packages'
 
 import App from './App'
 

@@ -32,7 +32,6 @@ export function designComponent<
           return () => null
         }
 
-
         const { refer, render } = setup(props, ctx)
         
         setupContext._refer = refer
@@ -47,7 +46,6 @@ export function designComponent<
         
         return {
           get value() {
-            console.log(ctx);
             return ((ctx as any).$refs[refName].$._refer) as Refer | null
           }
         }

@@ -18,7 +18,7 @@ module.exports = {
     sourceMap: false,
     loaderOptions: {
         sass: {
-            prependData: `@import "packages/style/global-import";`
+            prependData: `@import "src/style/global-import.scss";`
         }
     }
   },
@@ -37,7 +37,8 @@ module.exports = {
 
     config.resolve.alias
         .set('examples', resolve('examples'))
-        .set('packages', resolve('packages'))
+        .set('src', resolve('src'))
+        .set('sa-ui', resolve('src'))
 
     const fontRule = config.module.rule('fonts')
     fontRule.uses.clear()

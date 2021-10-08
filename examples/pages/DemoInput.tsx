@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, ref } from "vue";
-import { SaInput } from '../../packages'
+import { SaInput } from '../../src/packages'
 
 export default defineComponent({
   props: {},
@@ -13,11 +13,16 @@ export default defineComponent({
     onMounted(() => {
       const saInput = SaInput.use.ref('myInput')
       console.log(saInput.value);
-    }) 
-    
+    })
+
     return () => (
       <div>
-        <sa-input ref="myInput" status="danger" onClickClearIcon={onClickClearIcon} />
+        <sa-input
+          ref="myInput"
+          status="danger"
+          textarea
+          onClickClearIcon={onClickClearIcon}
+        />
       </div>
     )
 
