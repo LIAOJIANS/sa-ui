@@ -7,6 +7,7 @@ const plugins = [
   SaInput
 ]
 
+
 const install = (app: App) => {
   plugins.forEach(app.use)
 }

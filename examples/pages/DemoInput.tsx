@@ -9,19 +9,25 @@ export default defineComponent({
       console.log(1)
     }
 
+    const val = ref(100)
+
 
     onMounted(() => {
-      const saInput = SaInput.use.ref('myInput')
-      console.log(saInput.value);
+      // const saInput = SaInput.use.ref('myInput')
+      // console.log(saInput.value);
     })
+
+    const blur = (e) => {
+      console.log(e)
+    }
 
     return () => (
       <div>
-        <sa-input
+        <SaInput
+        v-model={ val.value }
           ref="myInput"
           status="danger"
-          textarea
-          onClickClearIcon={onClickClearIcon}
+          clearIcon
         />
       </div>
     )
