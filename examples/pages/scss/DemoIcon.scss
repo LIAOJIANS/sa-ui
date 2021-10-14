@@ -1,0 +1,22 @@
+
+
+.demo-icon {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .icon-item {
+    width: 19.5%;
+    padding-top: 20px;
+
+    text-align: center;
+    cursor: pointer;
+
+    border: 1px solid $cyan_7;
+
+    p {
+      color: $cyan_7;
+      white-space: normal;
+    }
+  }
+}

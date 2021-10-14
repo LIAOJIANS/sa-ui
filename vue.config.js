@@ -38,7 +38,7 @@ module.exports = {
     config.resolve.alias
         .set('examples', resolve('examples'))
         .set('src', resolve('src'))
-        .set('sa-ui', resolve('src'))
+        .set('sa-ui', resolve('src/packages'))
 
     const fontRule = config.module.rule('fonts')
     fontRule.uses.clear()

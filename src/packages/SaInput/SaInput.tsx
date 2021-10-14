@@ -14,8 +14,8 @@ import {
   useRefs,
   useEdit
 } from '../../hooks'
-import { handleError } from "vue"
 
+import SaIcon from '../SaIcon/SaIcon'
 
 export const SaInput = designComponent({
   name: 'sa-input',
@@ -23,14 +23,14 @@ export const SaInput = designComponent({
     ...StyleProps,
     textarea: { type: Boolean },
     block: { type: Boolean },
-    clearIcon: {type: Boolean},
+    clearIcon: { type: Boolean },
 
     width: { type: [Number, String] as PropType<string | number>, default: null },
     minHeight: { type: [Number, String], default: 100 },
     maxHeight: { type: [Number, String] as PropType<string | number | null>, default: 156 },
     autoHeight: { type: Boolean },
 
-    modelValue: { type: [String, Number] as PropType<string | number | null>},
+    modelValue: { type: [String, Number] as PropType<string | number | null> },
     clearHandler: Function,
 
     readonly: { type: Boolean }
@@ -80,16 +80,15 @@ export const SaInput = designComponent({
       return styles
     })
 
-    
+
     const classes = computed(() => classname([
       `sa-input-shape-${styleComputed.value.shape}`,
       `sa-input-size-${styleComputed.value.size}`,
       {
         [`sa-input-status-${styleComputed.value.status}`]: !!styleComputed.value.status,
+        'sa-input-clear': !!props.clearIcon
       }
     ]))
-
-
 
 
     const methods = {
@@ -100,7 +99,7 @@ export const SaInput = designComponent({
 
     const hander = {
       clickClearIcon: (e: MouseEvent) => {
-        if(!editComputed.value.editable) {
+        if (!editComputed.value.editable) {
           return
         }
 
@@ -115,7 +114,7 @@ export const SaInput = designComponent({
       }
     }
 
-    
+
     const publicProps = computed(() => ({
       style: styles.value,
       disabled: editComputed.value.disabled,
@@ -137,9 +136,6 @@ export const SaInput = designComponent({
       ref: onRef.input,
     }) as any)
 
-
-    
-
     return {
 
       refer: {
@@ -159,7 +155,10 @@ export const SaInput = designComponent({
           return (
             <div class={'sa-input ' + classes.value}>
               <input class="sa-input-inner" {...publicProps.value} />
-              { props.clearIcon && <button onClick={ hander.clickClearIcon }>清空</button> }
+
+              {!!props.clearIcon && (<span class="pl-input-suffix-icon pl-input-clear-icon">
+                <SaIcon onClick={hander.clickClearIcon} icon="el-icon-error" />
+              </span>)}
             </div>
           )
         }

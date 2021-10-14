@@ -2,6 +2,10 @@
   "name": "sa-ui",
   "version": "1.0.0",
   "private": true,
+  "author": {
+    "email": "272781702@qq.com",
+    "name": "LIAOJIANS"
+  },
   "scripts": {
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",

@@ -1,23 +1,23 @@
-
-import SaInput from "./SaInput";
-
 import { App } from 'vue'
 
-const plugins = [
-  SaInput
-]
-
+import * as SaUi from './enter'
 
 const install = (app: App) => {
-  plugins.forEach(app.use)
-}
 
-export default {
-  install
+  Object.entries(SaUi).forEach(([ key, item ]) => {
+    if('install' in item) {
+      app.use(item as any)
+    }
+  })
 }
 
 export {
-  install,
+  install
+}
 
-  SaInput
+export * from './enter'
+
+export default {
+  ...SaUi,
+  install
 }

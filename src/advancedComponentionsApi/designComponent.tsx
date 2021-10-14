@@ -62,7 +62,7 @@ export function designComponent<_,
   FcPropsType = PropsOptions & (Props extends { modelValue?: any } ? { 'v-model'?: Props['modelValue'] } : {}) &
   { ref?: any } & EmitToProp<EmitOptions> &
   { 'v-slots'?: (SlotProps<SlotKeys, ScopeSlots> & ScopeSlotProps<SlotKeys, ScopeSlots>) },
-  TargetInheritPropsType = (Omit<InheritPropsType extends { use: { inheritProps: infer R } } ? R : InheritAttributes<InheritPropsType>, keyof FcPropsType>)
+  TargetInheritPropsType = (Omit<InheritPropsType extends { use: { inheritProps: infer R } } ? R : InheritAttributes<InheritPropsType>, keyof FcPropsType>) | any
 >(options: {
   name?: string,
   props?: PropsOptions,

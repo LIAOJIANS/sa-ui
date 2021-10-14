@@ -14,7 +14,6 @@
     "types": [
       "webpack-env"
     ],
-    "paths": {},
     "lib": [
       "esnext",
       "dom",
@@ -26,9 +25,10 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "examples/**/*.ts",
+    "examples/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "shims-vue.d.ts"  
+    "tests/**/*.tsx"
   ],
   "exclude": [
     "node_modules"
