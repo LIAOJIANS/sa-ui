@@ -19,7 +19,8 @@ const routes: IRoutesData[] = [
   {
     name: '基础',
     childrens: [
-      { name: 'Icon', title: '图标', page: '/DemoIcon', complete: true}
+      { name: 'Icon', title: '图标', page: '/DemoIcon', complete: true},
+      { name: 'Title', title: '标题', page: '/DemoTitle', complete: true}
     ]
   },
 

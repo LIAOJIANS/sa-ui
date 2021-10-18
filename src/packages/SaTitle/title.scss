@@ -1,0 +1,47 @@
+@include theme {
+  .sa-title {
+    width: 100%;
+    line-height: 38px;
+    padding: 0 10px;
+
+    color: $cyan_7;
+    
+    p {
+      margin: 0;
+
+      font-size: 14px;
+    }
+  }
+
+  .sa-title-hidden {
+    p {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .sa-title-left, 
+  .sa-title-right {
+    border-radius: 4px;
+  }
+
+  .sa-title-bgc {
+    background-color: $cyan_2;
+    color: #333;
+  }
+
+  .sa-title-left {
+    border-left: 5px solid $cyan_7;
+  }
+
+  .sa-title-right {
+    border-right: 5px solid $cyan_7;
+  }
+
+  .sa-title-bottom {
+    border-bottom: 1px solid $gray_6;
+  }
+
+  color: #ccc;
+}

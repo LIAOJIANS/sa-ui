@@ -21,16 +21,32 @@ export enum StyleShape {
   square = 'square',
 }
 
+export enum StyleMode {
+  vline = 'vline',
+  hline = 'hline'
+}
+
+const enum StyleDirection {
+  center = 'center',
+  left = 'left',
+  right = 'right'
+}
+
 export const StyleProps = {
   shape: { type: String as PropType<keyof typeof StyleStatus> },
   status: { type: String as PropType<keyof typeof StyleStatus> },
   size: { type: String as PropType<keyof typeof StyleSize> }
 }
 
+export const TitleStyleProps = {
+  mode: { type: [String, Object] as PropType<keyof typeof StyleMode | { type: 'vline', direction?: 'left' | 'right' }>, default: 'hline' },
+  direction: { type: String as PropType<keyof typeof StyleDirection>, default: 'left' }
+}
+
 interface UseStyleProvideData {
   shape: StyleShape,
   size: StyleSize,
-  status?: StyleStatus,
+  status?: StyleStatus
 }
 
 interface UseStyleOption {

@@ -1,0 +1,15 @@
+
+
+.title-class {
+  > p {
+    color: #666;
+  }
+
+  > span {
+    display: block;
+    margin: 10px 0;
+
+    font-size: 14px;
+    color: #666;
+  }
+}
