@@ -25,7 +25,7 @@ export default defineComponent({
                     {
                       !!menu.complete && (
                         <div class="app-menu-item-is-done"> 
-                          <i>♥</i>
+                          <i>⭐</i>
                         </div>
                       )
                     }

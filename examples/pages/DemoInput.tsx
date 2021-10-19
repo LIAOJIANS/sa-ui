@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, ref } from "vue";
-import { SaInput } from '../../src/packages'
+import { SaInput, SaTitle } from '../../src/packages'
 
 export default defineComponent({
   props: {},
@@ -9,7 +9,7 @@ export default defineComponent({
       console.log(1)
     }
 
-    const val = ref(100)
+    const val = ref('')
 
 
     onMounted(() => {
@@ -23,11 +23,13 @@ export default defineComponent({
 
     return () => (
       <div>
+        <SaTitle 
+          title="基本用法"
+          mode='vline'
+        />
+        <p style={{ margin: '10px 0' }}></p>
         <SaInput
-        v-model={ val.value }
-          ref="myInput"
-          status="danger"
-          clearIcon
+          v-model={ val.value }
         />
       </div>
     )

@@ -1,4 +1,4 @@
-import { computed, PropType, ref } from "vue"
+import { computed, PropType, reactive, ref } from "vue"
 import { designComponent } from "../../advancedComponentionsApi/designComponent"
 import './input.scss'
 import {
@@ -24,6 +24,8 @@ export const SaInput = designComponent({
     textarea: { type: Boolean },
     block: { type: Boolean },
     clearIcon: { type: Boolean },
+    prefixIcon: { type: String },
+    suffixIcon: { type: String },
 
     width: { type: [Number, String] as PropType<string | number>, default: null },
     minHeight: { type: [Number, String], default: 100 },
@@ -32,7 +34,12 @@ export const SaInput = designComponent({
 
     modelValue: { type: [String, Number] as PropType<string | number | null> },
     clearHandler: Function,
+    asyncHandler: { type: Function },
+    fillGroup: { type: Boolean },
+    align: { type: String as PropType<'center' | 'left' | 'right'> },
 
+    placeValue: { type: String },
+    inputInnerTabindex: { type: Number, default: 0 },
     readonly: { type: Boolean }
   },
 
@@ -50,13 +57,36 @@ export const SaInput = designComponent({
     onClickClearIcon: (e: MouseEvent) => true,
   },
 
-  setup({ props, event: { emit } }) {
+  slots: ['default', 'append', 'prepend', 'hidden'],
+
+  setup({ props, event: { emit }, slots }) {
     // const inputValue = ref('')
     // const inputRef = ref(null as any as HTMLInputElement)
 
     const { onRef } = useRefs({
       input: HTMLInputElement,
       hiddenInput: HTMLTextAreaElement,
+    })
+
+    const state = reactive({
+      autoHeight: null as null | number,
+      handerEnter: null as null | ((e: KeyboardEvent) => void),
+      handleEnterInner: async (e: KeyboardEvent) => {
+        if (editComputed.value.editable) {
+          if (!!props.asyncHandler) {
+            editState.loading = true
+            try {
+              await props.asyncHandler()
+            } catch (e) {
+              console.log(e);
+            } finally {
+              editState.loading = false
+            }
+          } else {
+            emit.onEnter(e)
+          }
+        }
+      }
     })
 
     const model = useModel(() => props.modelValue, emit.onUpdateModelValue)
@@ -69,24 +99,37 @@ export const SaInput = designComponent({
         styles.width = unit(numberState.width)
       }
 
-      // if(!!props.textarea) {
-      //   if(!props.autoHeight) {
-      //     styles.height = unit('100')
-      //   } else {
-
-      //   }
-      // }
+      if (!!props.textarea) {
+        if (!props.autoHeight || state.autoHeight == null) {
+          styles.height = unit(state.autoHeight)
+        } else {
+          if (numberState.minHeight != null && state.autoHeight > numberState.minHeight) {
+            styles.height = unit(numberState.minHeight)
+          } else if (state.autoHeight < numberState.minHeight) {
+            styles.height = unit(numberState.minHeight)
+          } else {
+            styles.height = unit(state.autoHeight)
+          }
+        }
+      }
 
       return styles
     })
-
-
     const classes = computed(() => classname([
       `sa-input-shape-${styleComputed.value.shape}`,
       `sa-input-size-${styleComputed.value.size}`,
       {
         [`sa-input-status-${styleComputed.value.status}`]: !!styleComputed.value.status,
-        'sa-input-clear': !!props.clearIcon
+        'sa-input-clear': !!props.clearIcon,
+        'sa-input-prefix-padding': !!props.prefixIcon,
+        'sa-input-disabled': !!editComputed.value.disabled,
+        'sa-input-suffix-padding': !!props.suffixIcon || !!props.clearIcon || editComputed.value.loading,
+        'sa-input-prefix': !!props.prefixIcon,
+        'sa-input-suffix': !!props.suffixIcon || editComputed.value.loading,
+        'sa-input-empty': !model.value && !props.placeValue,
+        'sa-input-not-editable': !editComputed.value.editable,
+        'sa-input-fill-group': props.fillGroup,
+        [`sa-input-align-${props.align}`]: !!props.align,
       }
     ]))
 
@@ -109,6 +152,25 @@ export const SaInput = designComponent({
         props.clearHandler ? props.clearHandler() : methods.clearValue()
       },
 
+      clickSuffixIcon: (e: MouseEvent) => {
+        if (!editComputed.value.editable) {
+          return
+        }
+        e.stopPropagation()
+        e.preventDefault()
+        emit.onClickSuffixIcon(e)
+      },
+
+      ClickPrefixIcon: (e: MouseEvent) => {
+        if (!editComputed.value.editable) {
+          return
+        }
+
+        e.stopPropagation()
+        e.preventDefault()
+        emit.onClickPrefixIcon(e)
+      },
+
       input: (e: any) => {
         model.value = e.target.value
       }
@@ -120,6 +182,7 @@ export const SaInput = designComponent({
       disabled: editComputed.value.disabled,
       readonly: props.readonly || editComputed.value.readonly || editComputed.value.loading,
       value: model.value || '',
+      placeholder: props.placeValue,
 
       onInput: hander.input,
       onClick: emit.onClickInput,
@@ -152,15 +215,51 @@ export const SaInput = designComponent({
           )
 
         } else {
-          return (
+          const input = (
             <div class={'sa-input ' + classes.value}>
-              <input class="sa-input-inner" {...publicProps.value} />
+              {!!props.prefixIcon && <span class="sa-input-prefix-icon" onClick={hander.ClickPrefixIcon}>
+                <SaIcon icon={props.prefixIcon} />
+              </span>}
+              {
+                slots.default.isExist() ?
+                  <div tabIndex={props.inputInnerTabindex} class="sa-input-inner" {...publicProps.value}>{slots.default()}</div> :
+                  <input class="sa-input-inner" {...publicProps.value} />
+              }
+              {
+                !!props.suffixIcon && <span class="sa-input-suffix-icon" >
+                  {typeof props.suffixIcon === 'function' ?
+                    (props.suffixIcon as any)()
+                    : <SaIcon icon={props.suffixIcon} onMousedown={hander.clickSuffixIcon} />
+                  }
+                </span>
+              }
 
-              {!!props.clearIcon && (<span class="pl-input-suffix-icon pl-input-clear-icon">
-                <SaIcon onClick={hander.clickClearIcon} icon="el-icon-error" />
-              </span>)}
+              {!!props.clearIcon && (<span class="sa-input-suffix-icon sa-input-clear-icon">
+                <SaIcon onMousedown={hander.clickClearIcon} icon="el-icon-error" />
+              </span>)
+              }
+
+              {
+                !!editComputed.value.loading && <span>loading</span>
+              }
+
+              {
+                slots.hidden.isExist() && <div class="sa-input-inner-hidden">{slots.hidden()}</div>
+              }
             </div>
           )
+
+          if (!slots.prepend.isExist() && !slots.append.isExist()) {
+            return input
+          } else {
+            return (
+              <div class='sa-input-container'>
+                {slots.prepend.isExist() && <div class='sa-input-prepend'>{slots.prepend()}</div>}
+                {input}
+                {slots.append.isExist() && <div class='sa-input-append'>{slots.append()}</div>}
+              </div>
+            )
+          }
         }
       }
     }
