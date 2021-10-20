@@ -11,7 +11,6 @@
 
   .sa-drawer-card-title {
     padding: 10px 20px;
-    min-height: 66px;
   }
 
   .sa-drawer-card-content {
@@ -43,6 +42,14 @@
     }
   }
 
+  .sa-drawer-card-animation-content {
+    transition: .2s;
+
+    &:hover {
+      box-shadow: 0 0 8px 0 rgba(232, 237, 250, .6), 0 2px 4px 0 rgba(232, 237, 250, .5);
+    }
+  }
+
   .sa-drawer-card-block-control-animation {
     &:hover {
 
@@ -50,6 +57,17 @@
         background: $cyan_1;
         span {
           color: $cyan_7!important;
+        }
+
+        span:nth-child(1) {
+          transform: translateX(-44px);
+          transition: .3s;
+        }
+        span:nth-child(2) {
+          opacity: 1;
+          transform: translateX(-44px);
+          transition: .3s;
+          color: $cyan_3;
         }
       }
     }
@@ -101,6 +119,17 @@
       transform: translateX(0);
       transition: .3s;
     }
+  }
+
+  .sa-drawer-card-block-control-no-animation  {
+    
+    .sa-drawer-card-block-title {
+      span:nth-child(2) {
+        opacity: 1;
+        color: $cyan_7;
+      }
+    }
+
   }
 
   .opacity-none {

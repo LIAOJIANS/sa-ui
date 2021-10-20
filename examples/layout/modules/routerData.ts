@@ -21,7 +21,8 @@ const routes: IRoutesData[] = [
     childrens: [
       { name: 'Icon', title: '图标', page: '/DemoIcon', complete: true},
       { name: 'Title', title: '标题', page: '/DemoTitle', complete: true},
-      { name: 'DrawerCard', title: '卡片抽屉', page: '/DemoDrawerCard', complete: true }
+      { name: 'DrawerCard', title: '卡片抽屉', page: '/DemoDrawerCard', complete: true },
+      { name: 'Tooltip', title: '文字提示', page: '/DemoTooltip', complete: true }
     ]
   },
 

@@ -93,7 +93,8 @@ export const SaInput = designComponent({
     const { styleComputed } = useStyle({ status: undefined })
     const { editState, editComputed } = useEdit()
     const { numberState } = useNumber(props, ['width', 'minHeight', 'minHeight'])
-
+    console.log(styleComputed);
+    
     const styles = useStyles(styles => {
       if (!numberState.width && !props.block) {
         styles.width = unit(numberState.width)

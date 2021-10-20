@@ -1,0 +1,66 @@
+@include theme {
+  .sa-tooltip {
+    position: fixed;
+
+    .sa-tooltip-content, .sa-tooltip-content-inner {
+      color: inherit;
+      padding: 8px 12px !important;
+    }
+
+    &.sa-tooltip-theme-dark {
+      .sa-tooltip-content {
+        background-color: black !important;
+
+        &, & .sa-tooltip-content-inner, & .sa-tooltip-title {
+          color: white;
+        }
+      }
+    }
+
+    &.sa-tooltip-radius {
+      border-radius: 5px;
+    }
+
+    &[direction=top] {
+      .sa-tooltip-content {
+        box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &[direction=bottom] {
+      .sa-tooltip-content {
+        box-shadow: 0 1px 10px 2px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &[direction=left] {
+      .sa-tooltip-content {
+        box-shadow: -1px 0 10px 2px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &[direction=right] {
+      .sa-tooltip-content {
+        box-shadow: 1px 0 10px 2px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &.sa-tooltip-theme-light {
+      .sa-tooltip-content {
+        background-color: white !important;
+
+        &, & .sa-popper-content-inner {
+          color: $itc !important;
+        }
+      }
+    }
+  }
+
+  .sa-tooltip-reference {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: baseline;
+  }
+}

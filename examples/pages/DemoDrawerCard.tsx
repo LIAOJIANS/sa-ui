@@ -20,8 +20,8 @@ export default defineComponent({
           <div slot="title">
             title
           </div>
-          <div slot="content">
-            <SaInput />
+          <div slot="content" style={{ padding: '20px' }}>
+            11111
           </div>
         </SaDrawerCard>
       </div>
