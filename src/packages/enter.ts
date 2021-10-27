@@ -3,6 +3,7 @@ import SaIcon from './SaIcon/SaIcon'
 import SaTitle from './SaTitle/SaTitle'
 import SaDrawerCard from './SaDrawerCard/SaDrawerCard'
 import SaTooltip from './SaTooltip/SaTooltip'
+import SaPopper from './SaPopper/SaPopper'
 
 
 export {
@@ -10,5 +11,6 @@ export {
   SaIcon,
   SaTitle,
   SaDrawerCard,
-  SaTooltip
+  SaTooltip,
+  SaPopper
 }

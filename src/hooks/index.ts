@@ -10,6 +10,7 @@ import { useEdit } from './use/useEdit'
 /* ------------------------------- UTILS ---------------------------- */
 import unit from './utils/unit'
 import classname from './utils/className'
+import nextIndex from './utils/nextIndex'
 
 
 export {
@@ -24,5 +25,6 @@ export {
   TitleStyleProps,
 
   unit,
-  classname
+  classname,
+  nextIndex
 }

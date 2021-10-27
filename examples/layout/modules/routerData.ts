@@ -16,13 +16,16 @@ interface IRoutesDataChilds {
 
 
 const routes: IRoutesData[] = [
+
   {
     name: '基础',
     childrens: [
+      { name: 'Index', title: '基本信息', page: '/index', complete: false },
       { name: 'Icon', title: '图标', page: '/DemoIcon', complete: true},
       { name: 'Title', title: '标题', page: '/DemoTitle', complete: true},
       { name: 'DrawerCard', title: '卡片抽屉', page: '/DemoDrawerCard', complete: true },
-      { name: 'Tooltip', title: '文字提示', page: '/DemoTooltip', complete: true }
+      { name: 'Tooltip', title: '文字提示', page: '/DemoTooltip', complete: true },
+      { name: 'Popper', title: 'popper气泡', page: '/DemoPopper', complete: true }
     ]
   },
 

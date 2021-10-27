@@ -1,5 +1,5 @@
 import { defineComponent, reactive } from "vue";
-import { SaTooltip } from 'sa-ui'
+import { SaTooltip, SaPopper } from 'sa-ui'
 
 export default defineComponent({
   setup() {
@@ -15,6 +15,8 @@ export default defineComponent({
         >
           aaaa
         </SaTooltip>
+
+        <SaPopper />
       </div>
     )
   }

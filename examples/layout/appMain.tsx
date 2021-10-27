@@ -11,7 +11,7 @@ export default defineComponent({
     watch(() => Router.route.path, async (path) => {
 
       if (!path) { // 如果路由路径为 / 给个默认路径
-        path = '/DemoInput'
+        path = '/index'
       }
 
       if (path.charAt(0) === '/') {
