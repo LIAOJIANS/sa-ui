@@ -16,7 +16,7 @@ export default function useModel<T>(
 
   config = config || {}
 
-  if(config.autoWatch) {
+  if(config.autoWatch !== false) { // 必须不等false  因为默认值为''的时候是通过的
     watch(getter, (val: T) => {
       if(val !== state.value) {
         config!.onChange && config!.onChange(val, state.value)
@@ -34,7 +34,7 @@ export default function useModel<T>(
     set value(val: T) {
       state.value = val
 
-      if(config!.autoEmit) {
+      if(config!.autoEmit !== false) {
         emitter(val)
       }
     }

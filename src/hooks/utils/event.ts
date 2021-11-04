@@ -1,0 +1,1 @@
+export type SimpleFunction = (...argu: any[]) => any

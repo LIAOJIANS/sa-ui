@@ -103,5 +103,8 @@ export type IStylePropertties = { [k in keyof CSSProperties]: string | number | 
 export function useStyles(
   getter: (styles: IStylePropertties) => IStylePropertties | void
 ) {
-  return computed(() => getter({}) || {})
+  return computed(() => {
+    const style = {}
+    return getter(style) || style
+  })
 }

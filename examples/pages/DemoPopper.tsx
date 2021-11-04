@@ -1,16 +1,18 @@
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { SaPopper } from 'sa-ui'
 
 
 export default defineComponent({
   setup() {
 
+    const box = ref(null)
 
-    return () => <SaPopper
-    >
-      <div>
-        我是弹窗啊
-      </div>
-    </SaPopper>
+    return () => <div>
+      <SaPopper
+        message="我是我啊"
+        title="你是你啊"
+      >
+      </SaPopper>
+    </div>
   }
 })
