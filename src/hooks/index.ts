@@ -6,12 +6,14 @@ import { useNumber } from './use/useNumber'
 import useModel from './use/useModel'
 import useRefs from './use/useRefs'
 import { useEdit } from './use/useEdit'
+import { useRefList } from './use/useRefList'
 
 /* ------------------------------- UTILS ---------------------------- */
 import unit from './utils/unit'
 import classname from './utils/className'
 import { nextIndex } from './utils/nextIndex'
 import { getElement } from './utils/getElement'
+import { delay } from './utils/delay'
 
 
 export {
@@ -21,6 +23,7 @@ export {
   useModel,
   useRefs,
   useEdit,
+  useRefList,
   
   StyleProps,
   TitleStyleProps,
@@ -28,5 +31,6 @@ export {
   unit,
   classname,
   nextIndex,
-  getElement
+  getElement,
+  delay
 }

@@ -171,7 +171,7 @@ export const SaPopper = designComponent({
 
         return (
           <>
-            <Teleport to='.main'>
+            <Teleport to='.sa-root-service-container'>
               <div
                 class={popperClasses.value}
                 style={popperStyles.value}
