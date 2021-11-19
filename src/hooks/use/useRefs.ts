@@ -7,7 +7,7 @@ V extends new (...args: any[]) => infer Refer ? Refer : V
 
 export default function useRefs<T extends { [k: string]: any }>(config: T): {
   refs: {
-    [k in keyof T]: RefValueType<k> | null | undefined
+    [k in keyof T]: RefValueType<T[k]> | null | undefined
   },
   onRef: {
     [k in keyof T]: (val: any) => void

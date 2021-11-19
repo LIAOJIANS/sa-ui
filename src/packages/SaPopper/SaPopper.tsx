@@ -1,9 +1,13 @@
 import { designComponent } from 'src/advancedComponentionsApi/designComponent'
-import { classname, getElement, nextIndex, useModel, useNumber, useRefs, useStyles } from 'src/hooks'
+import { SimpleFunction } from 'src/advancedComponentionsApi/emit'
+import { classname, delay, getElement, nextIndex, useModel, useNumber, useRefs, useStyles } from 'src/hooks'
+import { clickBodyListeners } from 'src/hooks/utils/clickBodyListeners'
+import { onBeforeUnmount, watch } from 'vue'
 import { markRaw } from 'vue'
 import { Teleport, PropType, computed, reactive, onMounted } from 'vue'
 import './popper.scss'
-import { PopperTrigger } from './trigger/PopperTrigger'
+import { Popper } from './popperUtils/popper'
+import { getProperTrigger, PopperTrigger, ProperTriggerType } from './trigger/PopperTrigger'
 
 
 export const SaPopper = designComponent({
@@ -14,7 +18,7 @@ export const SaPopper = designComponent({
     modelValue: { type: Boolean },
 
     tirgger: { type: String, default: 'hover' },
-    transition: { type: String, defualt: 'sa-transition-fade' },
+    transition: { type: String, default: 'sa-transition-fade' },
     message: { type: String },
     title: { type: String },
 
@@ -23,19 +27,37 @@ export const SaPopper = designComponent({
     noContentPadding: { type: Boolean },
 
     reference: { type: [Object, Function] as PropType<HTMLElement | (() => HTMLElement)> },
-    placement: { type: String, default: 'bottom-start' }
+    placement: { type: String, default: 'bottom-start' },
+
+    offset: { type: [Number, String] },
+    arrow: { type: Boolean, default: true },
+    boundary: { default: document.body as any }
   },
 
   slots: ['default', 'head'],
 
   emits: {
     onUpdateModelValue: (val?: boolean) => true,
+    onShow: () => true,
+    onHide: () => true,
+    onInit: () => true,
+
+    onClickReference: (e: MouseEvent) => true,
+    onClickPopper: (e: MouseEvent) => true,
+    onClickBody: (e: MouseEvent) => true,
+    onMousedownPopper: (e: MouseEvent) => true,
+
+    onEnterReference: (e: MouseEvent) => true,
+    onLeaveReference: (e: MouseEvent) => true,
     onEnterPopper: (e: MouseEvent) => true,
     onLeavePopper: (e: MouseEvent) => true,
-    onShow: () => true
+    onReferenceFocus: (e: FocusEvent) => true,
+    onReferenceBlur: (e: FocusEvent) => true,
   },
 
-  setup({ props, event: { emit }, slots, attrs }) {
+  setup({ props, event, slots, attrs }) {
+
+    const { emit, on, off } = event
 
     const model = useModel(() => props.modelValue, emit.onUpdateModelValue, { autoEmit: false, autoWatch: false })
 
@@ -57,6 +79,7 @@ export const SaPopper = designComponent({
       zIndex: nextIndex(),
       onTransitionend: null as null | ((e: Event) => void),
       trigger: null as null | PopperTrigger,
+      popper: null as null | Popper,
       init: false
     }) as {
       el: {
@@ -68,10 +91,13 @@ export const SaPopper = designComponent({
       zIndex: number,
       onTransitionend: null | ((e: Event) => void),
       init: boolean,
-      trigger: null | PopperTrigger
+      trigger: null | PopperTrigger,
+      popper: null | Popper,
     }
 
     const { numberState } = useNumber(props, [
+      'hoverOpenDelay',
+      'hoverCloseDelay',
       'height',
       'width',
       'offset'
@@ -103,6 +129,11 @@ export const SaPopper = designComponent({
       return styles
     })
 
+    // watch(() => props.modelValue, val => {
+    //   console.log(val);
+      
+    // },{ immediate: true })
+
     const popperStyles = useStyles(style => {
 
       style.zIndex = state.zIndex
@@ -120,16 +151,108 @@ export const SaPopper = designComponent({
     ]))
 
     const utils = {
-      init() {
+      init: (): boolean => {
+        let { comment, reference } = state.el
+
+        if(!!comment && !!reference) {
+          state.referenceEl = reference
+        } else if(!!props.reference){
+          state.referenceEl = getElement(typeof props.reference === 'function' ? (props.reference as SimpleFunction)() : props.reference )
+        } else { //没有reference，等待reference初始化在初始化popper
+          return false
+        }
+
+        utils.bindEvent()
+
+        state.trigger = getProperTrigger(props.tirgger as ProperTriggerType, {
+          model,
+          show: methods.show,
+          hide: methods.hide,
+
+          hoverOpenDelay: numberState.hoverOpenDelay as number,
+          hoverCloseDelay: numberState.hoverCloseDelay as number,
+
+          reference: state.referenceEl as HTMLElement,
+
+          on,
+          off,
+          emit
+        })
+
+        state.trigger.init()
+        emit.onInit()
+
+        return true
+      },
+
+      destroy() {
+        utils.unbindEvents()
+        if(!!state.trigger) {
+          state.trigger.destroy()
+        } 
+
+        if(!!state.popper) {
+          state.popper.destroy()
+        }
+      },
+
+      bindEvent() {
+        if(!!state.referenceEl) {
+          state.referenceEl.addEventListener('click', handler.onClickReference)
+        }
+
+        clickBodyListeners.listen(handler.onClickBody)
+      },
+
+      initPopper() {
+        state.popper = new Popper({
+          popper: refs.popper!,
+          reference: state.referenceEl!,
+          padding: 50,
+          placement: props.placement as any,
+          offset: Number(props.offset || (!!props.arrow ? 0 : 2)),
+          boundary: props.boundary as any,
+          arrowSize: !props.arrow ? 0 : undefined,
+          shouldUpdate: () => !!model.value
+        })
+      },
+
+      unbindEvents() {
 
       }
     }
 
+    const handler = {
+      onClickReference: (e: MouseEvent) => {
+        emit.onClickReference(e)
+      },
+
+      onClickBody: (e: MouseEvent) => {
+        if(!model.value) {
+          return
+        }
+
+        if(state.referenceEl?.contains(e.target as Node)) { // 点击了reference 节点
+          return
+        }
+
+        if(!!refs.content && refs.content!.contains(e.target as Node)) { // 点击了content节点
+          return 
+        }
+
+        emit.onClickBody(e)
+      }
+    }
+
     const methods = {
-      show: (shouldEmit = true) => {
+      show: async (shouldEmit = true) => {
         if(!state.init) {
           state.init = true
+          await delay()
+          await utils.initPopper()
         }
+
+        await delay(50)
 
         state.zIndex = nextIndex()
         model.value = true
@@ -141,6 +264,11 @@ export const SaPopper = designComponent({
         state.onTransitionend = () => {
           state.onTransitionend = null
         }
+      },
+
+      hide: (shouldEmit = true) => {
+        model.value = false
+        emit.onHide()
       }
     }
     onMounted(async () => {
@@ -155,6 +283,8 @@ export const SaPopper = designComponent({
         await methods.show(false)
       }
     })
+
+    onBeforeUnmount(() => utils.destroy())
 
     return {
       render: () => {

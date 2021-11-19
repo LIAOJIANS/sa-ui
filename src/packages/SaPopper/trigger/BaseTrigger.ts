@@ -124,14 +124,50 @@ function getHoverTrigger({
   hide: SimpleFunction;
   hoverOpenDelay: number;
   hoverCloseDelay: number;
-} & triggerFunc) { 
+  on: {
+    onEnterReference: SimpleFunction,
+    onLeaveReference: SimpleFunction,
+
+    onEnterPopper: SimpleFunction,
+    onLeavePopper: SimpleFunction,
+
+    onReferenceFocus: SimpleFunction,
+    onReferenceBlur: SimpleFunction,
+
+    onClickReference: SimpleFunction,
+    onClickPopper: SimpleFunction,
+  },
+  off: {
+    onEnterReference: SimpleFunction,
+    onLeaveReference: SimpleFunction,
+
+    onEnterPopper: SimpleFunction,
+    onLeavePopper: SimpleFunction,
+
+    onReferenceFocus: SimpleFunction,
+    onReferenceBlur: SimpleFunction,
+
+    onClickReference: SimpleFunction,
+    onClickPopper: SimpleFunction,
+  },
+  emit: {
+    onReferenceFocus: SimpleFunction,
+    onReferenceBlur: SimpleFunction,
+
+    onEnterReference: SimpleFunction,
+    onLeaveReference: SimpleFunction,
+
+    onEnterPopper: SimpleFunction,
+    onLeavePopper: SimpleFunction,
+  }
+}) {
   let closeTimer: number | undefined
   let openTimer: number | undefined
 
   const handler = {
     reference: {
       enter: () => {
-        if(!!closeTimer) {
+        if (!!closeTimer) {
           clearTimeout(closeTimer)
           closeTimer = undefined
         }
@@ -145,7 +181,7 @@ function getHoverTrigger({
       },
 
       leave: () => {
-        if(!!openTimer) {
+        if (!!openTimer) {
           clearTimeout(openTimer)
           openTimer = undefined
         }
@@ -161,11 +197,11 @@ function getHoverTrigger({
 
     popper: {
       enter: () => {
-        if(!!closeTimer) {
+        if (!!closeTimer) {
           clearTimeout(closeTimer)
           closeTimer = undefined
         }
-        
+
         openTimer = setTimeout(() => {
           show()
           openTimer = undefined
@@ -173,11 +209,11 @@ function getHoverTrigger({
       },
 
       leave: () => {
-        if(!!openTimer) {
+        if (!!openTimer) {
           clearTimeout(openTimer)
           openTimer = undefined
         }
-        
+
         closeTimer = setTimeout(() => {
           hide()
 
@@ -241,7 +277,7 @@ function getClickTrigger({
       off.onClickReference(handler.onClickReference)
     }
   )
- }
+}
 
 function getFocusTrigger({
   show,
@@ -254,7 +290,7 @@ function getFocusTrigger({
   show: SimpleFunction;
   hide: SimpleFunction;
   reference: HTMLElement;
-} & triggerFunc) { 
+} & triggerFunc) {
   let oldTableIndex: string | null
 
   const handler = {
@@ -273,21 +309,21 @@ function getFocusTrigger({
     ProperTriggerType.focus,
     () => {
       oldTableIndex = reference.getAttribute('tableIndex')
-      if(oldTableIndex == null) {
+      if (oldTableIndex == null) {
         reference.setAttribute('tableIndex', '0')
       }
-      
+
       on.onReferenceFocus(handler.focus)
       on.onReferenceBlur(handler.blur)
     },
     () => {
       oldTableIndex == null ? reference.removeAttribute('tableIndex') : reference.setAttribute('tableIndex', '0')
-      
+
       off.onReferenceFocus(handler.focus)
       off.onReferenceBlur(handler.blur)
     }
   )
- }
+}
 
 function getManualTrigger() {
   return new PopperTrigger(
