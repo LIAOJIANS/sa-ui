@@ -1,6 +1,7 @@
 import {
   adjustPlacement,
   Align,
+  debounce,
   Direction,
   getBoundaryPos,
   getPos,
@@ -39,7 +40,7 @@ export class Popper {
 
   private init() {
 
-    Object.assign(this.content.style,
+    Object.assign(this.config.popper.style,
       {
         overflow: 'hidden',
         position: 'fixed',
@@ -214,7 +215,7 @@ export class Popper {
     align: Align,
     forceTransform: boolean
   ) {
-    if (this.arrow) {
+    if (!this.arrow) {
       return
     }
 
@@ -269,9 +270,63 @@ export class Popper {
 
     setPos(this.arrow!, { top: top!, left: left! }, gpuAcceleration)
 
+    const transformRotate = `rotate(${rotate}deg)`
     Object.assign(this.arrow.style, {
       transform: gpuAcceleration ? `${this.arrow.style.transform} ${transformRotate}` : transformRotate
     } as StyleType)
 
+  }
+
+  private scrollEventListener: { el: HTMLElement, listener: Function }[] = []
+
+  private onWindowResize = () => {
+    this.refresh()
+  }
+
+  resetPositioningMode = debounce(() => this.refresh, 150)
+
+  private onParentScroll = () => {
+    if (!!this.config.shouldUpdate) {
+      if (!this.config.shouldUpdate()) {
+        return
+      }
+
+
+    }
+
+    this.refresh(true)
+    this.resetPositioningMode()
+  }
+
+  private bindEvent() {
+    let parentEl = this.config.reference.parentNode as HTMLElement
+
+    while (!!parentEl) {
+      parentEl.addEventListener('scroll', this.onParentScroll)
+      this.scrollEventListener.push({ el: parentEl, listener: this.onParentScroll })
+      parentEl = parentEl.parentNode as HTMLElement
+    }
+
+    window.addEventListener('resize', this.onWindowResize)
+  }
+
+  private unbindEvent(): void {
+    let scrollEventListener = this.scrollEventListener
+
+    while (scrollEventListener.length > 0) {
+      let {el, listener} = scrollEventListener.pop()!
+      el.removeEventListener('scroll', listener as any)
+    }
+
+    window.removeEventListener('resize', this.onWindowResize)
+  }
+
+  public destroy() {
+    this.unbindEvent()
+  }
+
+  public setPlacement(placement: PlacementType) {
+    this.config.placement = placement
+    this.refresh()
   }
 }

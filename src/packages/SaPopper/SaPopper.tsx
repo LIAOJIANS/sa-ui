@@ -67,6 +67,11 @@ export const SaPopper = designComponent({
       content: HTMLDivElement
     })
 
+    watch(() => props.modelValue, (val) => {
+      console.log(val);
+      
+    })
+
 
     const state = reactive({
       el: {
@@ -312,7 +317,7 @@ export const SaPopper = designComponent({
                   class='sa-popper-content'
                   ref={onRef.content}
                   {
-                  ... (props.tirgger === 'hover' ? {
+                  ...(props.tirgger === 'hover' ? {
                     onMouseenter: e => emit.onEnterPopper(e),
                     onMouseleave: e => emit.onLeavePopper(e)
                   } : {})
