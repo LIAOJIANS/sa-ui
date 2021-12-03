@@ -2,11 +2,10 @@ import { designComponent } from 'src/advancedComponentionsApi/designComponent'
 import { SimpleFunction } from 'src/advancedComponentionsApi/emit'
 import { classname, delay, getElement, nextIndex, useModel, useNumber, useRefs, useStyles } from 'src/hooks'
 import { clickBodyListeners } from 'src/hooks/utils/clickBodyListeners'
-import { onBeforeUnmount, watch } from 'vue'
-import { markRaw } from 'vue'
-import { Teleport, PropType, computed, reactive, onMounted } from 'vue'
+import { markRaw,createCommentVNode, onBeforeUnmount, watch, Teleport, PropType, computed, reactive, onMounted  } from 'vue'
 import './popper.scss'
 import { Popper } from './popperUtils/popper'
+import { refreshPopperReference } from './refershPopperReference'
 import { getProperTrigger, PopperTrigger, ProperTriggerType } from './trigger/PopperTrigger'
 
 
@@ -34,7 +33,7 @@ export const SaPopper = designComponent({
     boundary: { default: document.body as any }
   },
 
-  slots: ['default', 'head'],
+  slots: ['default', 'head', 'popper'],
 
   emits: {
     onUpdateModelValue: (val?: boolean) => true,
@@ -68,8 +67,10 @@ export const SaPopper = designComponent({
     })
 
     watch(() => props.modelValue, (val) => {
-      console.log(val);
-      
+      if(val === model.value) {
+        return
+      }
+      val ? methods.show(false) : methods.hide(false)
     })
 
 
@@ -88,9 +89,9 @@ export const SaPopper = designComponent({
       init: false
     }) as {
       el: {
-          popper: null | HTMLElement,
-          comment: null | HTMLElement,
-          reference: null | HTMLElement,
+        popper: null | HTMLElement,
+        comment: null | HTMLElement,
+        reference: null | HTMLElement,
       },
       referenceEl: null | HTMLElement,
       zIndex: number,
@@ -134,11 +135,6 @@ export const SaPopper = designComponent({
       return styles
     })
 
-    // watch(() => props.modelValue, val => {
-    //   console.log(val);
-      
-    // },{ immediate: true })
-
     const popperStyles = useStyles(style => {
 
       style.zIndex = state.zIndex
@@ -159,11 +155,14 @@ export const SaPopper = designComponent({
       init: (): boolean => {
         let { comment, reference } = state.el
 
-        if(!!comment && !!reference) {
+        console.log(reference);
+        
+
+        if (!!comment && !!reference) {
           state.referenceEl = reference
-        } else if(!!props.reference){
-          state.referenceEl = getElement(typeof props.reference === 'function' ? (props.reference as SimpleFunction)() : props.reference )
-        } else { //没有reference，等待reference初始化在初始化popper
+        } else if (!!props.reference) {
+          state.referenceEl = getElement(typeof props.reference === 'function' ? (props.reference as SimpleFunction)() : props.reference)
+        } else { // 没有reference，等待reference初始化在初始化popper
           return false
         }
 
@@ -192,17 +191,17 @@ export const SaPopper = designComponent({
 
       destroy() {
         utils.unbindEvents()
-        if(!!state.trigger) {
+        if (!!state.trigger) {
           state.trigger.destroy()
-        } 
+        }
 
-        if(!!state.popper) {
+        if (!!state.popper) {
           state.popper.destroy()
         }
       },
 
       bindEvent() {
-        if(!!state.referenceEl) {
+        if (!!state.referenceEl) {
           state.referenceEl.addEventListener('click', handler.onClickReference)
         }
 
@@ -233,16 +232,16 @@ export const SaPopper = designComponent({
       },
 
       onClickBody: (e: MouseEvent) => {
-        if(!model.value) {
+        if (!model.value) {
           return
         }
 
-        if(state.referenceEl?.contains(e.target as Node)) { // 点击了reference 节点
+        if (state.referenceEl?.contains(e.target as Node)) { // 点击了reference 节点
           return
         }
 
-        if(!!refs.content && refs.content!.contains(e.target as Node)) { // 点击了content节点
-          return 
+        if (!!refs.content && refs.content!.contains(e.target as Node)) { // 点击了content节点
+          return
         }
 
         emit.onClickBody(e)
@@ -251,10 +250,11 @@ export const SaPopper = designComponent({
 
     const methods = {
       show: async (shouldEmit = true) => {
-        if(!state.init) {
+        if (!state.init) {
           state.init = true
+
           await delay()
-          await utils.initPopper()
+          utils.initPopper()
         }
 
         await delay(50)
@@ -262,7 +262,7 @@ export const SaPopper = designComponent({
         state.zIndex = nextIndex()
         model.value = true
         emit.onShow()
-        if(shouldEmit) {
+        if (shouldEmit) {
           emit.onUpdateModelValue(model.value)
         }
 
@@ -274,22 +274,42 @@ export const SaPopper = designComponent({
       hide: (shouldEmit = true) => {
         model.value = false
         emit.onHide()
-      }
+      },
+      refreshReference: async () => {
+        await delay()
+        const comment = getElement(refs.comment)
+        const reference = !!comment ? comment!.nextElementSibling as HTMLElement : null
+        console.log(reference, state.el.reference)
+        if (!!reference && reference !== state.el.reference) {
+            await utils.destroy()
+            state.el.reference = markRaw(reference)
+            await utils.init()
+        }
+    }
     }
     onMounted(async () => {
-      const popper = getElement(onRef.popper)
-      const comment = getElement(onRef.comment)
+      const popper = getElement(refs.popper)
+      const comment = getElement(refs.comment)
       const reference = !!comment ? comment!.nextElementSibling as HTMLElement : null
+      console.log(reference, state.el.reference);
+      
       state.el = markRaw({ popper, comment, reference })
 
       await utils.init()
 
-      if(model.value) {
+      if (model.value) {
         await methods.show(false)
       }
     })
 
     onBeforeUnmount(() => utils.destroy())
+
+    
+    refreshPopperReference.provide(methods.refreshReference)
+
+
+    const Comment = createCommentVNode('') as any
+    
 
     return {
       render: () => {
@@ -306,34 +326,41 @@ export const SaPopper = designComponent({
 
         return (
           <>
-            <Teleport to='.sa-root-service-container'>
-              <div
-                class={popperClasses.value}
-                style={popperStyles.value}
-                ref={onRef.popper}
-                {...attrs}
-              >
+            {!!childDoms && <>
+              <Comment ref={onRef.comment} />
+              {childDoms}
+            </>}
+
+            {
+              state.init && <Teleport to='.sa-root-service-container'>
                 <div
-                  class='sa-popper-content'
-                  ref={onRef.content}
-                  {
-                  ...(props.tirgger === 'hover' ? {
-                    onMouseenter: e => emit.onEnterPopper(e),
-                    onMouseleave: e => emit.onLeavePopper(e)
-                  } : {})
-                  }
+                  class={popperClasses.value}
+                  style={popperStyles.value}
+                  ref={onRef.popper}
+                  {...attrs}
                 >
-                  <div class="plain-popper-arrow" />
-                  {(slots.head.isExist() || !!props.title) && <div class="sa-popper-title">
-                    {slots.head(props.title)}
-                  </div>}
-                  {
-                    (props.message || slots.default.isExist()) &&
-                    <div class="sa-popper-content-inner" style={sizeStyle.value}>{props.message || slots.default()}</div>
-                  }
+                  <div
+                    class='sa-popper-content'
+                    ref={onRef.content}
+                    {
+                    ...(props.tirgger === 'hover' ? {
+                      onMouseenter: e => emit.onEnterPopper(e),
+                      onMouseleave: e => emit.onLeavePopper(e)
+                    } : {})
+                    }
+                  >
+                    <div class="sa-popper-arrow" />
+                    {(slots.head.isExist() || !!props.title) && <div class="sa-popper-title">
+                      {slots.head(props.title)}
+                    </div>}
+                    {
+                      (props.message || slots.popper.isExist()) &&
+                      <div class="sa-popper-content-inner" style={sizeStyle.value}>{props.message || slots.popper()}</div>
+                    }
+                  </div>
                 </div>
-              </div>
-            </Teleport>
+              </Teleport>
+            }
           </>
         )
       }

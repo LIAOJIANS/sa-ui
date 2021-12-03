@@ -1,7 +1,6 @@
 
 
 export function getElement(ref: any): HTMLElement | null {
-
   if (!ref) {
     return null
   }
@@ -13,6 +12,5 @@ export function getElement(ref: any): HTMLElement | null {
   if (ref.nodeType !== 3) {
     return ref
   }
-
   return !!ref.data ? ref : ref.nextElementSibling
 }

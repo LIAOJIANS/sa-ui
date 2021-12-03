@@ -20,6 +20,8 @@ export default defineComponent({
         message="我是我啊"
         title="你是你啊"
       >
+        
+      <button>hover激活</button>
       </SaPopper>
 
       <button onClick={ handler.showPopper }>点我展开</button>

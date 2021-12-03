@@ -87,6 +87,7 @@ export class Popper {
     } = this.config as PopperConfig & { padding: number }
 
     const contentPos = getPos(content)
+    
     const referencePos = getPos(reference)
 
     const {
