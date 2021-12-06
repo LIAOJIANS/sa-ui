@@ -138,7 +138,7 @@ export const getBoundaryPos = (
     return {
       minTop: top,
       maxTop: top + height - contentRef.height - padding,
-      minLeft: width,
+      minLeft: left,
       maxLeft: width + left - contentRef.width - padding
     }
   }
@@ -155,6 +155,7 @@ export const adjustPlacement = (
   direction: Direction,
   align: Align,
 } => {
+  
   let [direction, align] = placement.split('-') as [Direction, Align]
   align = align || Align.center
 
@@ -162,7 +163,7 @@ export const adjustPlacement = (
     left = 0
 
   if (isVertical(direction)) {
-    top = direction === Direction.top ? (referencePos.top - contentPos.height - padding) : (referencePos.left - contentPos.width - padding)
+    top = direction === Direction.top ? (referencePos.top - contentPos.height - padding) : (referencePos.top + (referencePos.height - padding))
 
     left = {
       [Align.start]: referencePos.left,
@@ -171,6 +172,8 @@ export const adjustPlacement = (
     }[align]
 
     left -= padding
+
+
   } else {
     left = direction === Direction.left ? (referencePos.left - contentPos.width - padding) : (referencePos.left + (referencePos.width - padding))
     top = {

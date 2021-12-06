@@ -70,7 +70,10 @@ export const SaPopper = designComponent({
       if(val === model.value) {
         return
       }
+      console.log(model.value === val);
       val ? methods.show(false) : methods.hide(false)
+
+      
     })
 
 
@@ -274,6 +277,12 @@ export const SaPopper = designComponent({
       hide: (shouldEmit = true) => {
         model.value = false
         emit.onHide()
+
+        if(shouldEmit) {
+          emit.onUpdateModelValue(model.value)
+        }
+
+        // state.onTransitionend = () => state.onTransitionend = null
       },
       refreshReference: async () => {
         await delay()
@@ -291,7 +300,6 @@ export const SaPopper = designComponent({
       const popper = getElement(refs.popper)
       const comment = getElement(refs.comment)
       const reference = !!comment ? comment!.nextElementSibling as HTMLElement : null
-      console.log(reference, state.el.reference);
       
       state.el = markRaw({ popper, comment, reference })
 

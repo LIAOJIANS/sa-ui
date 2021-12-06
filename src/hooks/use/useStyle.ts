@@ -58,6 +58,8 @@ interface UseStyleOption {
 
 const USE_STYLE_PROVIDER = '@@USE_STYLE_PROVIDER'
 
+export const DEFAULT_STATUS = StyleStatus.primary
+
 export const useStyle = useFunctionWrapper('style', (
   ctx,
   option: UseStyleOption = {}
@@ -74,7 +76,7 @@ export const useStyle = useFunctionWrapper('style', (
 
   const styleComputed = computed(() => {
     const { size, shape, status } = ctx.props
-    
+
     const parentData = !!parent ? parent.value : {} as any
 
     let data: UseStyleProvideData = {
@@ -83,12 +85,12 @@ export const useStyle = useFunctionWrapper('style', (
       status: status || parentData.status || defaultDate.status
     }
 
-    if(!!defaultDate.adjust) {
+    if (!!defaultDate.adjust) {
       data = defaultDate.adjust(data) || data
     }
 
     (data as any).ctx = ctx
-    ;(data as any).parent = parent
+      ; (data as any).parent = parent
 
     return data
   })

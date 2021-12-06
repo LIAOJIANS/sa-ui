@@ -5,6 +5,7 @@ import SaDrawerCard from './SaDrawerCard/SaDrawerCard'
 import SaTooltip from './SaTooltip/SaTooltip'
 import SaPopper from './SaPopper/SaPopper'
 import SaRoot from './SaRoot/SaRoot'
+import SaButton from './SaButton/SaButton'
 
 
 export {
@@ -14,5 +15,6 @@ export {
   SaDrawerCard,
   SaTooltip,
   SaPopper,
-  SaRoot
+  SaRoot,
+  SaButton
 }

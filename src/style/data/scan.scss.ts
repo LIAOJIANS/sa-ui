@@ -59,10 +59,10 @@ const ScanUtils = (() => {
 })();
 
 (async () => {
-    const output = resolve("src/styles/data/scan.scss.json")
+    const output = resolve("src/style/data/scan.scss.json")
     const packages = resolve("src/packages")
     const entry = resolve('src/index.ts')
-    const globalImportFilePath = resolve('src/styles/global-import.scss')
+    const globalImportFilePath = resolve('src/style/global-import.scss')
 
     /*文件path映射code对象*/
     const pathToCode: Record<string, string> = {}
