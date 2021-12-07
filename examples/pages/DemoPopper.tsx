@@ -1,5 +1,5 @@
 import { defineComponent, reactive, ref } from "vue";
-import { SaPopper, SaButton, SaDrawerCard } from 'sa-ui'
+import { SaPopper, SaButton, SaDrawerCard, SaInput, SaTitle, SaIcon } from 'sa-ui'
 
 
 export default defineComponent({
@@ -9,7 +9,8 @@ export default defineComponent({
 
 
     const state = reactive({
-      showContent: false
+      showContent: false,
+      inputValue: ''
     })
 
     const handler = {
@@ -36,19 +37,37 @@ export default defineComponent({
             <SaButton mode="plain" onClick={handler.showPopper}>hover激活</SaButton>
           </SaPopper>
 
+
           <SaPopper
             message="你是我啊"
             title="1111"
+            
+            placement="left-center"
           >
-            <SaButton status="primary">click激活</SaButton>
+            <SaButton status="primary" style={{ marginLeft: '20px' }}>click激活</SaButton>
           </SaPopper>
 
-          <SaPopper
-            v-slots={{
-              default: () => <SaButton status="primary">自定义popper</SaButton>,
-              head: () => <> <SaButton status="primary">自定义头部</SaButton> </>,
-              popper: () => <>
 
+          <SaPopper
+           placement="top-center"
+            v-slots={{
+              default: () => <SaButton status="primary"  style={{ marginLeft: '20px' }}>自定义popper</SaButton>,
+              head: () => <> <div>
+                <SaTitle
+                  direction='left'
+                  mode='hline'
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', fontSize: '14px' }}>
+                    <p>请输入时间</p>
+                    <SaIcon icon="el-icon-circle-plus" />
+                  </div>
+                </SaTitle>
+              </div> </>,
+              popper: () => <>
+                <SaInput
+                  v-model={state.inputValue}
+                  type='time'
+                />
               </>
             }}
           >

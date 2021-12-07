@@ -5,6 +5,7 @@ import { clickBodyListeners } from 'src/hooks/utils/clickBodyListeners'
 import { markRaw,createCommentVNode, onBeforeUnmount, watch, Teleport, PropType, computed, reactive, onMounted  } from 'vue'
 import './popper.scss'
 import { Popper } from './popperUtils/popper'
+import { debounce } from './popperUtils/popperUtils'
 import { refreshPopperReference } from './refershPopperReference'
 import { getProperTrigger, PopperTrigger, ProperTriggerType } from './trigger/PopperTrigger'
 
@@ -127,13 +128,13 @@ export const SaPopper = designComponent({
         styles.width = `${width}px`
       )
 
-      if (!!state.referenceEl) {
-        if (['top', 'bottom'].indexOf(direction.value) > -1) {
-          styles.width = (state.referenceEl as HTMLElement).offsetWidth + 'px'
-        } else if (['left', 'right'].indexOf(direction.value) > -1) {
-          styles.height = (state.referenceEl as HTMLElement).offsetHeight + 'px'
-        }
-      }
+      // if (!!state.referenceEl) {
+      //   if (['top', 'bottom'].indexOf(direction.value) > -1) {
+      //     // styles.width = (state.referenceEl as HTMLElement).offsetWidth + 'px'
+      //   } else if (['left', 'right'].indexOf(direction.value) > -1) {
+      //     // styles.height = (state.referenceEl as HTMLElement).offsetHeight + 'px'
+      //   }
+      // }
 
       return styles
     })
@@ -146,11 +147,12 @@ export const SaPopper = designComponent({
     const popperClasses = computed(() => classname([
       'sa-popper',
       'sa-popper-box',
-      'sa-popper-show-arrow',
       props.transition,
       {
         'sa-popper-show': model.value,
-        'sa-popper-no-content-padding': props.noContentPadding
+        'sa-popper-open': model.value,
+        'sa-popper-no-content-padding': props.noContentPadding,
+        'sa-popper-show-arrow': props.arrow
       }
     ]))
 
@@ -311,8 +313,23 @@ export const SaPopper = designComponent({
     })
 
     onBeforeUnmount(() => utils.destroy())
-
+    const popperConfigChangeHandler = debounce(async () => {
+      await delay()
+      await utils.destroy()
+      await utils.init()
+      if (!state.referenceEl) {
+          if (!!state.popper) {
+              state.popper.destroy()
+              state.popper = null
+          }
+          return
+      }
+      if (!!state.popper) {
+          await utils.initPopper()
+      }
+  }, 50)
     
+    watch(() => props.arrow, popperConfigChangeHandler)
     refreshPopperReference.provide(methods.refreshReference)
 
 

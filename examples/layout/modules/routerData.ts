@@ -25,7 +25,8 @@ const routes: IRoutesData[] = [
       { name: 'Title', title: '标题', page: '/DemoTitle', complete: true},
       { name: 'DrawerCard', title: '卡片抽屉', page: '/DemoDrawerCard', complete: true },
       { name: 'Tooltip', title: '文字提示', page: '/DemoTooltip', complete: true },
-      { name: 'Popper', title: 'popper气泡', page: '/DemoPopper', complete: true }
+      { name: 'Popper', title: 'popper气泡', page: '/DemoPopper', complete: true },
+      { name: 'Buttom', title: '按钮', page: '/DemoButton', complete: true }
     ]
   },
 

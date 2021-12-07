@@ -26,10 +26,12 @@ export class Popper {
   }
 
   constructor(private config: PopperConfig) {
-    config.padding === null && (config.padding = 10)
-    config.offset === null && (config.offset = 0)
-    config.placement === null && (config.placement = 'bottom-start')
-    config.arrowSize === null && (config.arrowSize = 10)
+    console.log(config);
+    
+    config.padding == null && (config.padding = 10)
+    config.offset == null && (config.offset = 0)
+    config.placement == null && (config.placement = 'bottom-start')
+    config.arrowSize == null && (config.arrowSize = 12)
 
     this.content = config.popper.querySelector('.sa-popper-content') as HTMLElement
     this.arrowSize = !config.arrowSize ? 0 : Math.sqrt(Math.pow(config.arrowSize, 2) / 2)

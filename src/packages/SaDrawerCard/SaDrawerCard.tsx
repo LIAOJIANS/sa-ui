@@ -100,7 +100,7 @@ const SaDrawerCard = designComponent({
                 return (
                   <div>
                     {
-                      dom.props?.slot === 'title' && <div class="sa-drawer-card-title" style={{ height: unit(props.titleHeight) as string }}>{dom}</div>
+                      dom.props?.slot === 'title' && <div class="sa-drawer-card-title" style={{ minHeight: unit(props.titleHeight) as string }}>{dom}</div>
                     }
                     {
                       dom.props?.slot === 'content' && <div class="sa-drawer-card-content" { ...publicProps.value }>{dom}</div>

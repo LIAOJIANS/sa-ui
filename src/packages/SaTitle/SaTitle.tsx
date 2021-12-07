@@ -78,7 +78,7 @@ export const SaTitle = designComponent({
     }
 
     return {
-      render: () => <div style={{ padding: '0 20px 0 10px' }}>
+      render: () => <div style={{  }}>
         <div {...publicProps.value}>
           {
             slots.default.isExist() ? slots.default() : <p>{props.title}</p>

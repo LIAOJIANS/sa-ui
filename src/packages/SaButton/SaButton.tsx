@@ -10,6 +10,7 @@ export const SaButton = designComponent({
   props: {
     mode: { type: String as PropType<'plain | fill | text'>, default: 'fill' },
     title: { type: String },
+    style: { type: Object },
     ...StyleProps
   },
 
@@ -17,6 +18,9 @@ export const SaButton = designComponent({
   setup({ props, slots }) {
 
     const { styleComputed } = useStyle({ status: DEFAULT_STATUS })
+
+    console.log(props.style);
+    
 
     const classes = computed(() => classname([
       'sa-button',
@@ -30,7 +34,7 @@ export const SaButton = designComponent({
     return {
       render: () => {
         return (
-          <button class={classes.value}><span>{ slots.default.isExist() ? slots.default() : props.title }</span></button>
+          <button class={classes.value} style={ props.style }><span>{ slots.default.isExist() ? slots.default() : props.title }</span></button>
         )
       }
     }
