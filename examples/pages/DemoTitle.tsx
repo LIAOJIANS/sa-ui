@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { defineComponent } from "vue";
 import { SaTitle, SaIcon } from 'sa-ui'
 import './scss/DemoTitle.scss'

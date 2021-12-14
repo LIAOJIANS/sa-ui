@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { defineComponent, reactive, ref } from "vue";
 import { SaPopper, SaButton, SaDrawerCard, SaInput, SaTitle, SaIcon } from 'sa-ui'
 
@@ -50,6 +52,7 @@ export default defineComponent({
 
           <SaPopper
            placement="top-center"
+           tirgger="click"
             v-slots={{
               default: () => <SaButton status="primary"  style={{ marginLeft: '20px' }}>自定义popper</SaButton>,
               head: () => <> <div>

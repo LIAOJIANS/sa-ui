@@ -15,6 +15,7 @@ export const SaPopper = designComponent({
   name: 'sa-popper',
 
   props: {
+    disabled: { type: Boolean, default: false },
     modelValue: { type: Boolean },
 
     tirgger: { type: String, default: 'hover' },
@@ -71,10 +72,8 @@ export const SaPopper = designComponent({
       if(val === model.value) {
         return
       }
-      console.log(model.value === val);
       val ? methods.show(false) : methods.hide(false)
 
-      
     })
 
 
@@ -255,12 +254,17 @@ export const SaPopper = designComponent({
 
     const methods = {
       show: async (shouldEmit = true) => {
+        if(props.disabled) {
+          return
+        }
+
         if (!state.init) {
           state.init = true
 
           await delay()
           utils.initPopper()
         }
+        state.popper!.refresh()
 
         await delay(50)
 
@@ -271,9 +275,7 @@ export const SaPopper = designComponent({
           emit.onUpdateModelValue(model.value)
         }
 
-        state.onTransitionend = () => {
-          state.onTransitionend = null
-        }
+        state.onTransitionend = () => (state.onTransitionend = null)
       },
 
       hide: (shouldEmit = true) => {
@@ -284,8 +286,17 @@ export const SaPopper = designComponent({
           emit.onUpdateModelValue(model.value)
         }
 
-        // state.onTransitionend = () => state.onTransitionend = null
+        state.onTransitionend = () => (state.onTransitionend = null)
       },
+
+      toggle: async () => model.value ? await methods.hide : await methods.show(),
+
+      refresh: () => {
+        if(!state.referenceEl){ return }
+
+        state.popper!.refresh()
+      },
+
       refreshReference: async () => {
         await delay()
         const comment = getElement(refs.comment)
@@ -337,6 +348,13 @@ export const SaPopper = designComponent({
     
 
     return {
+      refer: {
+        refs,
+        event,
+        state,
+        ...methods
+      },
+
       render: () => {
         let childDoms = slots.default()
         if (!!childDoms) {

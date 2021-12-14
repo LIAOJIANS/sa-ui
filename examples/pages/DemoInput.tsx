@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { computed, defineComponent, onMounted, reactive, ref, watch } from "vue";
 import { SaInput, SaTitle } from '../../src/packages'
 

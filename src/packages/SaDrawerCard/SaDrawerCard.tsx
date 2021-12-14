@@ -1,6 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, unit, useStyles } from "src/hooks";
-import { computed, PropType, reactive, VNodeChild } from "vue";
+import { classname, unit, useModel, useStyles } from "src/hooks";
+import { computed, PropType, reactive, VNodeChild, watch } from "vue";
 import './drawerCard.scss'
 import SaIcon from '../SaIcon/SaIcon'
 
@@ -8,14 +8,14 @@ const SaDrawerCard = designComponent({
   name: 'sa-drawer-card',
 
   props: {
+    modelValue: { type: Boolean },
+
     mode: { type: String as PropType<'card' | 'none'>, default: 'none' },
     animation: { type: [Boolean, String] as PropType<'all' | 'content' | 'title'> },
 
     blockIcon: { type: String, default: 'el-icon-caret-bottom' },
     hiddenIcon: { type: String, default: 'el-icon-caret-top' },
-
-    showContent: { type: Boolean },
-    title: { type: String },
+    title: { type: [String, Array] },
     prefixContent: { type: [String, Function] },
     suffixContent: { type: [String, Function] },
 
@@ -26,36 +26,39 @@ const SaDrawerCard = designComponent({
   slots: ['default'],
 
   emits: {
-    onClickBclokTitle: (showContent: boolean) => true
+    onClickBclokTitle: (showContent: boolean) => true,
+    onUpdateModelValue: (val?: boolean) => true
   },
 
   setup({ props, event: { emit }, slots }) {
+
+    const model = useModel(() => props.modelValue, emit.onUpdateModelValue, { autoEmit: false, autoWatch: false })
 
     const classes = computed(() => classname([
       'sa-drawer-card',
       {
         'sa-drawer-card-animation-content': props.animation === 'content',
-        'sa-drawer-card-animation':  (typeof props.animation === 'boolean' && props.animation) || (typeof props.animation === 'string' && props.animation === 'all'),
+        'sa-drawer-card-animation': (typeof props.animation === 'boolean' && props.animation) || (typeof props.animation === 'string' && props.animation === 'all'),
       }
     ]))
 
     const styles = useStyles(styles => {
-
-      styles.height = unit(props.showContent ? props.contetHeight : '0')
-      
+      styles.height = unit(model.value ? props.contetHeight : '0')
       return styles
     })
 
     const publicProps = computed(() => ({
       style: styles.value
-    } as any ))
+    } as any))
 
     const handel = {
       onClickBclokTitle: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
 
-        emit.onClickBclokTitle(props.showContent)
+        model.value = !model.value
+        emit.onUpdateModelValue(model.value)
+        emit.onClickBclokTitle(model.value)
       }
     }
 
@@ -68,7 +71,7 @@ const SaDrawerCard = designComponent({
         }
 
         const animationType = typeof animation
-        
+
         if (
           animationType === 'boolean' ||
           (animationType === 'string' && ['all', 'title'].includes(animation as any as string))
@@ -77,8 +80,25 @@ const SaDrawerCard = designComponent({
         }
 
 
-        if(animation === 'content') {
+        if (animation === 'content') {
           return 'sa-drawer-card-block-control-no-animation'
+        }
+      },
+
+      titleFormat: () => {
+        if (!!props.title) {
+          if (
+            Array.isArray(props.title) &&
+            props.title.length > 1
+          ) {
+            const [trueLable, falseLable] = props.title
+
+            return model.value ? trueLable : falseLable
+          } else {
+            return props.title
+          }
+        } else {
+          return ''
         }
       }
     }
@@ -86,11 +106,12 @@ const SaDrawerCard = designComponent({
     return {
       render: () => {
         const {
-          showContent,
           hiddenIcon,
           blockIcon,
           prefixContent,
-          suffixContent
+          suffixContent,
+          title,
+          animation
         } = props
         return (
           <div class={classes.value}>
@@ -103,7 +124,7 @@ const SaDrawerCard = designComponent({
                       dom.props?.slot === 'title' && <div class="sa-drawer-card-title" style={{ minHeight: unit(props.titleHeight) as string }}>{dom}</div>
                     }
                     {
-                      dom.props?.slot === 'content' && <div class="sa-drawer-card-content" { ...publicProps.value }>{dom}</div>
+                      dom.props?.slot === 'content' && <div class="sa-drawer-card-content" {...publicProps.value}>{dom}</div>
                     }
                   </div>
                 )
@@ -123,8 +144,8 @@ const SaDrawerCard = designComponent({
               }
 
               <div class={'sa-drawer-card-block-title'}>
-                <span><SaIcon icon={showContent ? hiddenIcon : blockIcon} color='#08979c' size={15} /></span>
-                <span class={props.animation && 'opacity-none'}>{props.title}</span>
+                <span><SaIcon icon={model.value ? hiddenIcon : blockIcon} color='#08979c' size={15} /></span>
+                <span class={animation && 'opacity-none'}>{methods.titleFormat()}</span>
               </div>
 
               {

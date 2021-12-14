@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { defineComponent, ref } from "vue"
 import { SaIcon } from 'sa-ui'
 import './scss/DemoIcon.scss'

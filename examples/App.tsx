@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { defineComponent } from 'vue';
 import './app.scss'
 import AppMenu from './layout/appMenu';

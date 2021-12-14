@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { defineComponent, reactive } from "vue";
 import { SaTooltip, SaPopper } from 'sa-ui'
 

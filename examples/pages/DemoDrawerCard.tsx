@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { defineComponent, reactive } from "vue";
 import { SaDrawerCard, SaInput } from 'sa-ui'
 
