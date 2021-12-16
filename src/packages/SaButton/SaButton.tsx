@@ -3,15 +3,19 @@ import { classname, DEFAULT_STATUS, StyleProps, useRefs, useStyle } from "src/ho
 import { computed, PropType } from "vue";
 import './SaButton.scss'
 import { useClickAnimation } from "src/directives/ClickAnimation";
+import SaIcon from "../SaIcon/SaIcon";
 
 export const SaButton = designComponent({
   name: 'Sa-Button',
 
   props: {
     mode: { type: String as PropType<'plain | fill | text'>, default: 'fill' },
-    title: { type: String },
+    lable: { type: String },
+    tip: { type: String },
     style: { type: Object },
+    icon: { type: String },
     disabled: { type: Boolean, default: false },
+    type: {type: String, default: 'button'},
     ...StyleProps
   },
 
@@ -32,8 +36,15 @@ export const SaButton = designComponent({
       'sa-click-node',
       `sa-button-status-${styleComputed.value.status}`,
       `sa-button-size-${styleComputed.value.size}`,
-      `sa-button-shape-${styleComputed.value.status}`,
-      `sa-button-mode-${props.mode}`
+      `sa-button-shape-${styleComputed.value.shape}`,
+      `sa-button-mode-${props.mode}`,
+
+      {
+        'sa-button-icon': !!props.icon,
+        'sa-button-has-icon': !!props.icon,
+        'sa-button-icon-only': !!props.icon && !props.lable && !slots.default.isExist()
+        
+      }
     ]))
 
     useClickAnimation({ elGetter: () => refs.el, optionsGetter: () => ({ size: props.size, disabled: props.disabled }) })
@@ -44,10 +55,10 @@ export const SaButton = designComponent({
           onClick={(e: MouseEvent) => emit.onClick(e)}
             ref={ onRef.el }
             class={classes.value}
+            title={props.tip || ''}
             style={props.style}>
-            <span>
-              {slots.default.isExist() ? slots.default() : props.title}
-            </span>
+              {!!props.icon ? <SaIcon icon={props.icon}/> : null}
+              { slots.default.isExist() ? <span>{slots.default()}</span> : !!props.lable ? <span>{props.lable}</span> : null}
           </button>
         )
       }

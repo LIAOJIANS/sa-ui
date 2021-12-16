@@ -1,5 +1,5 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, unit, useModel, useStyles } from "src/hooks";
+import { classname, unit, useModel, useStyle, useStyles } from "src/hooks";
 import { computed, PropType, reactive, VNodeChild, watch } from "vue";
 import './drawerCard.scss'
 import SaIcon from '../SaIcon/SaIcon'
@@ -18,6 +18,7 @@ const SaDrawerCard = designComponent({
     title: { type: [String, Array] },
     prefixContent: { type: [String, Function] },
     suffixContent: { type: [String, Function] },
+    width: { type: [String, Number] },
 
     contetHeight: { type: [Number, String], default: 375 },
     titleHeight: { type: [Number, String], default: 66 }
@@ -42,13 +43,21 @@ const SaDrawerCard = designComponent({
       }
     ]))
 
-    const styles = useStyles(styles => {
-      styles.height = unit(model.value ? props.contetHeight : '0')
-      return styles
+    const contentstyles = useStyles(style => {
+      style.maxHeight = unit(model.value ? props.contetHeight : '0')
+      return style
     })
 
-    const publicProps = computed(() => ({
-      style: styles.value
+    const styles = useStyles(style => {
+      if(!!props.width) {
+        style.width = unit(props.width)
+      }
+
+      return style
+    })
+
+    const publicContentProps = computed(() => ({
+      style: contentstyles.value
     } as any))
 
     const handel = {
@@ -114,7 +123,7 @@ const SaDrawerCard = designComponent({
           animation
         } = props
         return (
-          <div class={classes.value}>
+          <div class={classes.value} style={{...styles.value}}>
 
             {
               slots.default.isExist() && (slots.default() as VNodeChild[]).map((dom: any) => {
@@ -124,7 +133,9 @@ const SaDrawerCard = designComponent({
                       dom.props?.slot === 'title' && <div class="sa-drawer-card-title" style={{ minHeight: unit(props.titleHeight) as string }}>{dom}</div>
                     }
                     {
-                      dom.props?.slot === 'content' && <div class="sa-drawer-card-content" {...publicProps.value}>{dom}</div>
+                      dom.props?.slot === 'content' && (<div class="sa-drawer-card-content" {...publicContentProps.value}>
+                        <div>{dom}</div>
+                      </div>)
                     }
                   </div>
                 )

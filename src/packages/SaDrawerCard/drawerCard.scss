@@ -16,9 +16,9 @@
   .sa-drawer-card-content {
     background-color: $gray_2;
     border-top: 1px solid #eaeefb;
-    overflow: hidden;
-    height: 0;
-    transition: height .2s;
+    overflow-y: auto;
+    max-height: 0;
+    transition: max-height .2s;
   }
 
   .sa-drawer-card-animation {

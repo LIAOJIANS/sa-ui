@@ -88,7 +88,7 @@ const SaIcon = designComponent({
           props: { 
             ...Icon.props,
             class: `${Icon.props.class || ''} ${classname(classes.value)}`,
-            style: { fontSize: `${ props.size || '12' }px`, color: `${props.color || '#000'}` }
+            style: { fontSize: `${ props.size || '12' }px`, color: `${props.color}` }
            } 
         }: <i class="sa-icon" />
       }

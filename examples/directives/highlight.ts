@@ -1,7 +1,7 @@
 
-import "highlight.js/scss/vs.scss"
-import highlight from 'highlight.js';
-import { App } from "vue";
+import "highlight.js/scss/base16/solarized-dark.scss" 
+import highlight from 'highlight.js'
+import { App } from "vue"
 
 export function dirHeighLight(app: App) {
   app.directive('highlight', {

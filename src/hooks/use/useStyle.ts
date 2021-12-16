@@ -33,7 +33,7 @@ const enum StyleDirection {
 }
 
 export const StyleProps = {
-  shape: { type: String as PropType<keyof typeof StyleStatus> },
+  shape: { type: String as PropType<keyof typeof StyleShape> },
   status: { type: String as PropType<keyof typeof StyleStatus> },
   size: { type: String as PropType<keyof typeof StyleSize> }
 }

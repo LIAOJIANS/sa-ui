@@ -2,7 +2,7 @@ import {
   designComponent
 } from "src/advancedComponentionsApi/designComponent";
 import { classname, TitleStyleProps, unit, useStyles } from "src/hooks";
-import { computed } from "vue";
+import { computed, CSSProperties, PropType } from "vue";
 import './title.scss'
 
 
@@ -14,7 +14,8 @@ export const SaTitle = designComponent({
     title: { type: String },
     bgc: { type: [Boolean, String] },
     height: { type: [Number, String] },
-    hidden: { type: Boolean }
+    hidden: { type: Boolean },
+    style: { type: Object as PropType<{ [k in keyof CSSProperties]: number | null | string | undefined }> }
   },
 
   slots: ['default'],
@@ -52,7 +53,7 @@ export const SaTitle = designComponent({
     })
 
     const publicProps = computed(() => ({
-      style: styles.value,
+      style: { ...styles.value, ...props.style },
       class: classes.value
     } as any))
 
