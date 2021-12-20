@@ -21,7 +21,7 @@ const SaDrawerCard = designComponent({
     width: { type: [String, Number] },
 
     contetHeight: { type: [Number, String], default: 375 },
-    titleHeight: { type: [Number, String], default: 66 }
+    titleHeight: { type: [Number, String]}
   },
 
   slots: ['default'],
@@ -51,6 +51,14 @@ const SaDrawerCard = designComponent({
     const styles = useStyles(style => {
       if(!!props.width) {
         style.width = unit(props.width)
+      }
+
+      return style
+    })
+
+    const titleStyles = useStyles(style => {
+      if(!!props.titleHeight) {
+        style.height = unit(props.titleHeight)
       }
 
       return style
@@ -130,7 +138,7 @@ const SaDrawerCard = designComponent({
                 return (
                   <div>
                     {
-                      dom.props?.slot === 'title' && <div class="sa-drawer-card-title" style={{ minHeight: unit(props.titleHeight) as string }}>{dom}</div>
+                      dom.props?.slot === 'title' && <div class="sa-drawer-card-title" style={{ ...titleStyles.value }}> {dom} </div>
                     }
                     {
                       dom.props?.slot === 'content' && (<div class="sa-drawer-card-content" {...publicContentProps.value}>

@@ -39,14 +39,23 @@ export default defineComponent({
             <SaButton mode="plain" onClick={handler.showPopper}>hover激活</SaButton>
           </SaPopper>
 
+          <SaPopper
+            message="我是我啊"
+            title="你是你啊"
+            placement="left-start"
+          >
+            <p style={{ width: '200px'}}>1111111</p>
+          </SaPopper>
+
+
 
           <SaPopper
             message="你是我啊"
             title="1111"
-            
-            placement="left-center"
+            tirgger="click"
+            placement="right-center"
           >
-            <SaButton status="primary" style={{ marginLeft: '20px' }}>click激活</SaButton>
+            <SaButton status="primary" >click激活</SaButton>
           </SaPopper>
 
 
@@ -54,7 +63,7 @@ export default defineComponent({
            placement="top-center"
            tirgger="click"
             v-slots={{
-              default: () => <SaButton status="primary"  style={{ marginLeft: '20px' }}>自定义popper</SaButton>,
+              default: () => <SaButton status="primary"  >自定义popper</SaButton>,
               head: () => <> <div>
                 <SaTitle
                   direction='left'

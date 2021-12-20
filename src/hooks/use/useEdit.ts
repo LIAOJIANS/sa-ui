@@ -13,6 +13,15 @@ interface IEditProvideData {
   onChange?: (...args: any[]) => void
 }
 
+export const EditProps = {
+  disabled: {type: Boolean, default: null},
+  readonly: {type: Boolean, default: null},
+  loading: {type: Boolean, default: null},
+  placeholder: {type: String, default: null},
+  customReadonly: {type: Boolean, default: null},
+}
+
+
 export const useEdit = useFunctionWrapper(
   'edit',
   (ctx, option: { adjust?: (dtaa: IEditProvideData) => void | IEditProvideData } = {}) => {

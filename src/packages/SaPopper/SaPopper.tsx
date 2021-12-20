@@ -158,10 +158,7 @@ export const SaPopper = designComponent({
     const utils = {
       init: (): boolean => {
         let { comment, reference } = state.el
-
-        console.log(reference);
         
-
         if (!!comment && !!reference) {
           state.referenceEl = reference
         } else if (!!props.reference) {

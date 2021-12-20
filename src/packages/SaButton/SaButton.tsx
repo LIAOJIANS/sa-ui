@@ -1,9 +1,10 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, DEFAULT_STATUS, StyleProps, useRefs, useStyle } from "src/hooks";
+import { classname, DEFAULT_STATUS, StyleProps, useEdit, useRefs, useStyle, EditProps, useStyles, unit } from "src/hooks";
 import { computed, PropType } from "vue";
 import './SaButton.scss'
 import { useClickAnimation } from "src/directives/ClickAnimation";
 import SaIcon from "../SaIcon/SaIcon";
+import SaLoading from "../SaLoading/SaLoading";
 
 export const SaButton = designComponent({
   name: 'Sa-Button',
@@ -14,9 +15,12 @@ export const SaButton = designComponent({
     tip: { type: String },
     style: { type: Object },
     icon: { type: String },
-    disabled: { type: Boolean, default: false },
-    type: {type: String, default: 'button'},
-    ...StyleProps
+    type: { type: String, default: 'button' },
+    block: {type: Boolean},
+    noPadding: { type: Boolean },
+
+    ...StyleProps,
+    ...EditProps,
   },
 
   emits: {
@@ -27,8 +31,15 @@ export const SaButton = designComponent({
   setup({ props, slots, event: { emit } }) {
 
     const { styleComputed } = useStyle({ status: DEFAULT_STATUS })
-    const { refs ,onRef } = useRefs({
+    const { editComputed } = useEdit()
+    const { refs, onRef } = useRefs({
       el: HTMLElement
+    })
+
+    const styles = useStyles(style => {
+      if(!props.noPadding) {
+        style.marginRight = unit(10)
+      }
     })
 
     const classes = computed(() => classname([
@@ -42,23 +53,27 @@ export const SaButton = designComponent({
       {
         'sa-button-icon': !!props.icon,
         'sa-button-has-icon': !!props.icon,
-        'sa-button-icon-only': !!props.icon && !props.lable && !slots.default.isExist()
-        
+        'sa-button-icon-only': !!props.icon && !props.lable && !slots.default.isExist(),
+        'sa-button-disabled': !!editComputed.value.disabled,
+        'sa-button-block': !!props.block,
       }
     ]))
 
-    useClickAnimation({ elGetter: () => refs.el, optionsGetter: () => ({ size: props.size, disabled: props.disabled }) })
+    useClickAnimation({ elGetter: () => refs.el, optionsGetter: () => ({ size: props.size, disabled: editComputed.value.editable }) })
     return {
       render: () => {
         return (
           <button
-          onClick={(e: MouseEvent) => emit.onClick(e)}
-            ref={ onRef.el }
+            onClick={(e: MouseEvent) => emit.onClick(e)}
+            ref={onRef.el}
             class={classes.value}
             title={props.tip || ''}
-            style={props.style}>
-              {!!props.icon ? <SaIcon icon={props.icon}/> : null}
-              { slots.default.isExist() ? <span>{slots.default()}</span> : !!props.lable ? <span>{props.lable}</span> : null}
+            disabled={editComputed.value.disabled!}
+            style={{ ...styles.value, ...props.style }}
+          >
+            {!!props.loading && <SaLoading />}
+            {!!props.icon && !editComputed.value.loading ? <SaIcon icon={props.icon} /> : null}
+            {slots.default.isExist() ? <span>{slots.default()}</span> : !!props.lable ? <span>{props.lable}</span> : null}
           </button>
         )
       }

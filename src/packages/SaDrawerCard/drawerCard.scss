@@ -1,7 +1,6 @@
 @include theme {
   .sa-drawer-card {
     width: 100%;
-    min-height: 120px;
 
     border: 1px solid $gray_4;
 
@@ -11,6 +10,7 @@
 
   .sa-drawer-card-title {
     padding: 10px 20px;
+    overflow-y: auto;
   }
 
   .sa-drawer-card-content {

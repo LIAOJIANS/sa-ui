@@ -65,8 +65,8 @@ export function getPos(el: HTMLElement): Pos {
   return {
     left: rect.left,
     top: rect.top,
-    width: offsetWidth || Math.ceil(rect.width),
-    height: offsetHeight || Math.ceil(rect.height)
+    width: offsetWidth != null ? offsetWidth : Math.ceil(rect.width),
+    height: offsetHeight != null ? offsetHeight : Math.ceil(rect.height),
   }
 }
 
@@ -95,7 +95,7 @@ export const isVertical = (direction: Direction): Boolean => { // 判断是否�
   return [Direction.top, Direction.bottom].indexOf(direction) > -1
 }
 
-const origin ={
+const origin = {
   'top-start': 'bottom left',
   'top-center': 'bottom center',
   'top-end': 'bottom right',
@@ -176,6 +176,7 @@ export const adjustPlacement = (
 
   } else {
     left = direction === Direction.left ? (referencePos.left - contentPos.width - padding) : (referencePos.left + (referencePos.width - padding))
+    // left += 10
     top = {
       [Align.start]: referencePos.top,
       [Align.center]: referencePos.top - (contentPos.height - referencePos.height) / 2,
@@ -183,6 +184,9 @@ export const adjustPlacement = (
     }[align]
 
     top -= padding
+
+    
+    console.log(left);
   }
 
   top = {

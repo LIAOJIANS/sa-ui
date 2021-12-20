@@ -5,7 +5,7 @@ import { StyleProps, TitleStyleProps, useStyle, useStyles, DEFAULT_STATUS } from
 import { useNumber } from './use/useNumber'
 import useModel from './use/useModel'
 import useRefs from './use/useRefs'
-import { useEdit } from './use/useEdit'
+import { EditProps, useEdit } from './use/useEdit'
 import { useRefList } from './use/useRefList'
 
 /* ------------------------------- UTILS ---------------------------- */
@@ -28,6 +28,7 @@ export {
   StyleProps,
   TitleStyleProps,
   DEFAULT_STATUS,
+  EditProps,
 
   unit,
   classname,

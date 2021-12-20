@@ -1,0 +1,277 @@
+$size: 1em;
+
+.sa-content-loading {
+  display: inline-block;
+  vertical-align: -0.15em;
+
+  /*---------------------------------------svg-------------------------------------------*/
+  &.sa-loading-ice {
+    stroke: currentColor;
+    stroke-width: 4;
+
+    & > svg {
+      width: $size;
+      height: $size;
+      display: block;
+    }
+
+    svg:not(.sa-loading-ice-inactive) {
+      @keyframes ice-svg-item {
+        0% {
+          opacity: 1;
+        }
+        @for $i from 2 through 5 {
+          #{($i - 1) / 5 * 100}% {
+            opacity: 1 - ($i - 1) / 5;
+          }
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      use {
+        opacity: 0;
+        @for $i from 1 through 6 {
+          &:nth-child(#{$i}) {
+            animation: ice-svg-item 1s linear infinite #{ ($i - 1) / 6}s;
+          }
+        }
+      }
+    }
+
+  }
+
+  /*---------------------------------------alpha-------------------------------------------*/
+  &.sa-loading-alpha {
+    height: $size;
+    width: $size;
+
+    .sa-loading-tag {
+      $centerRadius: (0.5*$size)/1.2;
+      $itemWidth: (0.35*$size)/1.2;
+      $itemHeight: (0.1*$size)/1.2;
+      $width: $centerRadius + $itemWidth * 2;
+      $height: $width;
+
+      width: $width;
+      height: $height;
+      position: relative;
+      display: block;
+
+      .sa-loading-inner {
+        background-color: currentColor;
+        display: inline-block;
+        width: $itemWidth;
+        height: $itemHeight;
+        margin-top: $itemHeight / 2 * -1;
+        margin-left: $centerRadius / 2;
+        top: 50%;
+        left: 50%;
+        position: absolute;
+        transform-origin: ($centerRadius / 2 * -1) ($itemHeight / 2);
+        border-radius: 1px;
+        @for $i from 1 through 12 {
+          &:nth-child(#{$i}) {
+            transform: rotate(($i - 1) * 30deg);
+            animation: sa-loading-tag 1s linear infinite #{-1 + $i / 12}s;
+          }
+        }
+        @keyframes sa-loading-tag {
+          0% {
+            opacity: 1;
+          }
+          @for $i from 1 through 11 {
+            #{$i / 12 * 100}% {
+              opacity: 1 - $i / 12;
+            }
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  /*---------------------------------------beta-------------------------------------------*/
+  $tagSize: $size/5;
+  $tagNum: 10;
+
+  &.sa-loading-beta {
+    height: $size;
+    width: $size;
+    position: relative;
+
+    .sa-loading-tag {
+      position: absolute;
+      height: 50%;
+      width: $tagSize;
+      left: ($size - $tagSize)/2;
+      transform-origin: bottom;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .sa-loading-inner {
+        display: inline-block;
+        height: $tagSize;
+        width: $tagSize;
+        border-radius: 100px;
+        background-color: currentColor;
+      }
+
+      @for $i from 1 through $tagNum {
+        &.sa-loading-tag-#{$i} {
+          transform: rotate(($i - 1)*(360 / $tagNum)*1deg);
+          animation: sa-loading-beta 1s linear infinite #{-1 + $i / $tagNum}s;
+        }
+      }
+
+      @keyframes sa-loading-beta {
+        0% {
+          opacity: 1;
+        }
+        @for $i from 1 through 11 {
+          #{$i / $tagNum * 100}% {
+            opacity: 1 - $i / $tagNum;
+          }
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @for $i from 1 through $tagNum {
+        .sa-loading-inner-#{$i} {
+          animation: sa-loading-beta-inner 1s linear infinite #{-1 + $i / $tagNum}s;
+        }
+      }
+
+      @keyframes sa-loading-beta-inner {
+        0% {
+          transform: scale(1);
+        }
+        @for $i from 1 through 11 {
+          #{$i / $tagNum * 100}% {
+            transform: scale((1 - $i / $tagNum)*0.75 +0.25);
+          }
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    }
+
+  }
+
+  /*---------------------------------------gamma-------------------------------------------*/
+  $tagSize: $size/5;
+  $tagNum: 5;
+
+  &.sa-loading-gamma {
+    height: $size;
+    width: $size;
+    position: relative;
+    animation: sa-loading-gamma 5s linear infinite;
+
+    @keyframes sa-loading-gamma {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .sa-loading-tag {
+      position: absolute;
+      height: 50%;
+      width: $tagSize;
+      left: ($size - $tagSize)/2;
+      transform-origin: bottom;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .sa-loading-inner {
+        background-color: currentColor;
+        display: inline-block;
+        height: $tagSize;
+        width: $tagSize;
+        border-radius: $tagSize;
+      }
+
+      @for $i from 1 through $tagNum {
+        &.sa-loading-tag-#{$i} {
+          animation: sa-loading-gamma-tag 2s cubic-bezier(.31, .64, .47, .81) infinite #{$i*0.1}s;
+        }
+      }
+
+      @keyframes sa-loading-gamma-tag {
+        0% {
+          transform: rotate(0deg);
+        }
+        85% {
+          transform: rotate(360deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @for $i from 1 through $tagNum {
+        .sa-loading-inner-#{$i} {
+          transform: scale((1 - $i / $tagNum)*0.5+0.5);
+        }
+      }
+    }
+  }
+
+  /*---------------------------------------delta-------------------------------------------*/
+
+  @keyframes loading-dash {
+    0% {
+      stroke-dasharray: 10, 300;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 200, 300;
+      stroke-dashoffset: -100;
+    }
+    100% {
+      stroke-dasharray: 200, 300;
+      stroke-dashoffset: -300;
+    }
+  }
+
+  @keyframes loading-rotate {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  &.sa-loading-delta {
+    svg {
+      height: 1em;
+      width: 1em;
+      animation: loading-rotate 2s linear infinite;
+
+      circle{
+        animation: loading-dash 1.5s ease-in-out infinite;
+        stroke: currentColor;
+        fill: transparent;
+        stroke-width: 5;
+
+        stroke-dasharray: 200, 300;
+        stroke-dashoffset: -100;
+
+        stroke-linecap: round;
+
+      }
+    }
+  }
+}

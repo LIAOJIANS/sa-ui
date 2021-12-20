@@ -25,13 +25,13 @@ export class Popper {
     return this.config.offset! + this.arrowSize
   }
 
+
   constructor(private config: PopperConfig) {
-    console.log(config);
-    
-    config.padding == null && (config.padding = 10)
-    config.offset == null && (config.offset = 0)
-    config.placement == null && (config.placement = 'bottom-start')
-    config.arrowSize == null && (config.arrowSize = 12)
+
+    (config.padding == null && (config.padding = 10));
+    (config.offset == null && (config.offset = 0));
+    (config.placement == null && (config.placement = 'bottom-start'));
+    (config.arrowSize == null && (config.arrowSize = 12));
 
     this.content = config.popper.querySelector('.sa-popper-content') as HTMLElement
     this.arrowSize = !config.arrowSize ? 0 : Math.sqrt(Math.pow(config.arrowSize, 2) / 2)
@@ -68,6 +68,7 @@ export class Popper {
     }
 
     this.refresh()
+    this.bindEvent()
   }
 
   public refresh(forceTransform = false) {
@@ -89,7 +90,7 @@ export class Popper {
     } = this.config as PopperConfig & { padding: number }
 
     const contentPos = getPos(content)
-    
+
     const referencePos = getPos(reference)
 
     const {
@@ -118,7 +119,7 @@ export class Popper {
     switch (direction) {
       case Direction.top:
         if (pos.top < minTop) {
-          const { pos: bottomPos } = adjustPlacement(`bottom-${align}` as Direction, referencePos, contentPos, offset, padding as number)
+          const { pos: bottomPos } = adjustPlacement(`bottom-${align}` as Direction, referencePos, contentPos, offset, padding)
           if (bottomPos.top > maxTop) {
             top = pos.top
           } else {
@@ -132,7 +133,7 @@ export class Popper {
         break
       case Direction.bottom:
         if (pos.top > maxTop) {
-          const { pos: topPos } = adjustPlacement(`top-${align}` as Direction, referencePos, contentPos, offset, padding as number)
+          const { pos: topPos } = adjustPlacement(`top-${align}` as Direction, referencePos, contentPos, offset, padding)
           if (topPos.top < minTop) {
             top = pos.top
           } else {
@@ -146,7 +147,7 @@ export class Popper {
         break
       case Direction.left:
         if (pos.left < minLeft) {
-          const { pos: rightPos } = adjustPlacement(`right-${align}` as Direction, referencePos, contentPos, offset, padding as number)
+          const { pos: rightPos } = adjustPlacement(`right-${align}` as Direction, referencePos, contentPos, offset, padding)
           if (rightPos.left > maxLeft) {
             left = pos.left
           } else {
@@ -160,7 +161,7 @@ export class Popper {
         break
       case Direction.right:
         if (pos.left > maxLeft) {
-          const { pos: leftPos } = adjustPlacement(`left-${align}` as Direction, referencePos, contentPos, offset, padding as number)
+          const { pos: leftPos } = adjustPlacement(`left-${align}` as Direction, referencePos, contentPos, offset, padding)
           if (leftPos.left < minLeft) {
             left = pos.left
           } else {
@@ -174,31 +175,28 @@ export class Popper {
         break
     }
 
+
     (() => {
       const paddingProp = isVertical(direction) ? (direction === Direction.top ? 'Bottom' : 'Top') : (direction === Direction.left ? 'Right' : 'Left')
 
-        ;['Top', 'Bottom', 'Left', 'Right'].forEach(item => {
-          if (item === paddingProp) {
-            this.config.popper.style[`padding${item}` as any] = `${offset}px`
-          } else {
-            this.config.popper.style[`padding${item}` as any] = `${padding}px`
-          }
-        })
+        ;['Top', 'Bottom', 'Left', 'Right'].forEach(item => (this.config.popper.style[`padding${item}` as any] = `${item === paddingProp ? offset : padding}px`))
 
+      console.log(padding);
       switch (paddingProp) {
+
         case 'Top':
-          top += padding - offset
+          top += (padding - offset)
           break
         case 'Bottom':
           break
         case 'Left':
-          left += padding + offset
+          left += (padding - offset)
         case 'Right':
           break
       }
     })()
 
-    setPos(this.config.popper, { top, left }, forceTransform ? true : !!gpuAcceleration)
+    setPos(this.config.popper, { left, top }, forceTransform ? true : !!gpuAcceleration)
 
     this.content.style.transformOrigin = getTransformOriginByPlacement(`${direction}-${align}` as PlacementType)
 
@@ -232,8 +230,8 @@ export class Popper {
 
     switch (direction) {
       case Direction.top:
-        top = contentPos.height = arrowSize / 2
-        rotate = 255
+        top = contentPos.height - arrowSize / 2
+        rotate = 225
         break
 
       case Direction.bottom:
@@ -256,17 +254,29 @@ export class Popper {
     const paddingSize = arrowSize * 2
 
     if (isVertical(direction)) {
-      left = {
-        [Align.start]: paddingSize,
-        [Align.center]: (contentPos.width - arrowSize) / 2,
-        [Align.end]: contentPos.width - arrowSize - paddingSize
-      }[align]
+      switch (align) {
+        case Align.start:
+          left = paddingSize
+          break
+        case Align.center:
+          left = (contentPos.width - arrowSize) / 2
+          break
+        case Align.end:
+          left = (contentPos.width - arrowSize) - paddingSize
+          break
+      }
     } else {
-      top = {
-        [Align.start]: paddingSize,
-        [Align.center]: (contentPos.height - arrowSize) / 2,
-        [Align.end]: contentPos.height - arrowSize - paddingSize
-      }[align]
+      switch (align) {
+        case Align.start:
+          top = paddingSize
+          break
+        case Align.center:
+          top = (contentPos.height - arrowSize) / 2
+          break
+        case Align.end:
+          top = (contentPos.height - arrowSize) - paddingSize
+          break
+      }
     }
 
     const gpuAcceleration = forceTransform ? true : !!this.config.gpuAcceleration
@@ -317,7 +327,7 @@ export class Popper {
     let scrollEventListener = this.scrollEventListener
 
     while (scrollEventListener.length > 0) {
-      let {el, listener} = scrollEventListener.pop()!
+      let { el, listener } = scrollEventListener.pop()!
       el.removeEventListener('scroll', listener as any)
     }
 
