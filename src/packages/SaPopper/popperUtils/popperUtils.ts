@@ -75,7 +75,7 @@ export const setPos = (
   { left, top }: { left: number, top: number },
   gpuAcceleration: boolean
 ) => {
-  if(gpuAcceleration) {
+  if (gpuAcceleration) {
     el.style.transform = `translate3d(${left}px,${top}px,0)`
     el.style.transitionDuration = '0ms';
     (el.style as any).willChange = 'transform'
@@ -155,7 +155,7 @@ export const adjustPlacement = (
   direction: Direction,
   align: Align,
 } => {
-  
+
   let [direction, align] = placement.split('-') as [Direction, Align]
   align = align || Align.center
 
@@ -185,17 +185,24 @@ export const adjustPlacement = (
 
     top -= padding
 
-    
+
     console.log(left);
   }
 
-  top = {
-    [Direction.top]: top - offset,
-    [Direction.bottom]: top + offset,
-    [Direction.left]: top - offset,
-    [Direction.right]: top + offset
-  }[direction]
-
+  switch (direction) {
+    case Direction.top:
+      top -= offset;
+      break
+    case Direction.bottom:
+      top += offset
+      break
+    case Direction.left:
+      left -= offset
+      break
+    case Direction.right:
+      left += offset
+      break
+  }
 
   return {
     pos: {
@@ -211,17 +218,17 @@ export const debounce = <T extends Function>(func: T, wait: number, immediate?: 
   let timeout: any
 
   return function (...args: any[]) {
+    // @ts-ignore
+    const context = this
+    clearTimeout(timeout)
+    if (immediate) {
+      let callNow = !timeout
       // @ts-ignore
-      const context = this
-      clearTimeout(timeout)
-      if (immediate) {
-          let callNow = !timeout
-          // @ts-ignore
-          if (callNow) func.apply(this, args)
-      }
-      timeout = setTimeout(() => {
-          func.apply(context, args)
-          timeout = null
-      }, wait)
+      if (callNow) func.apply(this, args)
+    }
+    timeout = setTimeout(() => {
+      func.apply(context, args)
+      timeout = null
+    }, wait)
   } as any
 }

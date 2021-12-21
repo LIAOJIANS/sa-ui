@@ -8,7 +8,8 @@ export default defineComponent({
 
   props: {
     codeText: { type: String },
-    label: { type: String }
+    label: { type: String },
+    describe: { type: String }
   },
 
   slots: ['title', 'content'],
@@ -32,8 +33,8 @@ export default defineComponent({
     }
     return () => <>
 
-      <SaTitle mode={{ type: 'vline', direction: 'left' }} style={{ margin: '30px 0' }}>{ props.label }</SaTitle>
-      <p style={{ margin: '10px 0' }}></p>
+      <SaTitle mode={{ type: 'vline', direction: 'left' }} style={{ margin: !!props.describe ? '30px 0 10px'  : '30px 0' }}>{ props.label }</SaTitle>
+      { !!props.describe && <p style={{ margin: '20px 0', fontSize: '14px', color: '#999' }}>{props.describe}</p> }
 
       <SaDrawerCard
         animation

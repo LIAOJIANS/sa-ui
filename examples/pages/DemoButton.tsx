@@ -78,6 +78,7 @@ export default defineComponent({
       
       <DemoContainer
         label="基础用法"
+        describe="按钮的一些基本用法"
         codeText={state.initBtnText}
       >
         <div slot="title">
@@ -112,6 +113,7 @@ export default defineComponent({
 
       <DemoContainer
         label="文字按钮"
+        describe="各种类型的文字按钮"
         codeText={state.textText}
       >
         <div slot="title">
@@ -125,6 +127,7 @@ export default defineComponent({
 
       <DemoContainer
         label="尺寸"
+        describe="Button 组件提供除了默认值以外的三种尺寸，可以在不同场景下选择合适的按钮尺寸。"
         codeText={state.sizeBtnText}
       >
         <div slot="title">
@@ -136,6 +139,7 @@ export default defineComponent({
 
       <DemoContainer
         label="禁用按钮"
+        describe="按钮的不可用状态"
         codeText={state.disabledText}
       >
         <div slot="title">
@@ -147,6 +151,7 @@ export default defineComponent({
 
       <DemoContainer
         label="loading 按钮"
+        describe="按钮的loading状态"
         codeText={state.loadingText}
       >
         <div slot="title">

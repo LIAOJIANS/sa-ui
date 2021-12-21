@@ -101,7 +101,7 @@ export class Popper {
     } = getBoundaryPos(
       boundary,
       contentPos,
-      padding as number
+      padding
     )
 
     let {
@@ -113,7 +113,7 @@ export class Popper {
       referencePos,
       contentPos,
       offset,
-      padding as number
+      padding
     )
 
     switch (direction) {
@@ -179,9 +179,8 @@ export class Popper {
     (() => {
       const paddingProp = isVertical(direction) ? (direction === Direction.top ? 'Bottom' : 'Top') : (direction === Direction.left ? 'Right' : 'Left')
 
-        ;['Top', 'Bottom', 'Left', 'Right'].forEach(item => (this.config.popper.style[`padding${item}` as any] = `${item === paddingProp ? offset : padding}px`))
+      ;['Top', 'Bottom', 'Left', 'Right'].forEach(item => (this.config.popper.style[`padding${item}` as any] = `${item === paddingProp ? offset : padding}px`))
 
-      console.log(padding);
       switch (paddingProp) {
 
         case 'Top':
@@ -303,7 +302,6 @@ export class Popper {
       if (!this.config.shouldUpdate()) {
         return
       }
-
 
     }
 

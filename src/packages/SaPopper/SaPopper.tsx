@@ -54,6 +54,7 @@ export const SaPopper = designComponent({
     onLeavePopper: (e: MouseEvent) => true,
     onReferenceFocus: (e: FocusEvent) => true,
     onReferenceBlur: (e: FocusEvent) => true,
+    onDestroy: () => true
   },
 
   setup({ props, event, slots, attrs }) {
@@ -75,7 +76,6 @@ export const SaPopper = designComponent({
       val ? methods.show(false) : methods.hide(false)
 
     })
-
 
     const state = reactive({
       el: {
@@ -223,13 +223,20 @@ export const SaPopper = designComponent({
       },
 
       unbindEvents() {
-
+        if (!!state.referenceEl) {
+            state.referenceEl.removeEventListener('click', handler.onClickReference)
+        }
       }
     }
 
     const handler = {
       onClickReference: (e: MouseEvent) => {
         emit.onClickReference(e)
+      },
+
+      onMouseupPopper: () => {
+        clickBodyListeners.disable()
+        setTimeout(() => clickBodyListeners.enable())
       },
 
       onClickBody: (e: MouseEvent) => {
@@ -382,6 +389,9 @@ export const SaPopper = designComponent({
                   <div
                     class='sa-popper-content'
                     ref={onRef.content}
+                    onClick={emit.onClickPopper}
+                    onMousedown={emit.onMousedownPopper}
+                    onMouseup={handler.onMouseupPopper}
                     {
                     ...(props.tirgger === 'hover' ? {
                       onMouseenter: e => emit.onEnterPopper(e),

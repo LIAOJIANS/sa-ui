@@ -1,7 +1,8 @@
 // @ts-nocheck
 
 import { defineComponent, reactive, ref } from "vue";
-import { SaPopper, SaButton, SaDrawerCard, SaInput, SaTitle, SaIcon } from 'sa-ui'
+import { SaPopper, SaButton, SaInput, SaTitle, SaIcon } from 'sa-ui'
+import DemoContainer from '../components/container'
 
 
 export default defineComponent({
@@ -11,6 +12,39 @@ export default defineComponent({
 
 
     const state = reactive({
+      initText: `
+      <SaPopper
+        message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+        title="标题"
+      >
+        <SaButton onClick={handler.showPopper}>hover激活</SaButton>
+      </SaPopper>
+
+      <SaPopper
+        message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+        title="标题"
+        tirgger="click"
+      >
+        <SaButton status="primary" >click激活</SaButton>
+      </SaPopper>
+
+      <SaPopper
+        message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+        title="标题"
+        tirgger="focus"
+      >
+        <SaButton status="primary" >focus激活</SaButton>
+      </SaPopper>
+
+      <SaPopper
+        message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+        title="标题"
+        tirgger="manual"
+      >
+        <SaButton status="primary" >手动激活</SaButton>
+      </SaPopper>
+      `,
+
       showContent: false,
       inputValue: ''
     })
@@ -22,45 +56,47 @@ export default defineComponent({
     }
 
     return () => <div>
+      <h1 style={{ color: '#333' }}>Popper 按钮</h1>
 
-      <SaDrawerCard
-        animation
-        title={`${state.showContent ? '收起代码' : '展开代码'}`}
-        showContent={state.showContent}
-        onClickBclokTitle={(showContent: boolean) => state.showContent = !showContent}
+      <DemoContainer
+        label="基本用法"
+        describe="Popper 的属性与 Tooltip 很类似，它们都是基于Vue-popper开发的，因此对于重复属性，请参考 Tooltip 的文档，在此文档中不做详尽解释。"
+        codeText={ state.initText }
       >
-
-        <div slot="title">
+      <div slot="title">
           <SaPopper
-            v-model={popperState.value}
-            message="我是我啊"
-            title="你是你啊"
+            message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+            title="标题"
           >
-            <SaButton mode="plain" onClick={handler.showPopper}>hover激活</SaButton>
+            <SaButton onClick={handler.showPopper}>hover激活</SaButton>
           </SaPopper>
 
           <SaPopper
-            message="我是我啊"
-            title="你是你啊"
-            placement="left-start"
-          >
-            <p style={{ width: '200px'}}>1111111</p>
-          </SaPopper>
-
-
-
-          <SaPopper
-            message="你是我啊"
-            title="1111"
+            message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+            title="标题"
             tirgger="click"
-            placement="right-center"
           >
             <SaButton status="primary" >click激活</SaButton>
           </SaPopper>
 
+          <SaPopper
+            message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+            title="标题"
+            tirgger="focus"
+          >
+            <SaButton status="primary" >focus激活</SaButton>
+          </SaPopper>
 
           <SaPopper
-           placement="top-center"
+            message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+            title="标题"
+            tirgger="manual"
+          >
+            <SaButton status="primary" >手动激活</SaButton>
+          </SaPopper>
+
+
+          {/* <SaPopper
            tirgger="click"
             v-slots={{
               default: () => <SaButton status="primary"  >自定义popper</SaButton>,
@@ -86,13 +122,10 @@ export default defineComponent({
             <div>
               1
             </div>
-          </SaPopper>
+          </SaPopper> */}
 
         </div>
-        <div slot="content" style={{ padding: '20px' }}>
-          代码
-        </div>
-      </SaDrawerCard>
+      </DemoContainer>
     </div>
   }
 })
