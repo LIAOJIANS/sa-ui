@@ -68,6 +68,7 @@ export function getBaseTrigger(
     reference: HTMLElement;
   } & triggerFunc,
 ) {
+  
   switch (triggerName) {
     case ProperTriggerType.hover:
       return getHoverTrigger({
@@ -326,6 +327,7 @@ function getFocusTrigger({
 }
 
 function getManualTrigger() {
+  
   return new PopperTrigger(
     ProperTriggerType.manual,
     () => undefined,

@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { defineComponent, ref } from "vue"
-import { SaIcon } from 'sa-ui'
+import { SaIcon, SaTitle } from 'sa-ui'
 import './scss/DemoIcon.scss'
 
 export default defineComponent({
@@ -26,16 +26,22 @@ export default defineComponent({
     }
 
     return () => (
-      <div class="demo-icon">
-        <input ref={inputRef} style={ { position: 'absolute', top: '-999em' } } />
-        {
-          icons.value.map(c => (
-            <div class="icon-item" onClick={ _ => copyIconName(c) }>
-              <SaIcon icon={c} size={22} color="#08979c" />
-              <p>{c}</p>
-            </div>
-          ))
-        }
+      <div>
+        <div style={{ marginBottom: '20px' }}>
+          <input ref={inputRef} style={{ position: 'absolute', top: '-999em' }} />
+          <h1 style={{ color: '#333' }}>Icon 图标</h1>
+          <span style={{ color: '#666', fontSize: '14px' }}>常用的操作按钮，点击图表即复制到剪贴板</span>
+        </div>
+        <div class="demo-icon">
+          {
+            icons.value.map(c => (
+              <div class="icon-item" onClick={_ => copyIconName(c)}>
+                <SaIcon icon={c} size={42} color="#08979c" />
+                <p>{c}</p>
+              </div>
+            ))
+          }
+        </div>
       </div>
     )
   }

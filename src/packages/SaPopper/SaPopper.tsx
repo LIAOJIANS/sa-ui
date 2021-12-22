@@ -2,7 +2,7 @@ import { designComponent } from 'src/advancedComponentionsApi/designComponent'
 import { SimpleFunction } from 'src/advancedComponentionsApi/emit'
 import { classname, delay, getElement, nextIndex, useModel, useNumber, useRefs, useStyles } from 'src/hooks'
 import { clickBodyListeners } from 'src/hooks/utils/clickBodyListeners'
-import { markRaw,createCommentVNode, onBeforeUnmount, watch, Teleport, PropType, computed, reactive, onMounted  } from 'vue'
+import { markRaw, createCommentVNode, onBeforeUnmount, watch, Teleport, PropType, computed, reactive, onMounted } from 'vue'
 import './popper.scss'
 import { Popper } from './popperUtils/popper'
 import { debounce } from './popperUtils/popperUtils'
@@ -15,9 +15,9 @@ export const SaPopper = designComponent({
   name: 'sa-popper',
 
   props: {
-    disabled: { type: Boolean, default: false },
     modelValue: { type: Boolean },
 
+    disabled: { type: Boolean, default: false },
     tirgger: { type: String, default: 'hover' },
     transition: { type: String, default: 'sa-transition-fade' },
     message: { type: String },
@@ -69,8 +69,11 @@ export const SaPopper = designComponent({
       content: HTMLDivElement
     })
 
+    console.log(props.modelValue);
+
+    
     watch(() => props.modelValue, (val) => {
-      if(val === model.value) {
+      if (val === model.value) {
         return
       }
       val ? methods.show(false) : methods.hide(false)
@@ -158,7 +161,7 @@ export const SaPopper = designComponent({
     const utils = {
       init: (): boolean => {
         let { comment, reference } = state.el
-        
+
         if (!!comment && !!reference) {
           state.referenceEl = reference
         } else if (!!props.reference) {
@@ -224,7 +227,7 @@ export const SaPopper = designComponent({
 
       unbindEvents() {
         if (!!state.referenceEl) {
-            state.referenceEl.removeEventListener('click', handler.onClickReference)
+          state.referenceEl.removeEventListener('click', handler.onClickReference)
         }
       }
     }
@@ -258,7 +261,7 @@ export const SaPopper = designComponent({
 
     const methods = {
       show: async (shouldEmit = true) => {
-        if(props.disabled) {
+        if (props.disabled) {
           return
         }
 
@@ -286,17 +289,17 @@ export const SaPopper = designComponent({
         model.value = false
         emit.onHide()
 
-        if(shouldEmit) {
+        if (shouldEmit) {
           emit.onUpdateModelValue(model.value)
         }
 
         state.onTransitionend = () => (state.onTransitionend = null)
       },
 
-      toggle: async () => model.value ? await methods.hide : await methods.show(),
+      toggle: async () => model.value ? await methods.hide() : await methods.show(),
 
       refresh: () => {
-        if(!state.referenceEl){ return }
+        if (!state.referenceEl) { return }
 
         state.popper!.refresh()
       },
@@ -307,17 +310,17 @@ export const SaPopper = designComponent({
         const reference = !!comment ? comment!.nextElementSibling as HTMLElement : null
         console.log(reference, state.el.reference)
         if (!!reference && reference !== state.el.reference) {
-            await utils.destroy()
-            state.el.reference = markRaw(reference)
-            await utils.init()
+          await utils.destroy()
+          state.el.reference = markRaw(reference)
+          await utils.init()
         }
-    }
+      }
     }
     onMounted(async () => {
       const popper = getElement(refs.popper)
       const comment = getElement(refs.comment)
       const reference = !!comment ? comment!.nextElementSibling as HTMLElement : null
-      
+
       state.el = markRaw({ popper, comment, reference })
 
       await utils.init()
@@ -333,23 +336,23 @@ export const SaPopper = designComponent({
       await utils.destroy()
       await utils.init()
       if (!state.referenceEl) {
-          if (!!state.popper) {
-              state.popper.destroy()
-              state.popper = null
-          }
-          return
+        if (!!state.popper) {
+          state.popper.destroy()
+          state.popper = null
+        }
+        return
       }
       if (!!state.popper) {
-          await utils.initPopper()
+        await utils.initPopper()
       }
-  }, 50)
-    
+    }, 50)
+
     watch(() => props.arrow, popperConfigChangeHandler)
     refreshPopperReference.provide(methods.refreshReference)
 
 
     const Comment = createCommentVNode('') as any
-    
+
 
     return {
       refer: {

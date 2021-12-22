@@ -1,6 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { classname, DEFAULT_STATUS, StyleProps, useEdit, useRefs, useStyle, EditProps, useStyles, unit } from "src/hooks";
-import { computed, PropType } from "vue";
+import { computed, CSSProperties, PropType } from "vue";
 import './SaButton.scss'
 import { useClickAnimation } from "src/directives/ClickAnimation";
 import SaIcon from "../SaIcon/SaIcon";
@@ -13,7 +13,7 @@ export const SaButton = designComponent({
     mode: { type: String as PropType<'plain | fill | text'>, default: 'fill' },
     lable: { type: String },
     tip: { type: String },
-    style: { type: Object },
+    style: { type: Object as PropType<{ [k in keyof CSSProperties]: number | null | string | undefined }> },
     icon: { type: String },
     type: { type: String, default: 'button' },
     block: {type: Boolean},
@@ -69,7 +69,7 @@ export const SaButton = designComponent({
             class={classes.value}
             title={props.tip || ''}
             disabled={editComputed.value.disabled!}
-            style={{ ...styles.value, ...props.style }}
+            style={{ ...styles.value, ...props.style as any }}
           >
             {!!props.loading && <SaLoading />}
             {!!props.icon && !editComputed.value.loading ? <SaIcon icon={props.icon} /> : null}

@@ -43,9 +43,9 @@ export default defineComponent({
       `,
 
       sizeBtnText: `
-      <SaButton> 大 </SaButton>
-      <SaButton> 中 </SaButton>
-      <SaButton> 小 </SaButton>
+      <SaButton size="large"> 大 </SaButton>
+      <SaButton size="normal"> 中 </SaButton>
+      <SaButton size="mini"> 小 </SaButton>
       `,
 
       disabledText: `
