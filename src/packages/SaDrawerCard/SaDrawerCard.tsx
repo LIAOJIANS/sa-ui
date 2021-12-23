@@ -130,6 +130,7 @@ const SaDrawerCard = designComponent({
           title,
           animation
         } = props
+        
         return (
           <div class={classes.value} style={{...styles.value}}>
 

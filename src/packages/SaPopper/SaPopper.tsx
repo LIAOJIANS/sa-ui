@@ -32,7 +32,8 @@ export const SaPopper = designComponent({
 
     offset: { type: [Number, String] },
     arrow: { type: Boolean, default: true },
-    boundary: { default: document.body as any }
+    boundary: { default: document.body as any },
+    popperClass: {type: [String, Array, Object]}
   },
 
   slots: ['default', 'head', 'popper'],
@@ -58,7 +59,8 @@ export const SaPopper = designComponent({
   },
 
   setup({ props, event, slots, attrs }) {
-
+    console.log(props.placement);
+    
     const { emit, on, off } = event
 
     const model = useModel(() => props.modelValue, emit.onUpdateModelValue, { autoEmit: false, autoWatch: false })
@@ -68,9 +70,6 @@ export const SaPopper = designComponent({
       popper: HTMLDivElement,
       content: HTMLDivElement
     })
-
-    console.log(props.modelValue);
-
     
     watch(() => props.modelValue, (val) => {
       if (val === model.value) {
@@ -150,6 +149,7 @@ export const SaPopper = designComponent({
       'sa-popper',
       'sa-popper-box',
       props.transition,
+      props.popperClass,
       {
         'sa-popper-show': model.value,
         'sa-popper-open': model.value,

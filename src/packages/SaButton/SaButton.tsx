@@ -1,7 +1,7 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { classname, DEFAULT_STATUS, StyleProps, useEdit, useRefs, useStyle, EditProps, useStyles, unit } from "src/hooks";
 import { computed, CSSProperties, PropType } from "vue";
-import './SaButton.scss'
+import './button.scss'
 import { useClickAnimation } from "src/directives/ClickAnimation";
 import SaIcon from "../SaIcon/SaIcon";
 import SaLoading from "../SaLoading/SaLoading";

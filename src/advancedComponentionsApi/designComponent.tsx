@@ -69,6 +69,7 @@ export function designComponent<_,
   emits?: EmitOptions,
   scopeSlots?: ScopeSlots,
   provideRefer?: boolean,
+  inheritPropsType?: InheritPropsType,
   slots?: SlotKeys[],
   expose?: Expose,
   setup?: (data: {

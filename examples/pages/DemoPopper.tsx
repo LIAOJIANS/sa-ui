@@ -177,6 +177,8 @@ export default defineComponent({
           <SaPopper
             tirgger="manual"
             v-model={state.customPopperState}
+            onShow={() => console.log('出现') }
+            onHide={() => console.log('消失')}
             v-slots={{
               default: () => <SaButton status="primary" onClick={() => state.customPopperState = true}  >自定义popper</SaButton>,
               head: () => <> <div>

@@ -1,4 +1,5 @@
 @include theme {
+  
   .sa-tooltip {
     position: fixed;
 
@@ -6,20 +7,27 @@
       color: inherit;
       padding: 8px 12px !important;
     }
-
+  
     &.sa-tooltip-theme-dark {
-      .sa-tooltip-content {
+      .sa-popper-content {
         background-color: black !important;
 
-        &, & .sa-tooltip-content-inner, & .sa-tooltip-title {
+        &, & .sa-popper-content-inner, & .sa-popper-title {
           color: white;
         }
       }
     }
 
-    &.sa-tooltip-radius {
-      border-radius: 5px;
+    &.sa-tooltip-theme-light {
+      .sa-popper-content {
+        background-color: white !important;
+
+        &, & .sa-popper-content-inner {
+          color: $itc !important;
+        }
+      }
     }
+
 
     &[direction=top] {
       .sa-tooltip-content {

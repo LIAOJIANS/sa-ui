@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { defineComponent, ref } from "vue"
-import { SaIcon, SaTitle } from 'sa-ui'
+import { SaIcon } from 'sa-ui'
 import './scss/DemoIcon.scss'
 
 export default defineComponent({
@@ -32,7 +32,7 @@ export default defineComponent({
           <h1 style={{ color: '#333' }}>Icon 图标</h1>
           <span style={{ color: '#666', fontSize: '14px' }}>常用的操作按钮，点击图表即复制到剪贴板</span>
         </div>
-        <div class="demo-icon">
+        <div class="demo-icon" style={{ marginBottom: '20px' }}>
           {
             icons.value.map(c => (
               <div class="icon-item" onClick={_ => copyIconName(c)}>
