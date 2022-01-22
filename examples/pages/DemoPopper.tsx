@@ -126,7 +126,7 @@ export default defineComponent({
     }
 
     return () => <>
-      <h1 style={{ color: '#333' }}>Popper 按钮</h1>
+      <h1 style={{ color: '#333' }}>Popper 气泡</h1>
 
       <DemoContainer
         label="基本用法"

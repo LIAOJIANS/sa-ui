@@ -7,6 +7,8 @@ import useModel from './use/useModel'
 import useRefs from './use/useRefs'
 import { EditProps, useEdit } from './use/useEdit'
 import { useRefList } from './use/useRefList'
+import { useEditPopperAgent } from './use/useEditPopperAgent'
+import { useCollect } from './use/useCollect'
 
 /* ------------------------------- UTILS ---------------------------- */
 import unit from './utils/unit'
@@ -14,6 +16,11 @@ import classname from './utils/className'
 import { nextIndex } from './utils/nextIndex'
 import { getElement } from './utils/getElement'
 import { delay } from './utils/delay'
+
+/* --------------------- POPPER-SERVICE ------------------------------- */
+
+import { createPopperServiceComponent, createCounter } from './popperService/createPopperServiceComponent'
+import { createUseEditPopperAgent } from './popperService/createAgentGetter'
 
 
 export {
@@ -24,6 +31,8 @@ export {
   useRefs,
   useEdit,
   useRefList,
+  useEditPopperAgent,
+  useCollect,
   
   StyleProps,
   TitleStyleProps,
@@ -34,5 +43,10 @@ export {
   classname,
   nextIndex,
   getElement,
-  delay
+  delay,
+
+  createPopperServiceComponent,
+  createCounter,
+
+  createUseEditPopperAgent
 }

@@ -33,13 +33,15 @@ export const SaPopper = designComponent({
     offset: { type: [Number, String] },
     arrow: { type: Boolean, default: true },
     boundary: { default: document.body as any },
-    popperClass: {type: [String, Array, Object]}
+    popperClass: {type: [String, Array, Object]},
+    popperAttrs: { type: Object }
   },
 
   slots: ['default', 'head', 'popper'],
 
   emits: {
     onUpdateModelValue: (val?: boolean) => true,
+    onUpdateOpen: (val?: boolean) => true,
     onShow: () => true,
     onHide: () => true,
     onInit: () => true,
@@ -388,6 +390,8 @@ export const SaPopper = designComponent({
                   style={popperStyles.value}
                   ref={onRef.popper}
                   {...attrs}
+                  
+                  {...(props.popperAttrs || {})}
                 >
                   <div
                     class='sa-popper-content'

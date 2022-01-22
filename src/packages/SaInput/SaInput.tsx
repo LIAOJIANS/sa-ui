@@ -51,6 +51,8 @@ export const SaInput = designComponent({
     inputInnerTabindex: { type: Number, default: 0 },
     readonly: { type: Boolean },
   },
+  
+  inheritPropsType: HTMLDivElement,
 
   emits: {
     onUpdateModelValue: (val: any) => true,
@@ -74,7 +76,7 @@ export const SaInput = designComponent({
     // const inputValue = ref('')
     // const inputRef = ref(null as any as HTMLInputElement)
 
-    const { onRef } = useRefs({
+    const { refs ,onRef } = useRefs({
       input: HTMLInputElement,
       hiddenInput: HTMLTextAreaElement,
     });
@@ -334,7 +336,11 @@ export const SaInput = designComponent({
 
     return {
       refer: {
+        refs,
+        state,
+        numberState,
         methods,
+        model,
       },
       render: () => {
         if (props.textarea) {
