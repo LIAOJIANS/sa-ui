@@ -9,6 +9,7 @@ import { useSelect } from "./useSelect"
 import { SaSelectPanel } from "./SaSelectPanel"
 import { PropType } from "vue"
 import { SaSelectOption } from "../SaSelectOption/SaSelectOption"
+import SaPopper from "../SaPopper/SaPopper"
 
 const Props = {
   ...EditProps,
@@ -27,6 +28,7 @@ const Props = {
   collapseTags: { type: Boolean, default: true },
   placeholder: { type: [String, Number], default: '' },         // placeholder 提示
 
+  popperAttrs: {type: Object as PropType<Partial<typeof SaPopper.use.props>>}
 }
 
 export const SaSelect = designComponent({
@@ -55,13 +57,8 @@ export const SaSelect = designComponent({
 
     const model = useModel(() => props.modelValue as number | string | string[] | undefined, emit.onUpdateModelValue)
 
-
-    const items = SelectCollector.parent()
-    const formatData = computed(() => items.filter(i => !i.props.group))
-    const popperHeight = computed(() => formatData.value.length > 6 ? 200 : null) // popper 高度
-
-
     const filterText = ref(null as string | null)
+
     const agentState = useEditPopperAgent({
       event,
       serviceGetter: useSelect,
@@ -85,7 +82,35 @@ export const SaSelect = designComponent({
           filterMethod: utils.filterMethod,
           onChange: handler.onServiceChange,
           onClick: event.emit.onClick,
+        }),
+
+        popperAttrs: ({
+          ...props.popperAttrs,
+          onMousedownPopper: () => agentState.state.focusCounter++,
+          onClickPopper: () => refs.input!.methods.focus(),
+          onHide: () => filterText.value = null
         })
+      }
+
+    })
+
+    const items = SelectCollector.parent() // 收集option
+
+    const formatData = computed(() => items.filter((i:any) => !i.props.group))
+
+    const popperHeight = computed(() => formatData.value.length > 6 ? 200 : null) // popper 高度
+
+    const displayValue = computed(() => {
+      if(!props.multiple) {
+        for(let i = 0; i < formatData.value.length; i++) {
+          const item = formatData.value[i] as any
+
+          if(item.props.val == model.value) {
+            return item.props.label
+          }
+        }
+      } else {
+        const strings: string[] = []
       }
     })
 
@@ -95,6 +120,7 @@ export const SaSelect = designComponent({
         return !!filterText.value && !!filterText.value.trim() ? (!!option.label && option.label.indexOf(filterText.value) > -1) : true
       }
     }
+    
     const handler = {
       onServiceChange: (val: any) => model.value = val,
     }

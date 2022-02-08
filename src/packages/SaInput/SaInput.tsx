@@ -51,7 +51,7 @@ export const SaInput = designComponent({
     inputInnerTabindex: { type: Number, default: 0 },
     readonly: { type: Boolean },
   },
-  
+
   inheritPropsType: HTMLDivElement,
 
   emits: {
@@ -76,7 +76,7 @@ export const SaInput = designComponent({
     // const inputValue = ref('')
     // const inputRef = ref(null as any as HTMLInputElement)
 
-    const { refs ,onRef } = useRefs({
+    const { refs, onRef } = useRefs({
       input: HTMLInputElement,
       hiddenInput: HTMLTextAreaElement,
     });
@@ -219,6 +219,12 @@ export const SaInput = designComponent({
 
         emit.onInputChange({ format, val });
         model.value = format;
+      },
+
+      focus: () => {
+        if (!!refs.input && !!refs.input.focus) {
+          refs.input.focus()
+        }
       },
     };
 
