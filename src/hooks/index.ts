@@ -16,6 +16,7 @@ import classname from './utils/className'
 import { nextIndex } from './utils/nextIndex'
 import { getElement } from './utils/getElement'
 import { delay } from './utils/delay'
+import { throttle } from './utils/throttle'
 
 /* --------------------- POPPER-SERVICE ------------------------------- */
 
@@ -44,6 +45,7 @@ export {
   nextIndex,
   getElement,
   delay,
+  throttle,
 
   createPopperServiceComponent,
   createCounter,

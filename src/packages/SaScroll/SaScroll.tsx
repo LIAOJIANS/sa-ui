@@ -1,6 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, unit, useRefs, useStyles } from "src/hooks";
-import { computed, onBeforeUnmount, reactive } from "vue";
+import { classname, throttle, unit, useRefs, useStyles } from "src/hooks";
+import { computed, onBeforeUnmount, reactive, watch } from "vue";
 import { onMounted } from "vue";
 import { ref } from "vue";
 import './SaScroll.scss'
@@ -38,7 +38,7 @@ export const SaScroll = designComponent({
   inheritPropsType: HTMLDivElement,
   slots: ['content', 'default'],
   provideRefer: true,
-  setup({ props }) {
+  setup({ props, slots }) {
 
     const { refs, onRef } = useRefs({
       host: HTMLDivElement,
@@ -158,8 +158,38 @@ export const SaScroll = designComponent({
       return style
     })
 
+    const methods = {
+      refresh() {
+        
+      }
+    }
+
+    
+    /*-------------------------------------- handler ------------------------------------*/
+
+    const handler = {
+      windowResize: throttle(() => methods.refresh(), 500)
+    }
+
+
+    /*-------------------------------------- Vue ------------------------------------*/
+
+    onMounted(() => window.addEventListener('resize', handler.windowResize))
+    onBeforeUnmount(() => window.addEventListener('resize', handler.windowResize))
+
+    watch(() => props.refreshState, methods.refresh)
+
+    
 
     return {
+
+      refer: {
+        props,
+        refs,
+        slots,
+        state,
+        freezeState
+      },
 
       render: () => <div
         ref={onRef.host}
@@ -171,12 +201,15 @@ export const SaScroll = designComponent({
           style={ wrapperStyle.value }
         >
           <div
+            class="sa-scroll-content"
             ref={onRef.content}
             style={ contentStyle.value }
           >
-
+            { slots.default() }
           </div>
+          { slots.content() }
         </div>
+
       </div>
     }
   }
