@@ -1,5 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, throttle, unit, useRefs, useStyles } from "src/hooks";
+import { ResizeDetectFuncParam, useResizeDetector } from "src/directives/ResizeDetector";
+import { classname, delay, throttle, unit, useRefs, useStyles } from "src/hooks";
 import { computed, onBeforeUnmount, reactive, watch } from "vue";
 import { onMounted } from "vue";
 import { ref } from "vue";
@@ -38,7 +39,13 @@ export const SaScroll = designComponent({
   inheritPropsType: HTMLDivElement,
   slots: ['content', 'default'],
   provideRefer: true,
-  setup({ props, slots }) {
+  emits: {
+    onScroll: (e: Event) => true,
+    onVerticalScrollCenter: (e: Event) => true,
+    onVerticalScrollTop: (e: Event) => true,
+    onVerticalScrollBottom: (e: Event) => true
+  },
+  setup({ props, slots, event: { emit } }) {
 
     const { refs, onRef } = useRefs({
       host: HTMLDivElement,
@@ -86,7 +93,7 @@ export const SaScroll = designComponent({
     /* --------------------------------- computed -------------------------------- */
 
     const targetScrollBarSize = computed(() => {
-      if(!props.scrollX) {
+      if (!props.scrollX) {
         return props.scrollbarSize || 6
       } else {
         return props.scrollbarSize || 9
@@ -101,11 +108,11 @@ export const SaScroll = designComponent({
     ]))
 
     const hostStyle = useStyles(style => {
-      if(!mounted.value) { 
+      if (!mounted.value) {
         return style
-       }
+      }
 
-      if(props.fitContentHeight) {
+      if (props.fitContentHeight) {
         style.height = unit(state.contentHeight)
       }
 
@@ -113,45 +120,45 @@ export const SaScroll = designComponent({
     })
 
     const wrapperStyle = useStyles(style => {
-      if(!mounted.value) { 
+      if (!mounted.value) {
         return style
-       }
+      }
 
-      if(props.fitContentHeight) {
+      if (props.fitContentHeight) {
         style.height = unit(state.contentHeight + 17)
       }
-      
+
       return style
     })
 
     const contentStyle = useStyles(style => {
-      if(!mounted.value) {
+      if (!mounted.value) {
         return style
       }
 
-      if(!props.scrollX) {
+      if (!props.scrollX) {
         style.width = props.fitContentWidth && state.contentWidth > 0 ? unit(state.contentWidth) : '100%'
         style.overflowX = 'hidden'
       }
 
-      if(!props.scrollY) {
+      if (!props.scrollY) {
         style.height = props.fitContentHeight && state.contentHeight > 0 ? unit(state.contentHeight) : '100%'
         style.overflowY = 'hidden'
       }
 
-      if(props.fitContentWidth) {
+      if (props.fitContentWidth) {
         style.width = '100%'
       }
 
-      if(props.fitContentHeight) {
+      if (props.fitContentHeight) {
         style.height = '100%'
       }
 
-      if( props.fitHostWidth ) {
+      if (props.fitHostWidth) {
         style.width = unit(state.contentWidth)
       }
 
-      if(props.fitHostHeight) {
+      if (props.fitHostHeight) {
         style.height = unit(state.contentHeight)
       }
 
@@ -159,16 +166,99 @@ export const SaScroll = designComponent({
     })
 
     const methods = {
-      refresh() {
-        
+      refresh: async () => {
+        await delay()
+
+        if (!refs.content) { return }
+
+        const { scrollHeight: contentHeight, scrollWidth: contentWidht } = refs.content!
+
+        handler.contentResize({
+          width: Math.ceil(contentWidht),
+          height: Math.ceil(contentHeight)
+        })
+
+        const { scrollHeight: hostHeight, scrollWidth: hostWidth } = refs.host!
+
+        handler.hostResize({
+          width: Math.ceil(hostWidth),
+          height: Math.ceil(hostHeight)
+        })
       }
     }
 
-    
+
     /*-------------------------------------- handler ------------------------------------*/
 
     const handler = {
-      windowResize: throttle(() => methods.refresh(), 500)
+      windowResize: throttle(() => methods.refresh(), 500),
+
+      hostResize: (data: ResizeDetectFuncParam) => {
+        const { width, height } = data
+
+        if (width != null) {
+          state.hostWidth = width
+        }
+
+        if (height != null) {
+          state.hostHeight = height
+        }
+      },
+
+      contentResize: (data: ResizeDetectFuncParam) => {
+        const { width, height } = data
+
+        if (width != null) {
+          state.contentWidth = width - 16
+        }
+
+        if (height != null) {
+          state.contentWidth = height - 16
+        }
+      },
+
+      wrapperScroll: (e: Event) => {
+        const target = e.target as HTMLElement
+
+        freezeState.wrapperScrollTop = target.scrollTop
+        freezeState.wrapperScrollLeft = target.scrollLeft
+
+        if (freezeState.emitScroll) {
+          emit.onScroll(e)
+        }
+
+        if (
+          freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.top &&
+          freezeState.wrapperScrollTop > props.topThreshold
+        ) { 
+          emit.onVerticalScrollCenter(e) // 进入center
+
+          freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.center
+        } else if(freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.center) {
+          if(freezeState.wrapperScrollTop < props.topThreshold!) {
+            emit.onVerticalScrollTop(e) // 进入top
+
+            freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.top
+          } else {
+            emit.onVerticalScrollBottom(e)
+
+            freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.bottom
+          }
+        } else if(freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.bottom) {
+          if(state.contentHeight - state.hostHeight - freezeState.wrapperScrollTop > props.bottomThreshold!) {
+            emit.onVerticalScrollBottom(e)
+
+            freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.bottom
+          }
+        }
+      },
+
+      wrapperMousewheel: () => {
+        if (!!freezeState.cancelAnimate) {
+          cancelAnimationFrame(freezeState.cancelAnimate)
+          freezeState.cancelAnimate = null
+        }
+      }
     }
 
 
@@ -179,7 +269,8 @@ export const SaScroll = designComponent({
 
     watch(() => props.refreshState, methods.refresh)
 
-    
+    useResizeDetector({ elGetter: () => refs.host, onResize: handler.hostResize })
+    useResizeDetector({ elGetter: () => refs.content, onResize: handler.contentResize })
 
     return {
 
@@ -188,26 +279,31 @@ export const SaScroll = designComponent({
         refs,
         slots,
         state,
-        freezeState
+        freezeState,
+        methods,
+        handler
       },
 
       render: () => <div
         ref={onRef.host}
         class={classes.value}
-        style={ hostStyle.value }
+        style={hostStyle.value}
       >
         <div
           ref={onRef.wrapper}
-          style={ wrapperStyle.value }
+          class="sa-scroll-wrapper"
+          style={wrapperStyle.value}
+          onScroll={handler.wrapperScroll}
+          onWheel={handler.wrapperMousewheel}
         >
           <div
             class="sa-scroll-content"
             ref={onRef.content}
-            style={ contentStyle.value }
+            style={contentStyle.value}
           >
-            { slots.default() }
+            {slots.default()}
           </div>
-          { slots.content() }
+          {slots.content()}
         </div>
 
       </div>
