@@ -1,6 +1,5 @@
 
 /* ------------------------------- USE ---------------------------- */
-
 import { StyleProps, TitleStyleProps, useStyle, useStyles, DEFAULT_STATUS } from './use/useStyle'
 import { useNumber } from './use/useNumber'
 import useModel from './use/useModel'
@@ -17,6 +16,7 @@ import { nextIndex } from './utils/nextIndex'
 import { getElement } from './utils/getElement'
 import { delay } from './utils/delay'
 import { throttle } from './utils/throttle'
+import { disabledUserSelect, enableUserSelect } from './utils/userSelect'
 
 /* --------------------- POPPER-SERVICE ------------------------------- */
 
@@ -50,5 +50,8 @@ export {
   createPopperServiceComponent,
   createCounter,
 
-  createUseEditPopperAgent
+  createUseEditPopperAgent,
+
+  disabledUserSelect,
+  enableUserSelect
 }

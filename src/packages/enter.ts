@@ -10,6 +10,8 @@ import SaDropdown from './SaDropdown/SaDropdown'
 import SaDropdownMenu from './SaDropdownMenu/SaDropdownMenu'
 import SaDropdowmOption from './SaDropdowmOption/SaDropdowmOption'
 import SaSelect from './SaSelect/SaSelect'
+import SaSelectOption from './SaSelectOption/SaSelectOption'
+import SaScroll from './SaScroll/SaScroll'
 
 
 export {
@@ -24,5 +26,7 @@ export {
   SaDropdown,
   SaDropdownMenu,
   SaDropdowmOption,
-  SaSelect
+  SaSelect,
+  SaSelectOption,
+  SaScroll,
 }

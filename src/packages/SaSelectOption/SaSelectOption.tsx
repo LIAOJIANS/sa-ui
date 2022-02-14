@@ -15,21 +15,37 @@ export const SaSelectOption = designComponent({
     group: { type: Boolean },
   },
 
-  setup({ props }) {
+  slots: ['default'],
+  setup({ props, slots }) {
     const { refs, onRef } = useRefs({
       el: HTMLDivElement
     })
 
+    const refer = {
+      props,
+      refs,
+    }
+
+
     SelectCollector.child({ injectDefaultValue: null, sort: () => refs.el! })
 
     return {
+      refer,
       render: () => <div
         {...{
           ref: onRef.el,
           label: props.label,
           val: props.val,
           icon: props.icon
-        }} />
+        }} >
+        {slots.default(props.label)}
+      </div>
     }
   }
 })
+
+
+export type SelectOption = typeof SaSelectOption.use.class
+
+
+export default SaSelectOption

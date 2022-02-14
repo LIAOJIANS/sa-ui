@@ -14,7 +14,9 @@ import {
   Ref,
   ComputedOptions,
   MethodOptions,
-  ComponentOptionsMixin
+  ComponentOptionsMixin,
+  Component,
+  Directive
 } from "vue";
 import { getComponentEmitOptions, ObjectEmitOptions, EmitToProp, useSetupEvent, ComponentEvent } from "./emit"
 import { SlotProps, useSetupSlots } from './sort'
@@ -82,6 +84,10 @@ export function designComponent<_,
     setupContext: SetupContext<E>,
     ctx: ComponentInternalInstance,
   }) => ({ refer?: Refer, render: () => any } | (() => any)),
+
+  mixins?: any[],
+  components?: Record<string, Component>;
+  directives?: Record<string, Directive>;
 }): DefineComponent<FcPropsType & TargetInheritPropsType,
   RawBindings,
   D,

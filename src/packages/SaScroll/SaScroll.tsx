@@ -4,6 +4,9 @@ import { classname, delay, throttle, unit, useRefs, useStyles } from "src/hooks"
 import { computed, onBeforeUnmount, reactive, watch } from "vue";
 import { onMounted } from "vue";
 import { ref } from "vue";
+import { debounce } from "../SaPopper/popperUtils/popperUtils";
+import VerticalScrollbar from './VerticalScrollbar'
+import HorizontalScrollbar from './HorizontalScrollbar'
 import './SaScroll.scss'
 
 export enum SA_SCROLL_VERTICAL_POSITION {
@@ -45,7 +48,7 @@ export const SaScroll = designComponent({
     onVerticalScrollTop: (e: Event) => true,
     onVerticalScrollBottom: (e: Event) => true
   },
-  setup({ props, slots, event: { emit } }) {
+  setup({ props, slots, event: { emit, on, off } }) {
 
     const { refs, onRef } = useRefs({
       host: HTMLDivElement,
@@ -165,6 +168,16 @@ export const SaScroll = designComponent({
       return style
     })
 
+    const targetScrollbarSize = computed(() => {
+      if (!props.scrollX) {
+        return props.scrollbarSize || 6
+      } else {
+        return props.scrollbarSize || 9
+      }
+    })
+
+    /* -------------------------- methods ------------------------- */
+
     const methods = {
       refresh: async () => {
         await delay()
@@ -184,6 +197,82 @@ export const SaScroll = designComponent({
           width: Math.ceil(hostWidth),
           height: Math.ceil(hostHeight)
         })
+      },
+
+      async scroll(point: { x?: number, y?: number }, configOrTime?: number | { time?: number, noEmitScroll?: boolean }) {
+
+        if (!refs.wrapper) return
+
+        const config = typeof configOrTime === "number" ? { time: configOrTime } : configOrTime
+        const { time, noEmitScroll } = (config || {})
+        
+        if (noEmitScroll) {
+          freezeState.emitScroll = false
+        }
+        const done = () => noEmitScroll && (freezeState.emitScroll = true)
+
+        if (!time) {
+          if (point.x != null) refs.wrapper!.scrollLeft = point.x
+          if (point.y != null) refs.wrapper!.scrollTop = point.y
+          await delay(23)
+          done()
+        } else {
+
+          if (!!freezeState.cancelAnimate) {
+            cancelAnimationFrame(freezeState.cancelAnimate)
+            freezeState.cancelAnimate = null
+          }
+
+          let ny = refs.wrapper!.scrollTop
+          let nx = refs.wrapper!.scrollLeft
+
+          let ky = (point.y! - ny) / time
+          let kx = (point.x! - nx) / time
+
+          let startTime = Date.now()
+          const run = async () => {
+            let nowTime = Date.now()
+            let delta = nowTime - startTime
+            let top;
+            let left;
+
+            if (delta >= time) {
+              freezeState.cancelAnimate = null
+              top = time * ky + ny
+              left = time * kx + nx
+
+              if (!!refs.wrapper) {
+                refs.wrapper.scrollTop = top
+                refs.wrapper.scrollLeft = left
+                await delay(23)
+                done()
+              }
+            } else {
+              top = delta * ky + ny
+              left = delta * kx + nx
+
+              if (!!refs.wrapper) {
+                refs.wrapper.scrollTop = top
+                refs.wrapper.scrollLeft = left
+              }
+              freezeState.cancelAnimate = requestAnimationFrame(run)
+            }
+          }
+          run()
+        }
+      },
+
+      scrollTop(scrollTop: number, time?: number) {
+        methods.scroll({ y: scrollTop }, { time })
+      },
+
+      disableListTransition: () => {
+        const disabledQueueAnimation = debounce(() => refs.host!.removeAttribute('virtual-scrolling'), 300, true)
+
+        return () => {
+          refs.host!.setAttribute('virtual-scrolling', '')
+          disabledQueueAnimation()
+        }
       }
     }
 
@@ -230,12 +319,12 @@ export const SaScroll = designComponent({
         if (
           freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.top &&
           freezeState.wrapperScrollTop > props.topThreshold
-        ) { 
+        ) {
           emit.onVerticalScrollCenter(e) // 进入center
 
           freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.center
-        } else if(freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.center) {
-          if(freezeState.wrapperScrollTop < props.topThreshold!) {
+        } else if (freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.center) {
+          if (freezeState.wrapperScrollTop < props.topThreshold!) {
             emit.onVerticalScrollTop(e) // 进入top
 
             freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.top
@@ -244,12 +333,16 @@ export const SaScroll = designComponent({
 
             freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.bottom
           }
-        } else if(freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.bottom) {
-          if(state.contentHeight - state.hostHeight - freezeState.wrapperScrollTop > props.bottomThreshold!) {
+        } else if (freezeState.verticalPosition === SA_SCROLL_VERTICAL_POSITION.bottom) {
+          if (state.contentHeight - state.hostHeight - freezeState.wrapperScrollTop > props.bottomThreshold!) {
             emit.onVerticalScrollBottom(e)
 
             freezeState.verticalPosition = SA_SCROLL_VERTICAL_POSITION.bottom
           }
+        }
+
+        if (props.disableListTransition) {
+          methods.disableListTransition()
         }
       },
 
@@ -277,9 +370,12 @@ export const SaScroll = designComponent({
       refer: {
         props,
         refs,
+        on,
+        off,
         slots,
         state,
         freezeState,
+        targetScrollbarSize,
         methods,
         handler
       },
@@ -305,7 +401,23 @@ export const SaScroll = designComponent({
           </div>
           {slots.content()}
         </div>
+        {
+          !props.hideScrollbar && props.scrollY && (
+            <div class="sa-vertical-scrollbar-wrapper">
+              {/* 虚拟列表 ---- Y*/}
+              {<VerticalScrollbar tooltip={props.verticalScrollbarTooltip} />}
+            </div>
+          )
+        }
 
+        {
+          !props.hideScrollbar && props.scrollX && (
+            <div class="sa-horizontal-scrollbar-wrapper">
+              {/* 虚拟列表 ---- X */}
+              {<HorizontalScrollbar tooltip={props.horizontalScrollbarTooltip} />}
+            </div>
+          )
+        }
       </div>
     }
   }

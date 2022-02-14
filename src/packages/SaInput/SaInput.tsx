@@ -47,7 +47,7 @@ export const SaInput = designComponent({
     fillGroup: { type: Boolean },
     align: { type: String as PropType<'center' | 'left' | 'right'> },
 
-    placeValue: { type: String },
+    placeholder: { type: String },
     inputInnerTabindex: { type: Number, default: 0 },
     readonly: { type: Boolean },
   },
@@ -155,7 +155,7 @@ export const SaInput = designComponent({
             editComputed.value.loading,
           'sa-input-prefix': !!props.prefixIcon,
           'sa-input-suffix': !!props.suffixIcon || editComputed.value.loading,
-          'sa-input-empty': !model.value && !props.placeValue,
+          'sa-input-empty': !model.value && !props.placeholder,
           'sa-input-not-editable': !editComputed.value.editable,
           'sa-input-fill-group': props.fillGroup,
           [`sa-input-align-${props.align}`]: !!props.align,
@@ -320,7 +320,7 @@ export const SaInput = designComponent({
           editComputed.value.readonly ||
           editComputed.value.loading,
         value: model.value || '',
-        placeholder: props.placeValue,
+        placeholder: props.placeholder,
 
         onInput: hander.input,
         onClick: emit.onClickInput,

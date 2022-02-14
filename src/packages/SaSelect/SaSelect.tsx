@@ -1,6 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent"
 import { classname, EditProps, StyleProps, useModel, useRefs, useEditPopperAgent, useCollect } from "src/hooks"
-import { computed, ref } from "vue"
+import { computed, ref, Fragment } from "vue"
 
 import './SaSelect.scss'
 import { SaInputInnertags } from "../SaInput/SaInputInnertags"
@@ -8,8 +8,10 @@ import { SaInput } from "../SaInput/SaInput"
 import { useSelect } from "./useSelect"
 import { SaSelectPanel } from "./SaSelectPanel"
 import { PropType } from "vue"
-import { SaSelectOption } from "../SaSelectOption/SaSelectOption"
+import { SaSelectOption, SelectOption } from "../SaSelectOption/SaSelectOption"
 import SaPopper from "../SaPopper/SaPopper"
+import SaIcon from '../SaIcon/SaIcon'
+import { handleKeyboard } from "src/keyboard"
 
 const Props = {
   ...EditProps,
@@ -28,7 +30,7 @@ const Props = {
   collapseTags: { type: Boolean, default: true },
   placeholder: { type: [String, Number], default: '' },         // placeholder 提示
 
-  popperAttrs: {type: Object as PropType<Partial<typeof SaPopper.use.props>>}
+  popperAttrs: { type: Object as PropType<Partial<typeof SaPopper.use.props>> }
 }
 
 export const SaSelect = designComponent({
@@ -43,7 +45,8 @@ export const SaSelect = designComponent({
     onClick: (option: any) => true,
 
     onBlur: (e: FocusEvent) => true,
-    onFocus: (e: FocusEvent) => true
+    onFocus: (e: FocusEvent) => true,
+    onSpace: (e: KeyboardEvent) => true
   },
 
   slots: ['default'],
@@ -51,7 +54,6 @@ export const SaSelect = designComponent({
 
     const { emit } = event
     const { onRef, refs } = useRefs({ input: SaInput })
-
 
     let panel = null as typeof SaSelectPanel.use.class | null
 
@@ -96,23 +98,44 @@ export const SaSelect = designComponent({
 
     const items = SelectCollector.parent() // 收集option
 
-    const formatData = computed(() => items.filter((i:any) => !i.props.group))
+    const formatData = computed(() => items.filter((i: any) => !i.props.group))
 
     const popperHeight = computed(() => formatData.value.length > 6 ? 200 : null) // popper 高度
 
     const displayValue = computed(() => {
-      if(!props.multiple) {
-        for(let i = 0; i < formatData.value.length; i++) {
+      if (!props.multiple) {
+        for (let i = 0; i < formatData.value.length; i++) {
           const item = formatData.value[i] as any
 
-          if(item.props.val == model.value) {
+          if (item.props.val == model.value) {
             return item.props.label
           }
         }
       } else {
-        const strings: string[] = []
+        let strings: string[] = []
+        if (!!model.value && Array.isArray(model.value)) {
+          for (let i = 0; i < formatData.value.length; i++) {
+            const item = formatData.value[i];
+            if (model.value.indexOf(item.props.val! as string) > -1) {
+              strings.push(item.props.label! as string)
+            }
+          }
+        }
+        return strings.join('').trim()
       }
     })
+
+    const multipleTags = computed(() => {
+      if (!model.value) {
+          return []
+      }
+      if (!Array.isArray(model.value)) {
+          console.error('The value of multiple select should be array')
+          return []
+      }
+      if (!formatData.value || formatData.value.length === 0) return []
+      return formatData.value.filter(option => (model.value as any[]).indexOf(option.props.val!) > -1)
+  })
 
     const utils = {
       filterMethod: (option: { label?: string, val: string, disabled: boolean }) => {
@@ -120,34 +143,129 @@ export const SaSelect = designComponent({
         return !!filterText.value && !!filterText.value.trim() ? (!!option.label && option.label.indexOf(filterText.value) > -1) : true
       }
     }
-    
+
     const handler = {
       onServiceChange: (val: any) => model.value = val,
+
+      onClickItemCloseIcon: (item: SelectOption, index: number) => {
+        index = (model.value as any[]).indexOf(item.props.val!)
+        if (index > -1) {
+          const value = [...(model.value as any[])]
+          value.splice(index, 1)
+          model.value = [...value]
+        }
+      },
+
+      onInputClear: () => model.value = undefined,
+
+      onInputChange: (val: string | null) => {
+        filterText.value = val
+        if (agentState.isShow.value) {
+          agentState.methods.show()
+        }
+      },
+
+      onInputKeydown: handleKeyboard({
+        space: (e) => {
+          if (props.multiple && agentState.isShow.value) {
+            e.stopPropagation()
+            e.preventDefault()
+            panel!.methods.selectHighlight()
+          }
+          event.emit.onSpace(e)
+        },
+        enter: (e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          if (agentState.isShow.value) {
+            panel!.methods.selectHighlight()
+          } else {
+            agentState.methods.show()
+          }
+        },
+        up: (e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          if (!!agentState.isShow.value) {
+            panel!.methods.highlightPrev()
+          }
+        },
+        down: (e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          if (!!agentState.isShow.value) {
+            panel!.methods.highlightNext()
+          }
+        },
+        esc: (e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          if (!!agentState.isShow.value) {
+            agentState.methods.hide()
+          }
+        },
+      }),
     }
 
+    const placeholderValue = computed(() => {
+      if (agentState.isShow.value) {
+        return displayValue.value
+      }
+      if (!!inputProps.value.placeholder) {
+        return inputProps.value.placeholder
+      }
+      return agentState.editComputed.value.placeholder
+    })
+
+    const inputProps = computed(() => Object.assign({}, props.inputProps || {})) // 拷贝一份input属性
+
     const inputBinding = computed(() => {
+
+      const { onEnter, ...inputHandler } = agentState.inputHandler
       return {
         ref: onRef.input,
         class: classname([
           'sa-select',
           {
-            'pl-input-tags': !!props.multiple
+            'sa-input-tags': !!props.multiple
           }
         ]),
 
-        modelValue: (props.filterable)
+        modelValue: (props.filterable && agentState.isShow.value) ? filterText.value! : displayValue.value as string,
+        placeValue: displayValue.value as string,
+        inputReadonly: !props.filterable,
+        placeholder: placeholderValue.value as string,
+        suffixIcon: 'el-icon-arrow-down',
+        clearIcon: true,
+        isFocus: agentState.state.focusCounter > 0,
+        clearHandler: handler.onInputClear,
+
+        ...inputHandler,
+        onChange: handler.onInputChange,
+        onKeydown: handler.onInputKeydown,
+
+        ...inputProps.value,
       }
     })
 
     return {
       render: () => <SaInput {...inputBinding.value}>
         {{
+          hidden: () => slots.default(),
           default: () => !props.multiple ? null : () => (
             <SaInputInnertags
-              data={props.multiple}
+              data={multipleTags.value}
               collapseTags={props.collapseTags}
               maxTags={props.maxTags}
-              placeholder={!props.modelValue ? props.placeholder : null}
+              placeholder={inputBinding.value.placeholder!}
+              v-slots={{
+                default: ({ item, index }: { item: SelectOption, index: number }) => (
+                  <Fragment key={index}>
+                    <span>{item.props.label}</span>
+                    <SaIcon icon="el-icon-close" onClick={() => handler.onClickItemCloseIcon(item, index)} />
+                  </Fragment>
+                )
+              }}
             />
           )
         }}
@@ -160,6 +278,5 @@ export const SelectCollector = useCollect(() => ({
   parent: SaSelect,
   child: SaSelectOption,
 }))
-
 
 export default SaSelect

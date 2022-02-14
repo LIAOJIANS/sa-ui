@@ -2,7 +2,6 @@ import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { delay, useRefList } from "src/hooks";
 import { ref } from "vue";
 
-
 export function createDefaultManager<Option>(
   managerName: string,
   serviceComponent: {
