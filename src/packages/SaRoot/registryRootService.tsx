@@ -2,7 +2,6 @@
 import SaRoot, { SaRootInstance } from "./SaRoot"
 import { App, createApp } from 'vue'
 import { RootMapper } from "./utils/registryRootService";
-
 export function createUseService<_,
   ManagerComponent extends { use: { class: { props: { name: any, Component: any } } } },
   CreateService extends (getManager: () => Promise<ManagerComponent["use"]["class"]>) => any

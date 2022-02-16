@@ -9,12 +9,12 @@ import { createPopperServiceComponent } from "./createPopperServiceComponent";
 export function createUseEditPopperAgent(defaultOption: CreateAgentGetterOption) {
   const useService = (() => {
     const name = defaultOption.name
-
+    
     return createUseService({
       name,
       optionsCallName: '$select',
       managerComponent: createDefaultManager(
-        `sa-popper-service-${name}-manager`,
+        `sa-popper-service-${name}-manager`,  
         createPopperServiceComponent(`sa-popper-service-${name}`)
       ),
 

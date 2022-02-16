@@ -48,8 +48,11 @@ export const SaInput = designComponent({
     align: { type: String as PropType<'center' | 'left' | 'right'> },
 
     placeholder: { type: String },
+    placeValue: {type: [String, Number]},
     inputInnerTabindex: { type: Number, default: 0 },
     readonly: { type: Boolean },
+    nativeAttrs: {type: Object},
+    isFocus: {type: Boolean}, 
   },
 
   inheritPropsType: HTMLDivElement,
@@ -83,7 +86,7 @@ export const SaInput = designComponent({
 
     const state = reactive({
       autoHeight: null as null | number,
-      handerEnter: null as null | ((e: KeyboardEvent) => void),
+      handlerEnter: null as null | ((e: KeyboardEvent) => void),
       handleEnterInner: async (e: KeyboardEvent) => {
         if (editComputed.value.editable) {
           if (!!props.asyncHandler) {
@@ -110,7 +113,6 @@ export const SaInput = designComponent({
       'minHeight',
       'minHeight',
     ]);
-    console.log(styleComputed);
 
     const styles = useStyles((styles) => {
       if (!numberState.width && !props.block) {
@@ -144,8 +146,7 @@ export const SaInput = designComponent({
         `sa-input-shape-${styleComputed.value.shape}`,
         `sa-input-size-${styleComputed.value.size}`,
         {
-          [`sa-input-status-${styleComputed.value.status}`]: !!styleComputed
-            .value.status,
+          [`sa-input-status-${styleComputed.value.status}`]: !!styleComputed.value.status,
           'sa-input-clear': !!props.clearIcon,
           'sa-input-prefix-padding': !!props.prefixIcon,
           'sa-input-disabled': !!editComputed.value.disabled,
@@ -155,10 +156,11 @@ export const SaInput = designComponent({
             editComputed.value.loading,
           'sa-input-prefix': !!props.prefixIcon,
           'sa-input-suffix': !!props.suffixIcon || editComputed.value.loading,
-          'sa-input-empty': !model.value && !props.placeholder,
+          'sa-input-empty': !model.value && !props.placeValue,
           'sa-input-not-editable': !editComputed.value.editable,
           'sa-input-fill-group': props.fillGroup,
           [`sa-input-align-${props.align}`]: !!props.align,
+          'pl-input-focus': props.isFocus
         },
       ]),
     );
@@ -228,8 +230,9 @@ export const SaInput = designComponent({
       },
     };
 
-    const hander = {
+    const handler = {
       clickClearIcon: (e: MouseEvent) => {
+        
         if (!editComputed.value.editable) {
           return;
         }
@@ -319,10 +322,21 @@ export const SaInput = designComponent({
           props.readonly ||
           editComputed.value.readonly ||
           editComputed.value.loading,
+        ...(props.nativeAttrs || {}),
+
         value: model.value || '',
         placeholder: props.placeholder,
 
-        onInput: hander.input,
+      //   ...(!slots.default.isExist() ? {
+      //     onInput: (e: Event) => {
+      //         /*ie 下不知道为什么页面初始化的之后这里默认就执行了一次，这里判断绕过这个问题*/
+      //         if (e.target === document.activeElement) {
+      //           handler.input(e as any)
+      //         }
+      //     },
+      // } : {}),
+
+        onInput: handler.input,
         onClick: emit.onClickInput,
         onFocus: (e: FocusEvent) => {
           if (e.target !== e.currentTarget) {
@@ -364,7 +378,7 @@ export const SaInput = designComponent({
               {!!props.prefixIcon && (
                 <span
                   class="sa-input-prefix-icon"
-                  onClick={hander.ClickPrefixIcon}
+                  onClick={handler.ClickPrefixIcon}
                 >
                   <SaIcon icon={props.prefixIcon} />
                 </span>
@@ -375,7 +389,8 @@ export const SaInput = designComponent({
                   class="sa-input-inner"
                   {...publicProps.value}
                 >
-                  {slots.default()}
+                  
+                 {slots.default()}
                 </div>
               ) : (
                 <input class="sa-input-inner" {...publicProps.value} />
@@ -387,7 +402,7 @@ export const SaInput = designComponent({
                   ) : (
                     <SaIcon
                       icon={props.suffixIcon}
-                      onMousedown={hander.clickSuffixIcon}
+                      onMousedown={handler.clickSuffixIcon}
                     />
                   )}
                 </span>
@@ -396,7 +411,7 @@ export const SaInput = designComponent({
               {!!props.clearIcon && (
                 <span class="sa-input-suffix-icon sa-input-clear-icon">
                   <SaIcon
-                    onMousedown={hander.clickClearIcon}
+                    onMousedown={handler.clickClearIcon}
                     icon="el-icon-error"
                   />
                 </span>

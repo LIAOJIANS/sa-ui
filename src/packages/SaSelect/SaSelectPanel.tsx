@@ -45,8 +45,7 @@ export const SaSelectPanel = designComponent({
 
     const options = computed(() => items.filter((i: any) => !i.props.group)) // 筛选出有效的option
 
-    const showOptions = computed(() => options.value.filter((o: any) => utils.isShow(o.props)))
-
+    const showOptions = computed(() => options.value.filter((o: any) => utils.isShow(o.props)))    
 
     const current = ref(null as null | SelectOption)
 
@@ -68,7 +67,7 @@ export const SaSelectPanel = designComponent({
     const classes = computed(() => classname([
       'sa-select-panel',
       {
-        'pl-select-panel-multiple': props.multiple
+        'sa-select-panel-multiple': props.multiple
       }
     ]))
 
@@ -199,10 +198,10 @@ export const SaSelectPanel = designComponent({
 
       refer: {
         props,
-        // handler,
+        handler,
         methods,
         utils,
-        // current,
+        current,
       },
 
       render: () => {
@@ -221,6 +220,8 @@ export const SaSelectPanel = designComponent({
             </div>
           ) : null}
         </>
+
+        console.log(inner)
 
         const content: any = !!props.height ? (
           <SaScroll fitHostWidth ref={onRef.scroll}>{inner}</SaScroll>

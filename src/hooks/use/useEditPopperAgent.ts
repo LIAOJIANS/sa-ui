@@ -1,5 +1,5 @@
 import { VueNode } from "src/advancedComponentionsApi/designComponent.utils"
-import { computed, reactive } from "vue"
+import { computed, onBeforeUnmount, reactive } from "vue"
 import { createPopperServiceComponent } from "../popperService/createPopperServiceComponent"
 import { useEdit } from "./useEdit"
 
@@ -53,10 +53,10 @@ export function useEditPopperAgent(
     option: SpecificPopperServiceOption,
   }
 ) {
-
   const service = useService()
   const { editComputed } = useEdit()
-
+  // console.log(servic);
+  
   const state = reactive({
     agent: null as null | PopperAgent,
     focusCounter: 0
@@ -70,6 +70,7 @@ export function useEditPopperAgent(
       if (!editComputed.value.editable) return
       if (isShow.value) return;
       if (!state.agent) {
+        
         state.agent = await service(option)
       }
       await state.agent.show()
@@ -107,6 +108,12 @@ export function useEditPopperAgent(
       await methods.show()
     }
   }
+
+  onBeforeUnmount(() => {
+    if (!!state.agent) {
+      state.agent.destroy()
+    }
+  })
 
 
   return {

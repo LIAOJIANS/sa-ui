@@ -1,6 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent"
-import { classname, EditProps, StyleProps, useModel, useRefs, useEditPopperAgent, useCollect } from "src/hooks"
-import { computed, ref, Fragment } from "vue"
+import { classname, EditProps, StyleProps, useModel, useRefs, useEditPopperAgent, useCollect, useStyle } from "src/hooks"
+import { computed, ref, Fragment, watch } from "vue"
 
 import './SaSelect.scss'
 import { SaInputInnertags } from "../SaInput/SaInputInnertags"
@@ -23,14 +23,15 @@ const Props = {
   multiple: { type: Boolean },                                  // 是否开启多选
   maxMutipleLimit: { type: Number },                            // 最多选择个数
   minMutipleLimit: { type: Number },                            // 最少选择个数
-  filterable: { type: Boolean },                                // 是否开启筛选过滤
+  filterable: { type: Boolean, default: true },                                // 是否开启筛选过滤
   filterMethod: Function,                                       // 过滤函数
 
   maxTags: { type: Number },                                    // 显示tag的个数
   collapseTags: { type: Boolean, default: true },
   placeholder: { type: [String, Number], default: '' },         // placeholder 提示
 
-  popperAttrs: { type: Object as PropType<Partial<typeof SaPopper.use.props>> }
+  popperAttrs: { type: Object as PropType<Partial<typeof SaPopper.use.props>> },
+
 }
 
 export const SaSelect = designComponent({
@@ -41,17 +42,23 @@ export const SaSelect = designComponent({
 
   name: 'sa-select',
   emits: {
-    onUpdateModelValue: (val?: string | number | string[]) => true,
-    onClick: (option: any) => true,
+    onUpdateModelValue: (val?: number | string | string[]) => true,
+    onClick: (option: SelectOption) => true,
+
+    onSpace: (e: KeyboardEvent) => true,
+    onEnter: (e: KeyboardEvent) => true,
+    onUp: (e: KeyboardEvent) => true,
+    onDown: (e: KeyboardEvent) => true,
+    onEsc: (e: KeyboardEvent) => true,
 
     onBlur: (e: FocusEvent) => true,
     onFocus: (e: FocusEvent) => true,
-    onSpace: (e: KeyboardEvent) => true
   },
 
   slots: ['default'],
   setup({ props, event, slots }) {
 
+    useStyle()
     const { emit } = event
     const { onRef, refs } = useRefs({ input: SaInput })
 
@@ -98,7 +105,7 @@ export const SaSelect = designComponent({
 
     const items = SelectCollector.parent() // 收集option
 
-    const formatData = computed(() => items.filter((i: any) => !i.props.group))
+    const formatData = computed(() => items.filter(i => !i.props.group))
 
     const popperHeight = computed(() => formatData.value.length > 6 ? 200 : null) // popper 高度
 
@@ -111,6 +118,7 @@ export const SaSelect = designComponent({
             return item.props.label
           }
         }
+        return model.value as string
       } else {
         let strings: string[] = []
         if (!!model.value && Array.isArray(model.value)) {
@@ -127,15 +135,15 @@ export const SaSelect = designComponent({
 
     const multipleTags = computed(() => {
       if (!model.value) {
-          return []
+        return []
       }
       if (!Array.isArray(model.value)) {
-          console.error('The value of multiple select should be array')
-          return []
+        console.error('The value of multiple select should be array')
+        return []
       }
       if (!formatData.value || formatData.value.length === 0) return []
       return formatData.value.filter(option => (model.value as any[]).indexOf(option.props.val!) > -1)
-  })
+    })
 
     const utils = {
       filterMethod: (option: { label?: string, val: string, disabled: boolean }) => {
@@ -148,6 +156,7 @@ export const SaSelect = designComponent({
       onServiceChange: (val: any) => model.value = val,
 
       onClickItemCloseIcon: (item: SelectOption, index: number) => {
+
         index = (model.value as any[]).indexOf(item.props.val!)
         if (index > -1) {
           const value = [...(model.value as any[])]
@@ -160,6 +169,7 @@ export const SaSelect = designComponent({
 
       onInputChange: (val: string | null) => {
         filterText.value = val
+
         if (agentState.isShow.value) {
           agentState.methods.show()
         }
@@ -207,6 +217,7 @@ export const SaSelect = designComponent({
       }),
     }
 
+    const inputProps = computed(() => Object.assign({}, props.inputProps || {})) // 拷贝一份input属性
     const placeholderValue = computed(() => {
       if (agentState.isShow.value) {
         return displayValue.value
@@ -217,8 +228,6 @@ export const SaSelect = designComponent({
       return agentState.editComputed.value.placeholder
     })
 
-    const inputProps = computed(() => Object.assign({}, props.inputProps || {})) // 拷贝一份input属性
-
     const inputBinding = computed(() => {
 
       const { onEnter, ...inputHandler } = agentState.inputHandler
@@ -227,13 +236,14 @@ export const SaSelect = designComponent({
         class: classname([
           'sa-select',
           {
-            'sa-input-tags': !!props.multiple
+            'sa-input-tags': !!props.multiple,
+            'sa-select-input-show': agentState.isShow.value,
           }
         ]),
 
         modelValue: (props.filterable && agentState.isShow.value) ? filterText.value! : displayValue.value as string,
         placeValue: displayValue.value as string,
-        inputReadonly: !props.filterable,
+        readonly: !props.filterable,
         placeholder: placeholderValue.value as string,
         suffixIcon: 'el-icon-arrow-down',
         clearIcon: true,
@@ -249,27 +259,30 @@ export const SaSelect = designComponent({
     })
 
     return {
-      render: () => <SaInput {...inputBinding.value}>
-        {{
-          hidden: () => slots.default(),
-          default: () => !props.multiple ? null : () => (
-            <SaInputInnertags
-              data={multipleTags.value}
-              collapseTags={props.collapseTags}
-              maxTags={props.maxTags}
-              placeholder={inputBinding.value.placeholder!}
-              v-slots={{
-                default: ({ item, index }: { item: SelectOption, index: number }) => (
-                  <Fragment key={index}>
-                    <span>{item.props.label}</span>
-                    <SaIcon icon="el-icon-close" onClick={() => handler.onClickItemCloseIcon(item, index)} />
-                  </Fragment>
-                )
-              }}
-            />
-          )
-        }}
-      </SaInput>
+      render: () => {
+        return <SaInput {...inputBinding.value}>
+          {{
+            hidden: () => slots.default(),
+            default: !props.multiple ? null : () => (
+              // <d></d>
+              <SaInputInnertags
+                data={multipleTags.value}
+                collapseTags={props.collapseTags}
+                maxTags={props.maxTags}
+                placeholder={inputBinding.value.placeholder!}
+                v-slots={{
+                  default: ({ item, index }: { item: SelectOption, index: number }) => (
+                    <Fragment key={index}>
+                      <span>{item.props.label}</span>
+                      <SaIcon icon="el-icon-close" onClick={handler.onClickItemCloseIcon(item, index)} />
+                    </Fragment>
+                  )
+                }}
+              />
+            )
+          }}
+        </SaInput>
+      }
     }
   }
 })

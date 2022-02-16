@@ -5,7 +5,6 @@ export type IMultipleClass = ISingleClass | ISingleClass[]
 
 const hasOwn = {}.hasOwnProperty
 
-
 export default function classname(...args: IMultipleClass[]): string {
   const classes: (string | number)[] = []
   args.forEach(arg => {
