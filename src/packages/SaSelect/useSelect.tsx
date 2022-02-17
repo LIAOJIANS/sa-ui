@@ -4,9 +4,7 @@ import { SaSelectPanel } from './SaSelectPanel'
 
 export const useSelect = createUseEditPopperAgent({
     name: 'select',
-    render: (attrs) => {
-        return <SaSelectPanel {...attrs}/>
-    },
+    render: (attrs) => <SaSelectPanel {...attrs}/>,
     defaultPopperAttrs: {
         transition: 'sa-transition-popper-drop',
         sizeEqual: true,

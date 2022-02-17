@@ -31,16 +31,15 @@ export const SaRoot = designComponent({
     ): Promise<ManagerCompoonent['use']['class']> {
       if (refList?.length > 0) {
         for (let i = 0; i < refList.length; i++) {
-          const managerInstance = refList[i]
-          if (!!managerInstance) {
-            const { name: attrName, Component: attrComponent } = managerInstance.props
-
-            if (name === attrName && managerInstance === attrComponent) {
-              return managerInstance as any
+            const managerInstance = refList[i];
+            if (!!managerInstance) {
+                const {name: attrName, Component: attrComponent} = managerInstance.props
+                if (name === attrName && managerComponent === attrComponent) {
+                    return managerInstance as any
+                }
             }
-          }
         }
-      }
+    }
 
       state.managers.push({
         name,
@@ -48,7 +47,7 @@ export const SaRoot = designComponent({
         RenderComponent: markRaw(managerComponent)
       })
 
-      await delay()
+      await delay(0)
       return getManagerInstance(name, managerComponent)
     }
 

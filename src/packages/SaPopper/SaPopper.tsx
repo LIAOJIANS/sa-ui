@@ -18,7 +18,7 @@ export const SaPopper = designComponent({
     modelValue: { type: Boolean },
 
     disabled: { type: Boolean, default: false },
-    tirgger: { type: String, default: 'hover' },
+    trigger: { type: String, default: 'hover' },
     transition: { type: String, default: 'sa-transition-fade' },
     message: { type: String },
     title: { type: String },
@@ -34,7 +34,9 @@ export const SaPopper = designComponent({
     arrow: { type: Boolean, default: true },
     boundary: { default: document.body as any },
     popperClass: {type: [String, Array, Object]},
-    popperAttrs: { type: Object }
+    popperAttrs: { type: Object },
+
+    sizeEqual: {type: Boolean},  // 宽 = 父宽
   },
 
   slots: ['default', 'head', 'popper'],
@@ -61,7 +63,6 @@ export const SaPopper = designComponent({
   },
 
   setup({ props, event, slots, attrs }) {
-    console.log(props.placement);
     
     const { emit, on, off } = event
 
@@ -131,13 +132,13 @@ export const SaPopper = designComponent({
         styles.width = `${width}px`
       )
 
-      // if (!!state.referenceEl) {
-      //   if (['top', 'bottom'].indexOf(direction.value) > -1) {
-      //     // styles.width = (state.referenceEl as HTMLElement).offsetWidth + 'px'
-      //   } else if (['left', 'right'].indexOf(direction.value) > -1) {
-      //     // styles.height = (state.referenceEl as HTMLElement).offsetHeight + 'px'
-      //   }
-      // }
+      if (!!state.referenceEl && !!props.sizeEqual) {
+        if (['top', 'bottom'].indexOf(direction.value) > -1) {
+          styles.width = (state.referenceEl as HTMLElement).offsetWidth + 'px'
+        } else if (['left', 'right'].indexOf(direction.value) > -1) {
+          styles.height = (state.referenceEl as HTMLElement).offsetHeight + 'px'
+        }
+      }
 
       return styles
     })
@@ -174,7 +175,7 @@ export const SaPopper = designComponent({
 
         utils.bindEvent()
 
-        state.trigger = getProperTrigger(props.tirgger as ProperTriggerType, {
+        state.trigger = getProperTrigger(props.trigger as ProperTriggerType, {
           model,
           show: methods.show,
           hide: methods.hide,
@@ -400,7 +401,7 @@ export const SaPopper = designComponent({
                     onMousedown={emit.onMousedownPopper}
                     onMouseup={handler.onMouseupPopper}
                     {
-                    ...(props.tirgger === 'hover' ? {
+                    ...(props.trigger === 'hover' ? {
                       onMouseenter: e => emit.onEnterPopper(e),
                       onMouseleave: e => emit.onLeavePopper(e)
                     } : {})

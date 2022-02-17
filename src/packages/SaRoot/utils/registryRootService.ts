@@ -1,8 +1,6 @@
 import { App } from "vue"
 import { SaRoot, SaRootInstance } from "../SaRoot"
 
-
-
 export const RootMapper = (() => {
   const get = (appRootInstance: any): SaRootInstance => {
     return appRootInstance._SA_ROOT
@@ -69,7 +67,7 @@ export function createUseService<_,
         app.mixin({
           computed: {
             [optionsCallName]() {
-              return use(() => RootMapper.get(this.$rout))
+              return use(() => RootMapper.get(this.$root))
             }
           }
         })

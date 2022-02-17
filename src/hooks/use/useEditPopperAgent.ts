@@ -33,7 +33,6 @@ export interface SpecificPopperServiceOption {
   hideOnClickBody?: boolean,
 }
 
-
 export type PopperServiceComponentOption = {
   defaultOption: Readonly<CreateAgentGetterOption>,
   serviceOption: SpecificPopperServiceOption,
@@ -54,6 +53,7 @@ export function useEditPopperAgent(
   }
 ) {
   const service = useService()
+  
   const { editComputed } = useEdit()
   // console.log(servic);
   

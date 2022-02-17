@@ -95,13 +95,16 @@ export const SaScroll = designComponent({
 
     /* --------------------------------- computed -------------------------------- */
 
-    const targetScrollBarSize = computed(() => {
+    const targetScrollbarSize = computed(() => {
       if (!props.scrollX) {
         return props.scrollbarSize || 6
       } else {
         return props.scrollbarSize || 9
       }
     })
+
+    console.log('scroll');
+    
 
     const classes = computed(() => classname([
       'sa-scroll',
@@ -166,14 +169,6 @@ export const SaScroll = designComponent({
       }
 
       return style
-    })
-
-    const targetScrollbarSize = computed(() => {
-      if (!props.scrollX) {
-        return props.scrollbarSize || 6
-      } else {
-        return props.scrollbarSize || 9
-      }
     })
 
     /* -------------------------- methods ------------------------- */

@@ -48,11 +48,11 @@ export const SaInput = designComponent({
     align: { type: String as PropType<'center' | 'left' | 'right'> },
 
     placeholder: { type: String },
-    placeValue: {type: [String, Number]},
+    placeValue: { type: [String, Number] },
     inputInnerTabindex: { type: Number, default: 0 },
-    readonly: { type: Boolean },
-    nativeAttrs: {type: Object},
-    isFocus: {type: Boolean}, 
+    inputReadonly: { type: Boolean },
+    nativeAttrs: { type: Object },
+    isFocus: { type: Boolean },
   },
 
   inheritPropsType: HTMLDivElement,
@@ -160,7 +160,7 @@ export const SaInput = designComponent({
           'sa-input-not-editable': !editComputed.value.editable,
           'sa-input-fill-group': props.fillGroup,
           [`sa-input-align-${props.align}`]: !!props.align,
-          'pl-input-focus': props.isFocus
+          'sa-input-focus': props.isFocus
         },
       ]),
     );
@@ -232,7 +232,7 @@ export const SaInput = designComponent({
 
     const handler = {
       clickClearIcon: (e: MouseEvent) => {
-        
+
         if (!editComputed.value.editable) {
           return;
         }
@@ -298,6 +298,7 @@ export const SaInput = designComponent({
             .split('')
             .filter((c: string) => /^[1-9]\d*$/.test(c))
             .join('');
+            
           if (number === 'negative') {
             numberValue = `-${numberValue}`
           }
@@ -319,7 +320,7 @@ export const SaInput = designComponent({
         style: styles.value,
         disabled: editComputed.value.disabled,
         readonly:
-          props.readonly ||
+          props.inputReadonly ||
           editComputed.value.readonly ||
           editComputed.value.loading,
         ...(props.nativeAttrs || {}),
@@ -327,14 +328,14 @@ export const SaInput = designComponent({
         value: model.value || '',
         placeholder: props.placeholder,
 
-      //   ...(!slots.default.isExist() ? {
-      //     onInput: (e: Event) => {
-      //         /*ie 下不知道为什么页面初始化的之后这里默认就执行了一次，这里判断绕过这个问题*/
-      //         if (e.target === document.activeElement) {
-      //           handler.input(e as any)
-      //         }
-      //     },
-      // } : {}),
+          ...(!slots.default.isExist() ? {
+            onInput: (e: Event) => {
+                /*ie 下不知道为什么页面初始化的之后这里默认就执行了一次，这里判断绕过这个问题*/
+                if (e.target === document.activeElement) {
+                  handler.input(e as any)
+                }
+            },
+        } : {}),
 
         onInput: handler.input,
         onClick: emit.onClickInput,
@@ -342,13 +343,23 @@ export const SaInput = designComponent({
           if (e.target !== e.currentTarget) {
             return;
           }
-          emit.onFocus;
+          emit.onFocus(e);
         },
         onBlur: (e: FocusEvent) => {
           if (e.target !== e.currentTarget) {
             return;
           }
           emit.onBlur(e);
+        },
+        onKeydown: (e: KeyboardEvent) => {
+          
+          emit.onKeydown(e)
+          // switch (getKey(e)) {
+          //   case KEY.enter:
+          //     return handler.enter(e)
+          //   case KEY.esc:
+          //     return emit.onEsc(e)
+          // }
         },
         ref: onRef.input,
       } as any),
@@ -389,8 +400,8 @@ export const SaInput = designComponent({
                   class="sa-input-inner"
                   {...publicProps.value}
                 >
-                  
-                 {slots.default()}
+
+                  {slots.default()}
                 </div>
               ) : (
                 <input class="sa-input-inner" {...publicProps.value} />

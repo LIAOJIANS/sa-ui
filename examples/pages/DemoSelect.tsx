@@ -28,6 +28,7 @@ export default defineComponent({
     return () => <div>
       <SaSelect
        v-model={val[3]}
+       multiple
       > {list.map(item => <SaSelectOption key={item.name} val={item.val} label={item.name}/>)}
       </SaSelect>
     </div>

@@ -91,7 +91,6 @@ export const SaSelectPanel = designComponent({
           if (index > -1) {
             if (!!numberState.multipleMinLimit && newValue.length <= numberState.multipleMinLimit) {
               console.log(`最少选择 ${numberState.multipleMinLimit} 个选项`);
-              
               return
             }
             newValue.splice(index, 1)

@@ -28,7 +28,7 @@ export default defineComponent({
             <SaPopper
               message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
               title="标题"
-              tirgger="click"
+              trigger="click"
             >
               <SaButton status="primary" >click激活</SaButton>
             </SaPopper>
@@ -36,7 +36,7 @@ export default defineComponent({
             <SaPopper
               message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
               title="标题"
-              tirgger="focus"
+              trigger="focus"
             >
               <SaButton status="primary" >focus激活</SaButton>
             </SaPopper>
@@ -45,7 +45,7 @@ export default defineComponent({
               v-model={ state.popperState }
               message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
               title="标题"
-              tirgger="manual"
+              trigger="manual"
             >
               <SaButton status="primary" onClick={() => (state.popperState = !state.popperState)} >手动激活</SaButton>
             </SaPopper>
@@ -74,7 +74,7 @@ export default defineComponent({
 
           return () => <>
             <SaPopper
-              tirgger="manual"
+              trigger="manual"
               v-model={state.customPopperState}
               v-slots={{
                 default: () => <SaButton status="primary" onClick={() => state.customPopperState = true}  >自定义popper</SaButton>,
@@ -144,7 +144,7 @@ export default defineComponent({
           <SaPopper
             message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
             title="标题"
-            tirgger="click"
+            trigger="click"
           >
             <SaButton status="primary" >click激活</SaButton>
           </SaPopper>
@@ -152,7 +152,7 @@ export default defineComponent({
           <SaPopper
             message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
             title="标题"
-            tirgger="focus"
+            trigger="focus"
           >
             <SaButton status="primary" >focus激活</SaButton>
           </SaPopper>
@@ -161,7 +161,7 @@ export default defineComponent({
             v-model={state.popperState}
             message="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
             title="标题"
-            tirgger="manual"
+            trigger="manual"
           >
             <SaButton status="primary" onClick={handler.showPopper} >手动激活</SaButton>
           </SaPopper>
@@ -175,7 +175,7 @@ export default defineComponent({
       >
         <div slot="title">
           <SaPopper
-            tirgger="manual"
+            trigger="manual"
             v-model={state.customPopperState}
             onShow={() => console.log('出现') }
             onHide={() => console.log('消失')}
