@@ -1,0 +1,88 @@
+@include theme {
+  .sa-checkbox {
+    @include public-style;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    outline: none;
+    font-size: 14px;
+
+    .plain-click-node {
+      width: 1.1em;
+      height: 1.1em;
+      display: inline-block;
+      vertical-align: -0.1em;
+
+      .sa-checkbox-inner {
+        transition: all 150ms linear;
+        float: left;
+      }
+
+      & + .sa-checkbox-label {
+        margin-left: 0.5em;
+      }
+    }
+
+    .sa-checkbox-label {
+      display: inline-block;
+    }
+
+    @include statusMixin(checkbox) {
+      .plain-click-node {
+        .sa-checkbox-inner {
+          color: $value;
+        }
+
+        &:after {
+          border-color: $value;
+        }
+      }
+    }
+
+    &.sa-checkbox-status-error {
+      &.sa-checkbox-check-status-check {
+        .sa-checkbox-label {
+          color: $colorError;
+        }
+      }
+    }
+
+    &.sa-checkbox-size-large {
+      font-size: 16px;
+    }
+
+    &.sa-checkbox-size-normal {
+      font-size: 14px;
+    }
+
+    &.sa-checkbox-size-mini {
+      font-size: 12px;
+    }
+
+    &:focus {
+      .sa-checkbox-label {
+        text-decoration: underline;
+      }
+    }
+
+    &.sa-checkbox-disabled {
+      cursor: not-allowed;
+
+      .sa-checkbox-label {
+        color: $disabledText !important;
+      }
+
+      .sa-checkbox-inner {
+        border-color: currentColor !important;
+        background-color: $disabled !important;
+        color: $disabledText !important;
+      }
+    }
+  }
+
+  .sa-checkbox-group {
+    width: 100%;
+  }
+}

@@ -23,6 +23,8 @@ import { disabledUserSelect, enableUserSelect } from './utils/userSelect'
 import { createPopperServiceComponent, createCounter } from './popperService/createPopperServiceComponent'
 import { createUseEditPopperAgent } from './popperService/createAgentGetter'
 
+/* --------------------------- GLOBAL CONFIG ----------------------- */
+import { CheckboxStatus } from './utils/config'
 
 export {
   useStyle,
@@ -53,5 +55,7 @@ export {
   createUseEditPopperAgent,
 
   disabledUserSelect,
-  enableUserSelect
+  enableUserSelect,
+
+  CheckboxStatus
 }

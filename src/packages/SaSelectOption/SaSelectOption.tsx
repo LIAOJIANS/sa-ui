@@ -5,6 +5,7 @@ import { SelectCollector } from "../SaSelect/SaSelect";
 import { SelectPanelCollector } from "../SaSelect/SaSelectPanel";
 import { SelectGroupCollector } from "../SaSelectGroup/SaSelectGroup";
 import SaIcon from '../SaIcon/SaIcon'
+import SaCheckbox from '../SaCheckbox/SaCheckbox'
 
 export const SaSelectOption = designComponent({
   name: 'sa-select-option',
@@ -66,9 +67,10 @@ export const SaSelectOption = designComponent({
           onClick: handler.click,
         }} >
         {!!panel && isShow.value && <>
-          {!!panel.props.multiple && !props.group ? <div>dui</div> : null}
+          {!!panel.props.multiple && !props.group ? <SaCheckbox v-model={isSelected.value} class="sa-select-option-checkbox" /> : null}
           {!!props.icon && <SaIcon icon={props.icon} class="sa-select-option-icon" />}
           {slots.default(props.label)}
+          {!!panel.props.multiple && isSelected.value && <SaIcon size={ 16 } icon='el-icon-check' class="sa-multiple-selected" />}
         </>}
       </div>
     }

@@ -24,7 +24,7 @@
         }
 
         &.sa-select-option-selected {
-          background-color: $colorPrimaryLight;
+          // background-color: $colorPrimaryLight;
           color: $colorPrimary;
         }
       }
@@ -81,8 +81,18 @@
     }
 
     &.sa-select-option-selected {
-      background-color: rgba($colorPrimary, 0.1);
+      // background-color: rgba($colorPrimary, 0.1);
       color: $colorPrimary;
+      font-weight: bold;
+
+      position: relative;
+    }
+
+    .sa-multiple-selected {
+      position: absolute;
+      top: 50%;
+      right: 15%;
+      transform: translateY(-50%);
     }
 
   }

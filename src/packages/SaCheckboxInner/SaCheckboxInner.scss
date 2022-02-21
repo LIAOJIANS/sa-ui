@@ -1,0 +1,57 @@
+@include theme {
+  .sa-checkbox-inner {
+    width: 1.1em;
+    height: 1.1em;
+
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: -0.15em;
+    border-width: 1px;
+    border-style: solid;
+    //border-radius: 2px;
+
+    &.sa-checkbox-inner-status-check {
+      border-color: currentColor;
+      background-color: currentColor;
+
+      .sa-checkbox-inner-check-polyline {
+        fill: transparent;
+        stroke: white;
+        stroke-width: 10;
+      }
+    }
+
+    &.sa-checkbox-inner-status-uncheck {
+      border-color: $ipc;
+      background-color: transparent;
+    }
+
+    &.sa-checkbox-inner-status-minus {
+      border-color: currentColor;
+      background-color: transparent;
+
+      .sa-checkbox-inner-minus-polyline {
+        fill: currentColor;
+      }
+    }
+
+    &.sa-checkbox-inner-disabled {
+      &.sa-checkbox-inner-status-check {
+        background-color: transparent;
+
+        .sa-checkbox-inner-check-polyline {
+          stroke: currentColor;
+        }
+      }
+
+      &.sa-checkbox-inner-status-minus {
+        background-color: transparent;
+
+        .sa-checkbox-inner-minus-polyline {
+          stroke: currentColor;
+        }
+      }
+
+    }
+  }
+}

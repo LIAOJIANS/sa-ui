@@ -1,5 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { useRefs } from "src/hooks";
+import { watch } from "vue";
 
 export const SaInputInnertags = designComponent({
   name: 'sa-input-inner-tags',
@@ -18,6 +19,8 @@ export const SaInputInnertags = designComponent({
   inheritPropsType: HTMLDivElement,
   setup({ props, scopeSlots }) {
     const { refs, onRef } = useRefs({ el: HTMLDivElement })
+
+    
     return {
       refer: {
         refs
@@ -31,11 +34,11 @@ export const SaInputInnertags = designComponent({
           }
 
           {
-            (props.collapseTags ? props.data!.slice(0, props.maxTags) : props.data!.map((item, index) => {
+            (props.collapseTags ? props.data!.slice(0, props.maxTags) : props.data!).map((item: any, index) => (
               <span key={index} class="sa-input-inner-tag-item">
                 {scopeSlots.default({item, index}, null)}
               </span>
-            }))
+            ))
           }
 
           {

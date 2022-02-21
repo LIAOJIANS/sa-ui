@@ -24,6 +24,8 @@ function createResizeDetector(el: HTMLElement, callback: ResizeDetectFunc) {
   }
 
   const runCallBack = (data: ResizeDetectFuncParam) => {
+    console.log(data);
+    
     Object.keys(data).forEach(k => {
       if (data[k] != null && typeof data[k] === "number") {
         data[k] = Math.ceil(data[k])
@@ -36,7 +38,7 @@ function createResizeDetector(el: HTMLElement, callback: ResizeDetectFunc) {
   const detect = () => {
     const { scrollWidth: width, scrollHeight: height } = el
 
-    if (width === state.width && height === state.height) { return } // 宽高跟滚动距离一致  最顶端
+    if (width === state.width && height === state.height) { return }
 
     const ref = {} as ResizeDetectFuncParam
 
@@ -63,16 +65,20 @@ function createResizeDetector(el: HTMLElement, callback: ResizeDetectFunc) {
   }
 
 
-  if (!el) { return console.error(`el is ${typeof el}`) }
+  const init = () => {
+    if (!el) { return console.error(`el is ${typeof el}`) }
 
-  state.observer = new MutationObserver(detect)
-  state.observer.observe(el, { childList: true, subtree: true })
-  const { scrollHeight, scrollWidth } = el
+    state.observer = new MutationObserver(detect)
+    state.observer.observe(el, { childList: true, subtree: true })
+    const { scrollHeight, scrollWidth } = el
 
-  state.height = scrollHeight
-  state.width = scrollWidth
+    state.height = scrollHeight
+    state.width = scrollWidth
 
-  runCallBack({ ...state, el })
+    runCallBack({ ...state, el })
+  }
+
+  init()
 
 
   return {
@@ -96,7 +102,7 @@ export function useResizeDetector(
   const state = { resizeDetector: null as null | ResizeDetector }
 
   watch(elGetter, async el => {
-    await delay()
+    await delay(0)
 
     if (!!state.resizeDetector) {
       state.resizeDetector.destroy()
@@ -109,6 +115,8 @@ export function useResizeDetector(
     )
   }, { immediate: true })
 
+  !!state.resizeDetector && state.resizeDetector.detect()
+  
   onBeforeUnmount(() => {
     !!state.resizeDetector && state.resizeDetector.destroy()
   })

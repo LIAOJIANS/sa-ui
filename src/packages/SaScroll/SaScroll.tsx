@@ -103,9 +103,6 @@ export const SaScroll = designComponent({
       }
     })
 
-    console.log('scroll');
-    
-
     const classes = computed(() => classname([
       'sa-scroll',
       {
@@ -153,19 +150,19 @@ export const SaScroll = designComponent({
       }
 
       if (props.fitContentWidth) {
-        style.width = '100%'
-      }
-
-      if (props.fitContentHeight) {
-        style.height = '100%'
-      }
-
-      if (props.fitHostWidth) {
         style.width = unit(state.contentWidth)
       }
 
-      if (props.fitHostHeight) {
+      if (props.fitContentHeight) {
         style.height = unit(state.contentHeight)
+      }
+
+      if (props.fitHostWidth) {
+        style.width = '100%'
+      }
+
+      if (props.fitHostHeight) {
+        style.height = '100%'
       }
 
       return style
@@ -200,7 +197,7 @@ export const SaScroll = designComponent({
 
         const config = typeof configOrTime === "number" ? { time: configOrTime } : configOrTime
         const { time, noEmitScroll } = (config || {})
-        
+
         if (noEmitScroll) {
           freezeState.emitScroll = false
         }
@@ -281,11 +278,11 @@ export const SaScroll = designComponent({
         const { width, height } = data
 
         if (width != null) {
-          state.hostWidth = width
+          state.hostWidth = width - 16
         }
 
         if (height != null) {
-          state.hostHeight = height
+          state.hostHeight = height - 16
         }
       },
 
@@ -293,12 +290,18 @@ export const SaScroll = designComponent({
         const { width, height } = data
 
         if (width != null) {
-          state.contentWidth = width - 16
+          state.contentWidth = width
         }
 
+        // state.contentWidth = refs.host?.offsetWidth!
+
+
         if (height != null) {
-          state.contentWidth = height - 16
+          state.contentHeight = height
         }
+
+        // console.log(data);
+
       },
 
       wrapperScroll: (e: Event) => {

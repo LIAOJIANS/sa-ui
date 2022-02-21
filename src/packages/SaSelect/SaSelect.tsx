@@ -271,18 +271,16 @@ export const SaSelect = designComponent({
           {{
             hidden: () => slots.default(),
             default: !props.multiple ? null : () => (
-              // <d></d>
               <SaInputInnertags
                 data={multipleTags.value}
                 collapseTags={props.collapseTags}
-                
                 maxTags={props.maxTags}
                 placeholder={inputBinding.value.placeholder!}
                 v-slots={{
                   default: ({ item, index }: { item: SelectOption, index: number }) => (
                     <Fragment key={index}>
                       <span>{item.props.label}</span>
-                      <SaIcon icon="el-icon-close" onClick={handler.onClickItemCloseIcon(item, index)} />
+                      <SaIcon icon="el-icon-close" onClick={() => handler.onClickItemCloseIcon(item, index)} />
                     </Fragment>
                   )
                 }}
