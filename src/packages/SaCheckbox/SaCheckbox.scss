@@ -4,10 +4,12 @@
     cursor: pointer;
     user-select: none;
     position: relative;
-    display: inline-block;
+    display: inline-flex;
     vertical-align: baseline;
     outline: none;
     font-size: 14px;
+    
+    align-items: center;
 
     .plain-click-node {
       width: 1.1em;

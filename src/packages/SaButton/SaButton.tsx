@@ -13,7 +13,6 @@ export const SaButton = designComponent({
     mode: { type: String as PropType<'plain | fill | text'>, default: 'fill' },
     lable: { type: String },
     tip: { type: String },
-    style: { type: Object as PropType<{ [k in keyof CSSProperties]: number | null | string | undefined }> },
     icon: { type: String },
     type: { type: String, default: 'button' },
     block: {type: Boolean},

@@ -12,7 +12,8 @@ import SaDropdowmOption from './SaDropdowmOption/SaDropdowmOption'
 import SaSelect from './SaSelect/SaSelect'
 import SaSelectOption from './SaSelectOption/SaSelectOption'
 import SaScroll from './SaScroll/SaScroll'
-
+import SaCheckbox from './SaCheckbox/SaCheckbox'
+import SaCheckboxGroup from './SaCheckboxGroup/SaCheckboxGroup'
 
 export {
   SaInput,
@@ -29,4 +30,6 @@ export {
   SaSelect,
   SaSelectOption,
   SaScroll,
+  SaCheckbox,
+  SaCheckboxGroup
 }
