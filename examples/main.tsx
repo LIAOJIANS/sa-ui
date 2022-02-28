@@ -6,6 +6,7 @@ import App from './App'
 
 const app = createApp(App)
 
+// 自定义代码高亮指令
 dirHeighLight(app)
 
 app.mount('#app')

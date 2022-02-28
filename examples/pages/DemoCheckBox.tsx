@@ -4,9 +4,7 @@ import { defineComponent, reactive } from "vue";
 import DemoContainer from '../components/container'
 import { SaCheckbox, SaButton, SaCheckboxGroup } from 'sa-ui'
 
-
 export default defineComponent({
-
   setup(props) {
 
     const state = reactive({
@@ -45,7 +43,7 @@ export default defineComponent({
       },
 
       disabled: {
-        checkboxStatus1: false,
+        checkboxStatus1: true,
         checkboxStatus2: false,
         checkAll: [],
         describe: '多选框不可用状态。',

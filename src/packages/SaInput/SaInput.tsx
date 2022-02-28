@@ -171,6 +171,7 @@ export const SaInput = designComponent({
       },
 
       format: (val: string) => {
+      
         if (val.length > 11) {
           val = val.substring(0, 11);
         }
@@ -184,7 +185,7 @@ export const SaInput = designComponent({
           format += c;
         });
 
-        emit.onInputChange({ format: format, val });
+        emit.onInputChange({ format, val });
         model.value = format;
       },
 

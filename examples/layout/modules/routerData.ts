@@ -28,7 +28,9 @@ const routes: IRoutesData[] = [
       { name: 'Buttom', title: '按钮', page: '/DemoButton', complete: true },
       { name: 'Dropdown', title: '下拉菜单', page: '/DemoDropdown', complete: true },
       { name: 'Scroll', title: '滚动组件', page: '/DemoScroll', complete: true },
-      { name: 'CheckBox', title: 'CheckBox多选框', page: '/DemoCheckBox', complete: true }
+      { name: 'CheckBox', title: 'CheckBox多选框', page: '/DemoCheckBox', complete: true },
+      
+      { name: 'Collapse', title: 'Collapse折叠面板', page: '/DemoCollapse', complete: true }
     ]
   },
 

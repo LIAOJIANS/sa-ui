@@ -36,7 +36,7 @@ export default defineComponent({
           {
             icons.value.map(c => (
               <div class="icon-item" onClick={_ => copyIconName(c)}>
-                <SaIcon icon={c} size={42} color="#08979c" />
+                <SaIcon icon={c} size={42} color="#3C64A0" />
                 <p>{c}</p>
               </div>
             ))

@@ -14,6 +14,8 @@ import SaSelectOption from './SaSelectOption/SaSelectOption'
 import SaScroll from './SaScroll/SaScroll'
 import SaCheckbox from './SaCheckbox/SaCheckbox'
 import SaCheckboxGroup from './SaCheckboxGroup/SaCheckboxGroup'
+import SaCollapse from './SaCollapse/SaCollapse'
+import SaCollapseGroup from './SaCollapseGroup/SaCollapseGroup'
 
 export {
   SaInput,
@@ -31,5 +33,7 @@ export {
   SaSelectOption,
   SaScroll,
   SaCheckbox,
-  SaCheckboxGroup
+  SaCheckboxGroup,
+  SaCollapse,
+  SaCollapseGroup
 }

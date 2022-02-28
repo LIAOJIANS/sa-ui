@@ -33,7 +33,14 @@ html, body {
 @include theme {
   .app-head {
     color: $colorPrimary;
+
+    .git-url {
+      color: $cyan_7;
+    
+      font-size: 16px;
+    }
   }
+
 }
 
 .app-menu {
@@ -115,5 +122,5 @@ html, body {
       }
     }
   }
+ 
 }
-

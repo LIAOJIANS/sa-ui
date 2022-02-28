@@ -1,21 +1,20 @@
 @include theme {
-    .sa-icon {
-        display: inline-block;
-        height: 1em;
-        width: 1em;
-        line-height: normal;
+  .sa-icon {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    line-height: normal;
 
-        &.el-svg-icon {
-            vertical-align: -0.15em;
+    &.el-svg-icon {
+      vertical-align: -0.15em;
 
-            path {
-                fill: currentColor;
-            }
-        }
-
-        @include statusMixin(icon) {
-            color: $value;
-        }
-
+      path {
+        fill: currentColor;
+      }
     }
+
+    @include statusMixin(icon) {
+      color: $value;
+    }
+  }
 }
