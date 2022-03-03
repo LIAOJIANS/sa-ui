@@ -41,6 +41,13 @@ const routes: IRoutesData[] = [
       { name: 'Input', title: '文本框', page: '/DemoInput', complete: true},
       { name: 'Select', title: '选择器', page: '/DemoSelect', complete: true }
     ]
+  },
+
+  {
+    name: '消息组件',
+    childrens: [
+      { name: 'Message', title: '消息提示', page: '/DemoMessage', complete: true}
+    ]
   }
 ]
 

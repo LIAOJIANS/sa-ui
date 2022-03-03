@@ -16,6 +16,7 @@ import SaCheckbox from './SaCheckbox/SaCheckbox'
 import SaCheckboxGroup from './SaCheckboxGroup/SaCheckboxGroup'
 import SaCollapse from './SaCollapse/SaCollapse'
 import SaCollapseGroup from './SaCollapseGroup/SaCollapseGroup'
+import SaMessage from './SaMessage/SaMessage'
 
 export {
   SaInput,
@@ -35,5 +36,6 @@ export {
   SaCheckbox,
   SaCheckboxGroup,
   SaCollapse,
-  SaCollapseGroup
+  SaCollapseGroup,
+  SaMessage
 }

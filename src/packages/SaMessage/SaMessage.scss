@@ -1,0 +1,114 @@
+@include theme {
+  .sa-message-manager {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+  }
+  .sa-message-container {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    @each $horizontal in (start, center, end) {
+      @each $vertical in (start, center, end) {
+        &.sa-message-container-#{$horizontal}-#{$vertical} {
+          @if $vertical  == center {
+            justify-content: center;
+          } @else {
+            justify-content: flex-#{$vertical};
+          }
+
+          & > .sa-list {
+            & > .sa-item {
+              margin-bottom: 8px;
+              width: 100%;
+              $textAlign: center;
+              @if ($horizontal == "start") {
+                $textAlign: left;
+              }
+              @if ($horizontal == "end") {
+                $textAlign: right;
+              }
+              text-align: $textAlign;
+            }
+          }
+        }
+      }
+    }
+  }
+  .sa-message {
+    text-align: initial;
+    padding: 12px 20px;
+    white-space: nowrap;
+    background-color: white;
+    pointer-events: auto;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+    position: relative;
+
+    .sa-icon {
+      &:not(.sa-message-close) + * {
+        margin-left: 8px;
+      }
+    }
+
+    .sa-message-close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      opacity: 0;
+      transition: opacity 300ms linear;
+      width: 20px;
+      height: 28px;
+    }
+
+    &:hover {
+      .sa-message-close {
+        opacity: initial
+      }
+    }
+
+    .sa-message-content {
+      max-width: 75vw;
+      display: inline-block;
+      white-space: normal;
+    }
+
+    .sa-message-close {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    @include statusMixin(message) {
+      .sa-icon {
+        color: $value;
+      }
+    }
+
+    &.sa-message-status-dark {
+      background-color: #383838;
+      border-color: #383838;
+      color: white;
+    }
+
+    &.sa-message-status-lite {
+      background-color: white;
+      border-color: #ddd;
+      color: $itc;
+    }
+  }
+}
