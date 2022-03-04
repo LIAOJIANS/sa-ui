@@ -1,5 +1,7 @@
 import { VueNode } from "src/advancedComponentionsApi/designComponent.utils";
 import { RequireFormat } from "src/hooks/utils/RequireFormat";
+import { createUseService } from "../SaRoot/utils/registryRootService";
+import SaMessageManager from "./SaMessageManager";
 
 export enum MessageServiceDirection {
   start = 'start',
@@ -27,3 +29,11 @@ export type MessageServiceFormatOption = RequireFormat<MessageServiceOption, 'ho
   close: () => void,
 }
 
+export const useMessage = createUseService({
+  name: 'message-service',
+  managerComponent: SaMessageManager,
+
+  createService: (getManage) => {
+
+  }
+})
