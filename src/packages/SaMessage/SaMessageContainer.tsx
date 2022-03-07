@@ -1,15 +1,17 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { classname, delay, useRefList } from "src/hooks";
-import { computed, PropType, reactive } from "vue";
-import { MessageServiceDirection, MessageServiceFormatOption } from ".";
+import { computed,reactive } from "vue";
+import { MessageServiceFormatOption } from ".";
 import SaMessage from "./SaMessage";
+import { SaList } from '../SaList/SaList'
+import { SaItem } from '../SaItem/SaItem'
 
-export const SaMessageContainer = designComponent({
+export default designComponent({
   name: 'sa-message-container',
   props: {
-    horizontal: { type: String as PropType<MessageServiceDirection>, default: 'center', required: true },
-    vertical: { type: String as PropType<MessageServiceDirection>, default: 'start', required: true },
-    duration: { type: String, default: "30px" },
+    horizontal: { type: String, required: true },
+    vertical: { type: String, required: true },
+    dur: { type: String, default: "30px" },
   },
 
   setup({ props }) {
@@ -52,22 +54,23 @@ export const SaMessageContainer = designComponent({
       render: () => (
         <div
           class={classes.value}
-          style={{ padding: props.duration }}
+          style={{ padding: props.dur }}
         >
+          <SaList direction="top">
           {
             state.options.map((option, index) => (
-              <SaMessage
-                key={index}
+              <SaItem  key={index}>
+                <SaMessage
                 option={option}
                 ref={onRefList(index)}
                 onClose={() => utils.closeMessage(index)}
               />
+              </SaItem>
             ))
           }
+          </SaList>
         </div>
       )
     }
   }
 })
-
-export default SaMessageContainer
