@@ -184,9 +184,6 @@ export const adjustPlacement = (
     }[align]
 
     top -= padding
-
-
-    console.log(left);
   }
 
   switch (direction) {

@@ -311,7 +311,6 @@ export const SaPopper = designComponent({
         await delay()
         const comment = getElement(refs.comment)
         const reference = !!comment ? comment!.nextElementSibling as HTMLElement : null
-        console.log(reference, state.el.reference)
         if (!!reference && reference !== state.el.reference) {
           await utils.destroy()
           state.el.reference = markRaw(reference)

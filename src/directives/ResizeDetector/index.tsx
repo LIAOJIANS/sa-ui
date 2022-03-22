@@ -24,8 +24,6 @@ function createResizeDetector(el: HTMLElement, callback: ResizeDetectFunc) {
   }
 
   const runCallBack = (data: ResizeDetectFuncParam) => {
-    console.log(data);
-    
     Object.keys(data).forEach(k => {
       if (data[k] != null && typeof data[k] === "number") {
         data[k] = Math.ceil(data[k])
@@ -116,7 +114,7 @@ export function useResizeDetector(
   }, { immediate: true })
 
   !!state.resizeDetector && state.resizeDetector.detect()
-  
+
   onBeforeUnmount(() => {
     !!state.resizeDetector && state.resizeDetector.destroy()
   })

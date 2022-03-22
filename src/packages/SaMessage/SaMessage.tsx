@@ -62,7 +62,7 @@ export const SaMessage = designComponent({
         {props.option.icon && <SaIcon icon={props.option.icon} />}
         <div class="sa-message-content">{!!props.option.render ? props.option.render() : props.option.message}</div>
         <div class="sa-message-close">
-          <SaIcon icon="el-icon-close" onClick={() => handler.close} />
+          <SaIcon icon="el-icon-close" onClick={() => handler.close()} />
         </div>
       </div>
     }

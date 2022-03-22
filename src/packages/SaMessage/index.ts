@@ -36,7 +36,7 @@ const formatOption = (() => {
       close: () => null,
       horizontal: option.horizontal || MessageServiceDirection.center,
       vertical: option.vertical || MessageServiceDirection.start,
-      distance: option.distance === null ? null : (option.distance || 30 * 1000),
+      distance: option.distance === null ? null : (option.distance || 3 * 1000),
       status,
       icon: option?.icon !== undefined ? option.icon : (!status ? null : STATUS[status].icon),
     })

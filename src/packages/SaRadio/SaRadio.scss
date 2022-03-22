@@ -1,0 +1,89 @@
+@include theme {
+  .sa-radio {
+    @include public-style;
+    margin: 0 10px;
+    display: inline-block;
+    outline: none;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+
+    .plain-click-node {
+      display: inline-block;
+
+      width: 1.1em;
+      height: 1.1em;
+      border-radius: 100px;
+      vertical-align: -0.1em;
+
+      .sa-radio-inner {
+        transition: all 150ms linear;
+        float: left;
+      }
+
+      & + .sa-radio-label {
+        margin-left: 0.5em;
+      }
+    }
+
+    .sa-radio-label {
+      display: inline-block;
+    }
+
+    @include statusMixin(radio) {
+      .plain-click-node {
+        color: $ipc;
+
+        &:after {
+          border-color: $value;
+        }
+      }
+      &.sa-radio-checked {
+        .sa-radio-label {
+          color: $value;
+        }
+
+        .sa-radio-inner {
+          color: $value;
+        }
+      }
+    }
+
+    &.sa-radio-size-large {
+      font-size: 16px;
+    }
+
+    &.sa-radio-size-normal {
+      font-size: 14px;
+    }
+
+    &.sa-radio-size-mini {
+      font-size: 12px;
+    }
+
+    &:hover {
+      .sa-radio-label {
+        text-shadow: 0 5px 5px $cyan_3;
+      }
+    }
+
+    &.sa-radio-disabled {
+      cursor: not-allowed;
+
+      .sa-radio-label {
+        color: $disabledText !important;
+      }
+
+      .sa-radio-inner {
+        border-color: currentColor !important;
+        background-color: $disabled !important;
+        color: $disabledText !important;
+      }
+    }
+
+  }
+
+  .sa-radio-group {
+    width: 100%;
+  }
+}
