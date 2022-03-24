@@ -118,7 +118,7 @@ html, body {
     .app-menu-item {
       &:hover {
         background-color: rgba($colorPrimary, 0.1);
-        text-decoration: underline;
+        text-shadow: 0 5px 5px $cyan_3;
       }
     }
   }
