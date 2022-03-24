@@ -20,6 +20,7 @@ const routes: IRoutesData[] = [
     name: '基础',
     childrens: [
       { name: 'Index', title: '基本信息', page: '/index', complete: false },
+      { name: 'Grid', title: '栅格布局', page: '/DemoGrid', complete: true },
       { name: 'Icon', title: '图标', page: '/DemoIcon', complete: true},
       { name: 'Title', title: '标题', page: '/DemoTitle', complete: true},
       { name: 'DrawerCard', title: '卡片抽屉', page: '/DemoDrawerCard', complete: true },

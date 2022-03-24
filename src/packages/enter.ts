@@ -18,6 +18,8 @@ import SaCollapse from './SaCollapse/SaCollapse'
 import SaCollapseGroup from './SaCollapseGroup/SaCollapseGroup'
 import SaRadio from './SaRadio/SaRadio'
 import SaRadioGroup from './SaRadioGroup/SaRadioGroup'
+import SaCol from './SaCol/SaCol'
+import SaRow from './SaRow/SaRow'
 
 import { useMessage } from './SaMessage/index'
 
