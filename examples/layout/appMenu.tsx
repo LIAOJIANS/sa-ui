@@ -22,11 +22,11 @@ export default defineComponent({
                     <span>{ menu.name }</span>
                     <span>{ menu.title }</span>
                     {
-                      !!menu.complete && (
-                        <div class="app-menu-item-is-done"> 
-                          <i>⭐</i>
-                        </div>
-                      )
+                      // !!menu.complete && (
+                      //   <div class="app-menu-item-is-done"> 
+                      //     <i>⭐</i>
+                      //   </div>
+                      // )
                     }
                   </div>
                 ))

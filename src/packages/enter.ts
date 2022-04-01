@@ -44,6 +44,8 @@ export {
   SaCollapseGroup,
   SaRadio,
   SaRadioGroup,
+  SaRow,
+  SaCol,
 
   useMessage
 }
