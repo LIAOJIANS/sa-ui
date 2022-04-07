@@ -32,7 +32,8 @@ const routes: IRoutesData[] = [
       { name: 'Radio', title: 'Radio单选框', page: '/DemoRadio', complete: true },
       { name: 'CheckBox', title: 'CheckBox多选框', page: '/DemoCheckBox', complete: true },
       
-      { name: 'Collapse', title: 'Collapse折叠面板', page: '/DemoCollapse', complete: true }
+      { name: 'Collapse', title: 'Collapse折叠面板', page: '/DemoCollapse', complete: true },
+      { name: 'Transfer', title: 'Transfer穿梭框', page: '/DemoTransfer', complete: true }
     ]
   },
 

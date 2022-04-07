@@ -20,6 +20,7 @@ import SaRadio from './SaRadio/SaRadio'
 import SaRadioGroup from './SaRadioGroup/SaRadioGroup'
 import SaCol from './SaCol/SaCol'
 import SaRow from './SaRow/SaRow'
+import SaTransfer from './SaTransfer/SaTransfer'
 
 import { useMessage } from './SaMessage/index'
 
@@ -46,6 +47,7 @@ export {
   SaRadioGroup,
   SaRow,
   SaCol,
+  SaTransfer,
 
   useMessage
 }
