@@ -1,7 +1,88 @@
-
-
 @include theme {
   .sa-transfer {
-    
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .sa-transfer-panel {
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+    background: #fff;
+    display: inline-block;
+    vertical-align: middle;
+    width: 200px;
+    max-height: 100%;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .sa-transfer-panel__header {
+    height: 40px;
+    line-height: 40px;
+    background: #f5f7fa;
+    margin: 0;
+    padding-left: 5px;
+    border-bottom: 1px solid #ebeef5;
+    box-sizing: border-box;
+    color: #000;
+    position: relative;
+  }
+
+  .sa-transfer-panel-checked_size {
+    position: absolute;
+    right: 15px;
+    color: #909399;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .sa-transfer-panel-checked_item {
+    padding: 5px 0;
+  }
+
+  .sa-transfer-panel__body {
+    color: #606266;
+  }
+
+  .sa-transfer-panel__scroll {
+
+    height: 246px;
+  }
+
+  .is-with-footer {
+    padding-bottom: 50px;
+  }
+
+  .sa-transfer-direction-buttons {
+    margin: 0 40px;
+  }
+
+  .sa-transfer-panel__list {
+    margin: 0;
+    padding: 6px 5px;
+    list-style: none;
+    box-sizing: border-box;
+  }
+
+  .sa-transfer-panel__noData {
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .sa-transfer-panel__filter {
+    margin: 15px 8px;
+  }
+
+  .sa-transfer-panel__footer {
+    height: 50px;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid #ebeef5;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
   }
 }

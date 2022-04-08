@@ -16,8 +16,8 @@ export const SaSelectPanel = designComponent({
     multipleMaxLimit: { type: [Number, String] },                     // 多选最多选择个数
     multipleMinLimit: { type: [Number, String] },                     // 多选最少选择个数
 
-    noMatchText: { type: String, defalut: '暂无匹配数据' },
-    noDataText: { type: String, defalue: '暂无数据' },
+    noMatchText: { type: String, default: '暂无匹配数据' },
+    noDataText: { type: String, default: '暂无数据' },
 
     filterMethod: { type: Function as PropType<(option: { val: string | number, label: string | number, disabled?: boolean }) => boolean> },// 筛选过滤函数
 
@@ -219,8 +219,6 @@ export const SaSelectPanel = designComponent({
             </div>
           ) : null}
         </>
-
-        console.log(inner)
 
         const content: any = !!props.height ? (
           <SaScroll fitHostWidth ref={onRef.scroll}>{inner}</SaScroll>

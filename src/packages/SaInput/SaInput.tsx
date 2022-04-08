@@ -70,7 +70,7 @@ export const SaInput = designComponent({
     onClickSuffixIcon: (e: MouseEvent) => true,
     onClickClearIcon: (e: MouseEvent) => true,
 
-    onInputChange: (row: { format: string; val: string }) => true,
+    onInputChange: (row: { format?: string; val: string }) => true,
   },
 
   slots: ['default', 'append', 'prepend', 'hidden'],
@@ -268,6 +268,7 @@ export const SaInput = designComponent({
 
         if (!!textarea || (!type && !number)) {
           model.value = e.target.value;
+          emit.onInputChange({ val: e.target.value });
           return;
         }
 
@@ -310,6 +311,7 @@ export const SaInput = designComponent({
             .fill('0')
             .join('')}`;
         } else {
+          
           model.value = numberValue
         }
       },

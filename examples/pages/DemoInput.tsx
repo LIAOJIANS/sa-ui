@@ -49,6 +49,7 @@ export default defineComponent({
         <p style={{ margin: '10px 0' }}></p>
         <SaInput
           v-model={state.inputValue1}
+          clearIcon
         />
 
         <SaTitle
