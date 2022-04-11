@@ -1,13 +1,14 @@
 // @ts-nocheck
 
 import { defineComponent, ref } from "vue"
-import { SaIcon } from 'sa-ui'
+import { SaIcon, useMessage } from 'sa-ui'
 import './scss/DemoIcon.scss'
 
 export default defineComponent({
   setup() {
 
     const iconFile = require.context('sa-ui/SaIcon/icons', false, /\.json$/)
+    const $message = useMessage()
 
     const icons = ref([])
     const inputRef = ref(null) as any
@@ -23,6 +24,7 @@ export default defineComponent({
       inputRef.value.value = iconName
       inputRef.value.select()
       document.execCommand('copy')
+      $message.success('复制成功！')
     }
 
     return () => (

@@ -1,0 +1,42 @@
+
+@include theme {
+
+  .sa-tag {
+    display: inline-block;
+
+    @include statusMixin(tag) {
+      .sa-tag-content {
+        display: inline-block;
+        height: 28px;
+
+        padding: 0 10px;
+        font-size: 12px;
+        line-height: 28px;
+        border-radius: 4px;
+      }
+
+      .sa-tag-plain {
+        color: #fff;
+        background: $value;
+      }
+
+      .sa-tag-no-plain {
+        color: $value;
+        border: 1px solid $value;
+      }
+
+      
+      .sa-tag-close-icon {
+        cursor: pointer;
+      }
+      
+    }
+  }
+  
+  
+  .sa-tag-transitions {
+
+  }
+
+
+}

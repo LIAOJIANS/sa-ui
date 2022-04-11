@@ -33,7 +33,8 @@ const routes: IRoutesData[] = [
       { name: 'CheckBox', title: 'CheckBox多选框', page: '/DemoCheckBox', complete: true },
       
       { name: 'Collapse', title: 'Collapse折叠面板', page: '/DemoCollapse', complete: true },
-      { name: 'Transfer', title: 'Transfer穿梭框', page: '/DemoTransfer', complete: true }
+      { name: 'Transfer', title: 'Transfer穿梭框', page: '/DemoTransfer', complete: true },
+      { name: 'Tag', title: 'Tag 标签', page: '/DemoTag', complete: true }
     ]
   },
 

@@ -27,8 +27,7 @@ export const SaDropdowmOption = designComponent({
     })
 
     const dropdownMenu = SaDropdownMenu.use.inject()
-    console.log(dropdownMenu);
-
+    
     const handler = {
       onClickItem: (e: MouseEvent) => {
         if(props.disabled) {
