@@ -18,10 +18,13 @@ import SaCollapse from './SaCollapse/SaCollapse'
 import SaCollapseGroup from './SaCollapseGroup/SaCollapseGroup'
 import SaRadio from './SaRadio/SaRadio'
 import SaRadioGroup from './SaRadioGroup/SaRadioGroup'
+import SaLoadingMask from './SaLoadingMask/SaLoadingMask'
+import SaLoading from './SaLoading/SaLoading'
 import SaCol from './SaCol/SaCol'
 import SaRow from './SaRow/SaRow'
 import SaTransfer from './SaTransfer/SaTransfer'
 import SaTag from './SaTag/SaTag'
+import SaForm from './SaForm/SaForm'
 
 import { useMessage } from './SaMessage/index'
 
@@ -46,10 +49,13 @@ export {
   SaCollapseGroup,
   SaRadio,
   SaRadioGroup,
+  SaLoadingMask,
+  SaLoading,
   SaRow,
   SaCol,
   SaTransfer,
   SaTag,
+  SaForm,
 
   useMessage
 }

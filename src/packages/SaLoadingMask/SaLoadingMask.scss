@@ -1,0 +1,44 @@
+@include theme {
+  .sa-loading-mask {
+    color: $colorPrimary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: all linear 300ms;
+    transform-origin: center center;
+    cursor: progress;
+    pointer-events: auto;
+
+    .sa-loading {
+      margin-bottom: 20px;
+      font-size: 32px;
+
+      & + span {
+        font-size: 14px;
+      }
+    }
+
+    &.sa-loading-mask-unlock {
+      pointer-events: none;
+    }
+
+    &.sa-loading-mask-fixed-position {
+      position: fixed;
+    }
+  }
+}
+
+.sa-transition-loading-mask-enter-active, .sa-transition-loading-mask-leave-active {
+  opacity: 1;
+}
+
+.sa-transition-loading-mask-enter-from, .sa-transition-loading-mask-leave-to {
+  opacity: 0;
+}

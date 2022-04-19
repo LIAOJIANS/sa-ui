@@ -11,9 +11,11 @@ export default defineComponent({
     })
 
     const handler = {
-      onTransferChange: (val) => {
+      onTransferChange: (val, dir) => {
         
         console.log('lalal',val);
+        console.log('dir', dir);
+        
       },
 
       onLeftChange: (val) => {

@@ -10,7 +10,7 @@ import { useEditPopperAgent } from './use/useEditPopperAgent'
 import { useCollect } from './use/useCollect'
 
 /* ------------------------------- UTILS ---------------------------- */
-import unit from './utils/unit'
+import { unit, removeUnit } from './utils/unit'
 import classname from './utils/className'
 import { nextIndex } from './utils/nextIndex'
 import { getElement } from './utils/getElement'
@@ -43,6 +43,7 @@ export {
   EditProps,
 
   unit,
+  removeUnit,
   classname,
   nextIndex,
   getElement,

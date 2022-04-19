@@ -32,7 +32,7 @@ export const SaTransfer = designComponent({
 
   emits: {
     onUpdateModelValue: (val?: string[]) => true,
-    onTransferChange: (key: any) => true,
+    onTransferChange: (key: any, btnDir?: number) => true,
     onLeftChange: (key: any) => true,
     onRightChange: (key: any) => true
   },
@@ -88,7 +88,7 @@ export const SaTransfer = designComponent({
       dirMove: (index: number) => {
         const type = index == 0 ? 'right' : 'left'
 
-        emit.onTransferChange(state[`${type}Checked`])
+        emit.onTransferChange(state[`${type}Checked`], index)
 
         if (type === 'right') {
           model.value = model.value.filter(c => state.rightChecked.indexOf(c) === -1)

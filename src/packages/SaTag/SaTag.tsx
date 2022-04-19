@@ -10,8 +10,8 @@ export const SaTag = designComponent({
   name: 'sa-tag',
 
   props: {
-    status: { ...StyleProps.status},
-    style: { ...StyleProps.style},
+    status: StyleProps.status,
+    style: StyleProps.style,
     plain: { type: Boolean, default: false },
     closeIcon: { type: Boolean, default: false },
     disableTransitions: { type: Boolean, default: false }

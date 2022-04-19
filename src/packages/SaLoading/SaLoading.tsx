@@ -5,6 +5,9 @@ import './SaLoading.scss'
 import SaLoadingContainer from './type'
 
 export default designComponent({
+  
+  name: 'sa-loading',
+  
   props: {
     type: { type: String, default: 'alpha' }
   },
@@ -38,7 +41,7 @@ export default designComponent({
         refs
       },
       render: () => {
-        return <i class={classes.value} ref={onRef.el}>我是loading</i>
+        return <i class={classes.value} ref={onRef.el}></i>
       }
     }
   }

@@ -11,7 +11,7 @@ export const SaButton = designComponent({
 
   props: {
     mode: { type: String as PropType<'plain | fill | text'>, default: 'fill' },
-    lable: { type: String },
+    label: { type: String },
     tip: { type: String },
     icon: { type: String },
     type: { type: String, default: 'button' },
@@ -52,7 +52,7 @@ export const SaButton = designComponent({
       {
         'sa-button-icon': !!props.icon,
         'sa-button-has-icon': !!props.icon,
-        'sa-button-icon-only': !!props.icon && !props.lable && !slots.default.isExist(),
+        'sa-button-icon-only': !!props.icon && !props.label && !slots.default.isExist(),
         'sa-button-disabled': !!editComputed.value.disabled,
         'sa-button-block': !!props.block,
       }
@@ -72,7 +72,7 @@ export const SaButton = designComponent({
           >
             {!!props.loading && <SaLoading />}
             {!!props.icon && !editComputed.value.loading ? <SaIcon icon={props.icon} /> : null}
-            {slots.default.isExist() ? <span>{slots.default()}</span> : !!props.lable ? <span>{props.lable}</span> : null}
+            {slots.default.isExist() ? <span>{slots.default()}</span> : !!props.label ? <span>{props.label}</span> : null}
           </button>
         )
       }
