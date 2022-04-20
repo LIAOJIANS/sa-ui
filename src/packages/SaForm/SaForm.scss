@@ -44,8 +44,8 @@
         .sa-form-item-required-dot {
           color: $colorError;
           position: relative;
-          top: 2px;
-          right: 12px;
+          top: -2px;
+          right: 9px;
           width: 0;
           display: inline-block;
         }
@@ -156,6 +156,8 @@
         .sa-form-item-label {
           flex: 1;
           white-space: nowrap;
+          // overflow:hidden;
+          // text-overflow: ellipsis;
         }
       }
 

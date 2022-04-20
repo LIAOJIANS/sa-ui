@@ -25,6 +25,7 @@ import SaRow from './SaRow/SaRow'
 import SaTransfer from './SaTransfer/SaTransfer'
 import SaTag from './SaTag/SaTag'
 import SaForm from './SaForm/SaForm'
+import SaFormItem from './SaFormItem/SaFormItem'
 
 import { useMessage } from './SaMessage/index'
 
@@ -56,6 +57,7 @@ export {
   SaTransfer,
   SaTag,
   SaForm,
+  SaFormItem,
 
   useMessage
 }

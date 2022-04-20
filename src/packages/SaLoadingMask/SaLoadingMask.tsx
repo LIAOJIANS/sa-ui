@@ -11,7 +11,7 @@ export const SaLoadingMask = designComponent({
   props: {
     modelValue: { type: Boolean },            // 是否打开遮罩层
     unlock: { type: Boolean },                  // 取消阻止点击事件
-    fixedPosition: { type: Boolean },           // 是否为根节点的加载遮罩
+    fixedPosition: { type: Boolean, default: true },           // 是否为根节点的加载遮罩
     background: { type: String, default: 'rgba(255,255,255,0.85)' }, // 遮罩层背景
     message: { type: String },                                         // 提示信息
     loadingType: { type: String, default: 'alpha' },                   // loading类型

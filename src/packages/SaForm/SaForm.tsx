@@ -4,6 +4,7 @@ import './SaForm.scss'
 import { computed, PropType } from 'vue'
 import { FormPropRules } from "./form.validata";
 import SaFormItem from "../SaFormItem/SaFormItem";
+import SaLoadingMask from "../SaLoadingMask/SaLoadingMask";
 
 export enum FormLabelSite {
   left = 'left',
@@ -24,9 +25,11 @@ export const SaForm = designComponent({
     width: { type: [Number, String] },                                     // form 表单宽度
     columnGutter: { type: [Number, String], default: 16 },                 // 列之间的间距
     labelWidth: { type: [String, Number] },                              // label 宽度
-    labelSite: { type: String as PropType<FormLabelSite>, default: FormLabelSite.left }, // label位置
+    labelSite: { type: String as PropType<FormLabelSite>, default: FormLabelSite.right }, // label位置
+    contentWidth: { type: [String, Number] },                              // 内容宽度
     column: { type: [String, Number], default: 1 },                       // 多列表单的列数
     verticalLabel: { type: Boolean },                                     // 纵向的表单
+    colon: {type: Boolean, default: true},                              // label的冒号
   },
 
   slots: ['default'],
@@ -59,13 +62,15 @@ export const SaForm = designComponent({
 
     return {
       refer: {
-
+        props,
+        numberState
       },
       render: () => <div
         class={classes.value}
         style={{ ...styles.value, ...props.style } as any}
       >
         {slots.default()}
+        <SaLoadingMask v-model={ props.loading } fixedPosition />
       </div>
     }
   }
