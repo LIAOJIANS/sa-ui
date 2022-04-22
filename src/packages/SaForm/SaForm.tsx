@@ -2,7 +2,7 @@ import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { classname, EditProps, StyleProps, unit, useCollect, useEdit, useNumber, useStyle, useStyles, removeUnit } from "src/hooks";
 import './SaForm.scss'
 import { computed, PropType } from 'vue'
-import { FormPropRules } from "./form.validata";
+import { FormPropRules, getFormRuleData } from "./form.validata";
 import SaFormItem from "../SaFormItem/SaFormItem";
 import SaLoadingMask from "../SaLoadingMask/SaLoadingMask";
 
@@ -58,6 +58,12 @@ export const SaForm = designComponent({
     })
     
     const formItem = FormCollector.parent(true) as { value: { props: FormPropRules }[] }
+
+    const formRulesData = computed(() => {
+      return getFormRuleData({
+        
+      })
+    })
 
 
     return {
