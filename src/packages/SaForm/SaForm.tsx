@@ -30,6 +30,7 @@ export const SaForm = designComponent({
     column: { type: [String, Number], default: 1 },                       // 多列表单的列数
     verticalLabel: { type: Boolean },                                     // 纵向的表单
     colon: {type: Boolean, default: true},                              // label的冒号
+    requiredMessage: { type: String, default: '必填' }                  // 默认错误提示
   },
 
   slots: ['default'],
@@ -61,7 +62,9 @@ export const SaForm = designComponent({
 
     const formRulesData = computed(() => {
       return getFormRuleData({
-        
+        formProps: props,
+        formItems: formItem,
+        reuqireMessage: props.requiredMessage
       })
     })
 

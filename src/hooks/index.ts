@@ -17,6 +17,7 @@ import { getElement } from './utils/getElement'
 import { delay } from './utils/delay'
 import { throttle } from './utils/throttle'
 import { disabledUserSelect, enableUserSelect } from './utils/userSelect'
+import { defer } from './utils/defer'
 
 /* --------------------- POPPER-SERVICE ------------------------------- */
 
@@ -49,6 +50,7 @@ export {
   getElement,
   delay,
   throttle,
+  defer,
 
   createPopperServiceComponent,
   createCounter,
