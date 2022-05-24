@@ -3,7 +3,7 @@ import { decopy } from 'js-hodgepodge'
 
 export const formValidataUtil = {
   getPropArray: (prop: string | string[] | undefined): string[] => {
-    if(!prop) {
+    if (!prop) {
       return []
     }
 
@@ -11,30 +11,30 @@ export const formValidataUtil = {
   },
 
   getRuleArray: (rule: FormRuleItem | FormRuleItem[]): FormRuleItem[] => {
-    return decopy(Array.isArray(rule) ? [...rule]: [rule])
+    return decopy(Array.isArray(rule) ? [...rule] : [rule])
   },
 
   getValueByProp: (
-    prop: string, 
-    formData: Record<string, any> | null | undefined, 
+    prop: string,
+    formData: Record<string, any> | null | undefined,
     transform?: (val: any) => any
   ) => {
-    if(!formData) {
+    if (!formData) {
       return null
     }
 
     let val: any;
     if (prop.indexOf('.') === -1) {
-        val = formData[prop]
+      val = formData[prop]
     } else {
-        const fields = prop.split('.')
-        let index = 0, len = fields.length
-        let value = formData[fields[index]]
+      const fields = prop.split('.')
+      let index = 0, len = fields.length
+      let value = formData[fields[index]]
 
-        while (index < len - 1 && value != null) {
-            value = value[fields[++index]]
-        }
-        val = index == len - 1 ? value : null
+      while (index < len - 1 && value != null) {
+        value = value[fields[++index]]
+      }
+      val = index == len - 1 ? value : null
     }
     return !transform ? val : transform(val)
 

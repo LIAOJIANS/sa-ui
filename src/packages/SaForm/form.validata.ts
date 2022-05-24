@@ -110,7 +110,7 @@ export function getFormRuleData({
 
     if (required) {
 
-      prop ? console.error('SaFormItem.props.prop is required when PlForm.props.required is working!') : (() => {
+      prop ? console.error('SaFormItem.props.prop is required when SaForm.props.required is working!') : (() => {
         utils.addRequired(prop, required)
         const requiredRule: StatusRules = {
           prop,
@@ -165,7 +165,9 @@ export function getFormRuleData({
       callback,
       source
     ) => {
+
       if (typeof required === 'function') {
+
         return callback(await required(value, source, rule) || undefined)
       }
 
@@ -190,7 +192,9 @@ export function getFormRuleData({
       return callback()
     }
 
+
     formValidataUtil.getPropArray(prop).forEach(p => {
+
       if (!prev[p]) {
         prev[p] = []
       }
@@ -275,8 +279,9 @@ export function getFormRuleData({
       const ruleKeys = Object.keys(rules)
 
       validation.validate(formData, undefined, (errors) => {
+
         const newErrors = allErrors.filter(e => ruleKeys.indexOf(e.prop) === -1)
-        dfd.resolve([...newErrors, ...errors.map(c => ({ ...c, prop: c.field })) || []].map(i => ({
+        dfd.resolve([...newErrors, ...errors?.map(c => ({ ...c, prop: c.field })) || []].map(i => ({
           ...i,
           label: state.PropToLabel[i.prop]!,
         })))
@@ -289,17 +294,16 @@ export function getFormRuleData({
       const validation = new Schema(rules)
       const dfd = defer<FormValidateError[]>()
       validation.validate(formData, undefined, (errors) => {
-          dfd.resolve((errors || []).map(i => ({
-              ...i,
-              prop: i.field,
-              label: state.PropToLabel[i.field]!
-          })))
+        dfd.resolve((errors || []).map(i => ({
+          ...i,
+          prop: i.field,
+          label: state.PropToLabel[i.field]!
+        })))
       }).then()
       return dfd.promise
     }
   }
 
-  
   return {
     utils,
     rules,

@@ -1,10 +1,12 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, EditProps, StyleProps, unit, useStyle } from "src/hooks";
+import { classname, EditProps, StyleProps, unit, useEdit, useStyle } from "src/hooks";
 import { StyleStatus, useStyles } from "src/hooks/use/useStyle";
-import { computed, PropType } from "vue";
+import { computed, ComputedRef, PropType } from "vue";
 import { FormRuleItem } from "../SaForm/form.validata";
+import { formValidataUtil } from "../SaForm/form.validata.util";
 import { FormCollector, FormLabelSite } from "../SaForm/SaForm";
 import SaTooltip from '../SaTooltip/SaTooltip'
+import SaIcon from '../SaIcon/SaIcon'
 
 const SaFormItem = designComponent({
 
@@ -28,7 +30,8 @@ const SaFormItem = designComponent({
   inheritPropsType: HTMLDivElement,
 
   emits: {
-
+    onBlur: () => true,
+    onChange: () => true,
   },
 
   slots: ['default', 'suffix'],
@@ -39,9 +42,33 @@ const SaFormItem = designComponent({
 
     const { styleComputed } = useStyle({
       adjust: ret => {
-        (ret.status = StyleStatus.error)
+        !!invalidate.value && (ret.status = StyleStatus.error)
       }
     })
+
+    const handler = {
+      onEditChange: () => form.validateHandler.onEditChange(props.prop),
+      onEditBlur: () => form.validateHandler.onBlurChange(props.prop),
+    }
+
+    useEdit({
+      adjust: ret => {
+          ret.onChange = handler.onEditChange
+          ret.onBlur = handler.onEditBlur
+
+          if (!!form.props.disabledProps && !!props.prop) {
+              const fields = formValidataUtil.getPropArray(props.prop)
+              if (!!fields && !!fields.find(f => form.props.disabledProps![f])) {
+                  ret.disabled = true
+              }
+          }
+          if (!!form.props.readonlyProps && !!props.prop) {
+              const fields = formValidataUtil.getPropArray(props.prop)
+              if (!!fields && !!fields.find(f => form.props.readonlyProps![f])) {
+                  ret.readonly = true
+              }
+          }
+      }})
 
     /* ---------------------------------------------- computer ------------------------------------------------- */
 
@@ -50,7 +77,17 @@ const SaFormItem = designComponent({
 
     const labelWidthValue = computed(() => form.props.column === 1 ? undefined : (props.labelWidth || form.props.labelWidth || 120))
 
-    const isRequired = computed(() => true)
+    const isRequired = computed(() => {
+      const ruleProps = formValidataUtil.getPropArray(props.prop)
+
+      if (!!props.rules) {
+        formValidataUtil.getRuleArray(props.rules).forEach(r => {
+          !!r.prop && ruleProps.push(...formValidataUtil.getPropArray(r.prop))
+        })
+      }
+
+      return form.formRulesData.value.utils.isRequire(ruleProps)
+    }) as ComputedRef<boolean>
 
     const classes = computed(() => classname([
       'sa-form-item',
@@ -58,7 +95,9 @@ const SaFormItem = designComponent({
       `sa-form-item-label-align-${labelSiteValue.value}`,
       {
         'sa-form-item-block': props.block,
-        'sa-form-item-required': isRequired.value
+        'sa-form-item-required': isRequired.value,
+
+        'sa-form-item-invalidate': !!invalidate.value
       }
     ]))
 
@@ -69,25 +108,48 @@ const SaFormItem = designComponent({
       }
     })
 
-    const bodyStyles = useStyles(styles => {
+    const bodyStyles = useStyles(style => {
       if (form.props.column === 1) {
-        styles.width = unit(form.props.contentWidth)
-        styles.flex = 'initial'
+        style.width = unit(form.props.contentWidth)
+        style.flex = 'initial'
+      }
+    })
+
+    const invalidate = computed(() => {
+      const { allErrors } = form.childState
+
+      const ruleProps = formValidataUtil.getPropArray(props.prop)
+
+      if (!ruleProps) {
+        return null
+      }
+
+      const fitErros = allErrors.find(err => ruleProps.indexOf(err.prop) > -1)
+      
+
+
+      return !fitErros ? null : {
+        message: fitErros.message,
+        prop: fitErros.prop,
       }
     })
 
     return {
-      render: () => <div class={classes.value}>
+      refer: {
+        props
+      },
+
+      render: () => <div class={classes.value} >
         {!!props.label && (
           <div class="sa-form-item-label" style={labelStyles.value}>
             {(() => {
               const content = <>
-                <span class="sa-form-item-required-dot">*</span>
+                {isRequired.value && <span class="sa-form-item-required-dot">*</span>}
                 <span>{props.label}</span>
                 {!!props.label && !!props.label.trim() && !!colonValue.value && '：'}
               </>
 
-              return form.props.column == 1 ? <SaTooltip tooltip={props.label} showWidth="100%" theme={props.labelColumnTipTheme}>
+              return form.props.column == 1 ? <SaTooltip tooltip={props.label} theme={props.labelColumnTipTheme}>
                 <span>
                   {content}
                 </span>
@@ -95,11 +157,18 @@ const SaFormItem = designComponent({
             })()}
           </div>
         )}
-        <div class="sa-form-item-body" style={ bodyStyles.value }>
+        <div class="sa-form-item-body" style={bodyStyles.value}>
           {slots.default.isExist() && slots.default()}
           {slots.suffix.isExist() && (
             <div class="sa-form-item-suffix">
               {slots.suffix()}
+            </div>
+          )}
+
+          {!!invalidate.value && (
+            <div class="sa-form-item-message">
+              <SaIcon icon="el-icon-warning" status="error" />
+              <span>{invalidate.value.message}</span>
             </div>
           )}
         </div>
@@ -107,6 +176,7 @@ const SaFormItem = designComponent({
     }
   }
 })
+
 
 
 export default SaFormItem
