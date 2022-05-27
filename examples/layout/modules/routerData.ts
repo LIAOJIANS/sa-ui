@@ -40,7 +40,9 @@ const routes: IRoutesData[] = [
       { name: 'Collapse', title: 'Collapse折叠面板', page: '/DemoCollapse', complete: true },
       { name: 'Transfer', title: 'Transfer穿梭框', page: '/DemoTransfer', complete: true },
       { name: 'Tag', title: 'Tag 标签', page: '/DemoTag', complete: true },
-      { name: 'LoadingMask', title: '遮罩层', page: '/DemoLoadingMask', complete: true }
+      { name: 'LoadingMask', title: 'Loading遮罩层', page: '/DemoLoadingMask', complete: true },
+      
+      { name: 'Dialog', title: 'dialog弹窗', page: '/DemoDialog', complete: true }
     ]
   },
 

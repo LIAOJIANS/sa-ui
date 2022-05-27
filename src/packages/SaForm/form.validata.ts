@@ -65,6 +65,7 @@ export function getFormRuleData({
     isRequire: (prop?: string | string[]) => {
       if (!prop) { return false }
       const props = [...formValidataUtil.getPropArray(prop)]
+
       return props.some(p => !!state.propReuqire[p])
     },
 
@@ -83,11 +84,12 @@ export function getFormRuleData({
 
     addRequired: (prop?: string | string[], required?: boolean | undefined | FormRuleValidator) => {
       formValidataUtil.getPropArray(prop).forEach(p => {
+        
         if (required == null) {
           return
         }
 
-        state.propReuqire[p] = typeof required !== "function" && !!required
+        state.propReuqire[p] = typeof required === "function" || !!required //  自定义校验器 也是默认必填项
       })
     }
   }
@@ -109,7 +111,7 @@ export function getFormRuleData({
     utils.addLabel(prop, label)
 
     if (required) {
-
+      
       prop ? console.error('SaFormItem.props.prop is required when SaForm.props.required is working!') : (() => {
         utils.addRequired(prop, required)
         const requiredRule: StatusRules = {

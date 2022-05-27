@@ -18,7 +18,7 @@ const SaFormItem = designComponent({
 
     label: { type: String },
     labelWidth: { type: [String, Number] },
-    require: { type: Boolean },
+    required: { type: Boolean },
     prop: { type: String },
     column: { type: [String, Number], default: 1 },                      // 多列表单的列数
     labelColumnTipTheme: { type: String as PropType<'dark' | 'light'>, default: 'light' },             // 一列时超出提示的tip主题
@@ -79,13 +79,14 @@ const SaFormItem = designComponent({
 
     const isRequired = computed(() => {
       const ruleProps = formValidataUtil.getPropArray(props.prop)
-
+      
       if (!!props.rules) {
         formValidataUtil.getRuleArray(props.rules).forEach(r => {
           !!r.prop && ruleProps.push(...formValidataUtil.getPropArray(r.prop))
         })
       }
 
+      console.log(ruleProps);
       return form.formRulesData.value.utils.isRequire(ruleProps)
     }) as ComputedRef<boolean>
 
@@ -126,8 +127,6 @@ const SaFormItem = designComponent({
 
       const fitErros = allErrors.find(err => ruleProps.indexOf(err.prop) > -1)
       
-
-
       return !fitErros ? null : {
         message: fitErros.message,
         prop: fitErros.prop,

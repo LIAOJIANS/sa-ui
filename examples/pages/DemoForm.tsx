@@ -3,6 +3,7 @@ import { defineComponent, reactive } from "vue";
 // @ts-ignore
 import { SaForm, SaFormItem } from 'sa-ui'
 import { SaInput } from "src/packages";
+import { FormRuleItem } from "src/packages/SaForm/form.validata";
 
 export default defineComponent({
   setup() {
@@ -15,8 +16,19 @@ export default defineComponent({
 
     const rules = {
       val1: [{ required: true, message: '不能为空', trigger: 'blur' }],
-      val2: [{ required: true, message: '不能为空', trigger: 'change' }],
+      // val2: [{ required: true, message: '不能为空', trigger: 'change' }],
       val3: [{ required: true, message: '不能为空', trigger: 'blur' }]
+    }
+
+    const customValidator = (value: any, row: any, rule: FormRuleItem) => {
+      // console.log(value);
+      // console.log(row);
+      // console.log(rule);
+
+     if(!value) {
+      return '我来测试以是'
+     }
+      
     }
 
     return () => <div>
@@ -28,11 +40,12 @@ export default defineComponent({
         contentWidth={ 300 }
         rules={rules}
       >
+        
         <SaFormItem label="111" prop="val1">
           <SaInput v-model={ formData.val1 } style={{ width: '200px' }} />
         </SaFormItem>
 
-        <SaFormItem label="hello2" prop="val2">
+        <SaFormItem label="hello2" prop="val2" rules={{ required: customValidator }}>
           <SaInput v-model={ formData.val2 }  />
         </SaFormItem>
 
