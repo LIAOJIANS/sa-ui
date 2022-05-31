@@ -8,7 +8,7 @@ export default defineComponent({
   setup() {
 
     const state = reactive({
-      showDialog: true
+      showDialog: false
     })
 
     return () => <div>
