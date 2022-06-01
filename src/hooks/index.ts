@@ -1,6 +1,6 @@
 
 /* ------------------------------- USE ---------------------------- */
-import { StyleProps, TitleStyleProps, useStyle, useStyles, DEFAULT_STATUS } from './use/useStyle'
+import { StyleProps, TitleStyleProps, useStyle, useStyles, DEFAULT_STATUS, Styles } from './use/useStyle'
 import { useNumber } from './use/useNumber'
 import useModel from './use/useModel'
 import useRefs from './use/useRefs'
@@ -39,6 +39,7 @@ export {
   useCollect,
   
   StyleProps,
+  Styles,
   TitleStyleProps,
   DEFAULT_STATUS,
   EditProps,

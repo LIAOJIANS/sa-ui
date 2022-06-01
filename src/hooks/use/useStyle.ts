@@ -32,11 +32,13 @@ const enum StyleDirection {
   right = 'right'
 }
 
+export const Styles = { type: Object as PropType<{ [k in keyof CSSProperties]: number | null | string | undefined }> }
+
 export const StyleProps = {
   shape: { type: String as PropType<keyof typeof StyleShape> },
   status: { type: String as PropType<keyof typeof StyleStatus> },
   size: { type: String as PropType<keyof typeof StyleSize> },
-  style: { type: Object as PropType<{ [k in keyof CSSProperties]: number | null | string | undefined }> },
+  style: Styles
 }
 
 export const TitleStyleProps = {

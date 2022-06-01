@@ -36,7 +36,7 @@ register('el-icon-', async (icon) => {
   }
 })
 
-const SaIcon = designComponent({
+export const SaIcon = designComponent({
   name: 'sa-icon',
 
   props: {
