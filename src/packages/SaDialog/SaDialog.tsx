@@ -1,8 +1,10 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, useModel, useStyle, useRefs, unit, Styles } from "src/hooks";
-import { Teleport, Transition, computed, PropType, reactive } from "vue";
+import { classname, useModel, useStyle, useRefs, unit, Styles, nextIndex } from "src/hooks";
+import { KeyboardService, KeyboardServiceOption } from "src/keyboard";
+import { Teleport, Transition, computed, PropType, reactive, watch, ref, onBeforeUnmount } from "vue";
 import SaButton from "../SaButton/SaButton";
 import SaIcon from "../SaIcon/SaIcon";
+import SaLoadingMask from "../SaLoadingMask/SaLoadingMask";
 
 import './SaDialog.scss'
 
@@ -17,14 +19,16 @@ export const SaDialog = designComponent({
 
     transition: { type: String, default: 'sa-transition-dialog' },
     mask: { type: Boolean, default: true },
+    clickMaskClose: { type: Boolean, default: true },
     destroyOnClose: { type: Boolean, default: true },                      // 关闭窗口是否销毁实例
 
-    top: { type: [String, Number] },
+    top: { type: [String, Number], default: '-14vh' },
     height: { type: [String, Number] },
     minHeight: { type: [String, Number] },
     maxHeight: { type: [String, Number] },
 
     scroll: { type: Boolean },
+    scrollAppoint: { type: [String, Number] },   //   滚动到指定位置触发
 
     title: { type: [String, Boolean], default: '提示' },
     showClose: { type: Boolean, default: true },
@@ -33,6 +37,9 @@ export const SaDialog = designComponent({
     cancelButton: { type: [Boolean, Object] as PropType<boolean | { cancelButtonText: string }> },      // 是否显示取消按钮
 
     loading: { type: Boolean },                                               // 弹出框添加 加载中的遮罩
+    confirmOnEnter: { type: Boolean, default: true },
+    closeOnEsc: { type: Boolean, default: true },
+    beforeClose: Function
   },
 
   emits: {
@@ -41,6 +48,11 @@ export const SaDialog = designComponent({
     onClose: () => true,
     onConfirm: () => true,
     onCancel: () => true,
+
+    onScroll: (e: Event) => true,
+    // onScrollTop: (e: Event) => true,
+    // onScrollBottom: (e: Event) => true,
+    onScrollAppoint: (e: Event) => true
   },
 
   slots: [
@@ -51,15 +63,16 @@ export const SaDialog = designComponent({
 
   setup({ props, event: { emit }, slots }) {
 
-    const model = useModel(() => props.modelValue, emit.onUpdateModelValue)
+    const model = ref(false)
 
-    const { onRef } = useRefs({
+    const { onRef, refs } = useRefs({
       el: HTMLDivElement,
       body: HTMLDivElement,
     })
 
     const state = reactive({
-      loading: false
+      loading: false,
+      zIndex: nextIndex(),
     })
 
     /* -------------------------------------------------- computed ------------------------------------------------------- */
@@ -99,6 +112,12 @@ export const SaDialog = designComponent({
       }
     })
 
+    const bodyStyle = computed(() => {
+      return {
+        top: props.top
+      }
+    })
+
     const contentStyle = computed(() => {
       let height = props.height || null
       let width = props.width || null
@@ -112,6 +131,12 @@ export const SaDialog = designComponent({
         width: unit(width),
         minHeight: unit(minHeight),
         maxHeight: unit(maxHeight)
+      }
+    })
+
+    const wrapperStyles = computed(() => {
+      return {
+        zIndex: state.zIndex
       }
     })
 
@@ -132,14 +157,46 @@ export const SaDialog = designComponent({
       },
 
       confirm() {
-        console.log('提交');
-        
+        methods.hide()
+        emit.onConfirm()
+      },
+
+      async show() {
+
+        if (model.value) { return }
+        KeyboardService.listen(handler.keyboardEventOption)
+        KeyboardService.cancelActiveElement()
+
+        state.zIndex = nextIndex()
+        await methods.open()
       },
 
       async hide() {
-        console.log('取消');
-      }
+        if (!model.value) { return }
+        KeyboardService.unbindListener(handler.keyboardEventOption)
+        await methods.close()
+      },
 
+      open() {
+        model.value = true
+        emit.onUpdateModelValue(model.value)
+      },
+
+      async close() {
+        try {
+          if (!!props.beforeClose) {
+            state.loading = true
+            const flag = await props.beforeClose!()
+            if (flag === false) { return }
+          }
+          model.value = false
+          emit.onUpdateModelValue(model.value)
+        } catch (e) {
+          console.error(e);
+        } finally {
+          state.loading = false
+        }
+      }
     }
 
     /* ---------------------------------- header -------------------------------- */
@@ -151,8 +208,54 @@ export const SaDialog = designComponent({
         }
 
         methods.cancel()
+      },
+
+      keyboardEventOption: {
+        "enter": () => {
+
+          if (loading.value) return
+          if (!!props.confirmOnEnter) {
+            methods.confirm()
+          }
+        },
+
+        "esc": () => {
+          if (loading.value) return
+          if (!!props.closeOnEsc) {
+            methods.cancel()
+          }
+        }
+      } as KeyboardServiceOption,
+
+      clickWrapper(e: MouseEvent) {
+        const { target, currentTarget } = e as any as { target: HTMLElement, currentTarget: HTMLElement }
+
+        if (!currentTarget.contains(target)) {
+          return
+        }
+
+        if (loading.value) {
+          return
+        }
+
+        if (props.clickMaskClose) {
+          if (!!refs.body && !refs.body.contains(e.target as HTMLElement)) {
+            methods.cancel()
+          }
+        }
       }
     }
+
+    watch(() => props.modelValue, (val) => {
+      val ? setTimeout(methods.show, 100) : methods.hide()
+    }, { immediate: true })
+
+    onBeforeUnmount(() => {
+      KeyboardService.unbindListener(handler.keyboardEventOption)
+      if (model.value) {
+        methods.hide()
+      }
+    })
 
     return {
       render: () => <Teleport to=".sa-root-service-container">
@@ -160,9 +263,9 @@ export const SaDialog = designComponent({
           {(() => {
 
             const Content = (
-              <div class={classes.value} ref={onRef.el} >
+              <div onClick={handler.clickWrapper} class={classes.value} ref={onRef.el} style={wrapperStyles.value as any}>
 
-                <div class={bodyClasses.value} ref={onRef.body}>
+                <div class={bodyClasses.value} ref={onRef.body} style={bodyStyle.value}>
 
                   {header.value && <div class="sa-dialog-head">
                     {slots.header(<span class="sa-dialog-head-title">{props.title}</span>)}
@@ -174,7 +277,7 @@ export const SaDialog = designComponent({
                   </div>
                   }
 
-                  <div class={contentClasses.value} style={contentStyle.value as any}>
+                  <div class={contentClasses.value} style={contentStyle.value as any} onScroll={emit.onScroll}>
                     {slots.default()}
                   </div>
 
@@ -185,6 +288,8 @@ export const SaDialog = designComponent({
                       {!!props.cancelButton && <SaButton mode="plain" onClick={methods.cancel}>{buttonText.value.cancelButtonText}</SaButton>}
                     </div>
                   }
+
+                  <SaLoadingMask v-model={loading.value} />
                 </div>
 
               </div>
@@ -196,6 +301,7 @@ export const SaDialog = designComponent({
               return <Content v-show={model.value} />
             }
           })()}
+
 
         </Transition>
       </Teleport>
