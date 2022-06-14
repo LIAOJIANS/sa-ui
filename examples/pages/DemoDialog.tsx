@@ -18,7 +18,7 @@ export default defineComponent({
       }
     }
 
-   setTimeout(() => state.loading = false, 5000)
+   setTimeout(() => state.loading = false, 2000)
 
     return () => <div>
       <SaButton onClick={ () => state.showDialog = true }> 点我开启弹窗 </SaButton>

@@ -41,8 +41,7 @@ const routes: IRoutesData[] = [
       { name: 'Transfer', title: 'Transfer穿梭框', page: '/DemoTransfer', complete: true },
       { name: 'Tag', title: 'Tag 标签', page: '/DemoTag', complete: true },
       { name: 'LoadingMask', title: 'Loading遮罩层', page: '/DemoLoadingMask', complete: true },
-      
-      { name: 'Dialog', title: 'dialog弹窗', page: '/DemoDialog', complete: true }
+      { name: 'TimePicker', title: 'Loading遮罩层', page: '/DemoTimePicker', complete: true }
     ]
   },
 
@@ -57,9 +56,10 @@ const routes: IRoutesData[] = [
   },
 
   {
-    name: '消息组件',
+    name: '消息弹窗组件',
     childrens: [
-      { name: 'Message', title: '消息提示', page: '/DemoMessage', complete: true}
+      { name: 'Message', title: '消息提示', page: '/DemoMessage', complete: true},
+      { name: 'Dialog', title: 'dialog弹窗', page: '/DemoDialog', complete: true }
     ]
   }
 ]

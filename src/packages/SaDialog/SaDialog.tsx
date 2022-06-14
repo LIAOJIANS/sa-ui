@@ -1,5 +1,5 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { classname, useModel, useStyle, useRefs, unit, Styles, nextIndex } from "src/hooks";
+import { classname, useStyle, useRefs, unit, Styles, nextIndex } from "src/hooks";
 import { KeyboardService, KeyboardServiceOption } from "src/keyboard";
 import { Teleport, Transition, computed, PropType, reactive, watch, ref, onBeforeUnmount } from "vue";
 import SaButton from "../SaButton/SaButton";
