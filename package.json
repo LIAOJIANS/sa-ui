@@ -15,6 +15,7 @@
   "dependencies": {
     "async-validator": "^3.5.2",
     "core-js": "^3.6.5",
+    "dayjs": "^1.11.3",
     "highlight": "^0.2.4",
     "highlight.js": "^11.3.1",
     "js-hodgepodge": "^1.2.3",

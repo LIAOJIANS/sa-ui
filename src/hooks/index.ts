@@ -18,6 +18,7 @@ import { delay } from './utils/delay'
 import { throttle } from './utils/throttle'
 import { disabledUserSelect, enableUserSelect } from './utils/userSelect'
 import { defer } from './utils/defer'
+import { findOne } from './utils/findOne'
 
 /* --------------------- POPPER-SERVICE ------------------------------- */
 
@@ -26,6 +27,7 @@ import { createUseEditPopperAgent } from './popperService/createAgentGetter'
 
 /* --------------------------- GLOBAL CONFIG ----------------------- */
 import { CheckboxStatus } from './utils/config'
+import { plainDate, utils as plainDateUtils } from './utils/plainDate'
 
 export {
   useStyle,
@@ -52,6 +54,9 @@ export {
   delay,
   throttle,
   defer,
+  findOne,
+  plainDate,
+  plainDateUtils,
 
   createPopperServiceComponent,
   createCounter,

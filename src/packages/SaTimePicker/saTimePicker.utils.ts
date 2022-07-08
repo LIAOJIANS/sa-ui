@@ -25,3 +25,9 @@ export const TimePublicProps = {
   custom: Function,
   checkDisabled: Function,
 }
+
+export const globalConfig = {
+  size: 24
+} as {
+  size: number
+}
