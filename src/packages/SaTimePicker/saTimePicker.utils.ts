@@ -17,11 +17,11 @@ export enum TimePanelLayout {
 }
 
 export const TimePublicProps = {
-  displayFormat: {type: String, default: 'HH:mm:ss'},
-  valueFormat: {type: String, default: 'HH:mm:ss'},
-  max: {type: String},
-  min: {type: String},
-  layout: {type: Array, default: () => (['h', 'm', 's'])},
+  displayFormat: { type: String, default: 'HH:mm:ss' },
+  valueFormat: { type: String, default: 'HH:mm:ss' },
+  max: { type: String },
+  min: { type: String },
+  layout: { type: Array, default: () => (['h', 'm', 's']) },
   custom: Function,
   checkDisabled: Function,
 }
@@ -30,4 +30,12 @@ export const globalConfig = {
   size: 24
 } as {
   size: number
+}
+
+export const TimePanelProps = {
+  modelValue: { type: String },
+  start: { type: String },
+  end: { type: String },
+  range: { type: Boolean },
+  ...TimePublicProps,
 }
