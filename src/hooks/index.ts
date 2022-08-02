@@ -2,7 +2,7 @@
 /* ------------------------------- USE ---------------------------- */
 import { StyleProps, TitleStyleProps, useStyle, useStyles, DEFAULT_STATUS, Styles } from './use/useStyle'
 import { useNumber } from './use/useNumber'
-import useModel from './use/useModel'
+import useModel, { ModelType } from './use/useModel'
 import useRefs from './use/useRefs'
 import { EditProps, useEdit } from './use/useEdit'
 import { useRefList } from './use/useRefList'
@@ -66,5 +66,6 @@ export {
   disabledUserSelect,
   enableUserSelect,
 
-  CheckboxStatus
+  ModelType,
+  CheckboxStatus,
 }

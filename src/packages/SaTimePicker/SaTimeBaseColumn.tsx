@@ -1,9 +1,10 @@
+import './time-base-column.scss'
 import { delay } from "js-hodgepodge";
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { EditProps, findOne, plainDateUtils, useEdit, useModel, useRefList, useRefs } from "src/hooks";
 import { computed, PropType } from "vue";
 import SaScroll from "../SaScroll/SaScroll";
-import { globalConfig } from "./saTimePicker.utils";
+import { globalConfig } from "./SaTimePicker.utils";
 
 export const SaTimeBaseColumn = designComponent({
   name: 'sa-time-base-column',

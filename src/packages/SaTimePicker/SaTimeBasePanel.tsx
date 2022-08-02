@@ -1,7 +1,8 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
+import './time-base-panel.scss'
 import { plainDate } from "src/hooks";
 import { computed } from "vue";
-import { TimePanelLayout, TimePublicProps } from "./saTimePicker.utils";
+import { TimePanelLayout, TimePublicProps } from "./SaTimePicker.utils";
 
 import SaTimeBaseColumn from "./SaTimeBaseColumn";
 

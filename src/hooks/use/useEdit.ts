@@ -7,7 +7,7 @@ interface IEditProvideData {
   disabled: boolean | null,
   readonly: boolean | null,
   loading: boolean | null,
-  placeholder: boolean | null,
+  placeholder: string | null,
 
   onBlur?: (...args: any[]) => void,
   onChange?: (...args: any[]) => void

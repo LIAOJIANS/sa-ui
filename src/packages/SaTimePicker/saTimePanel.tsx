@@ -1,6 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import './time-range-panel.scss'
-import { TimePanelProps, TimePublicProps, TimeRangePanelType } from './saTimePicker.utils'
+import { TimePanelProps, TimePublicProps, TimeRangePanelType } from './SaTimePicker.utils'
 import { computed, PropType } from "vue";
 import { VueNode } from "src/advancedComponentionsApi/designComponent.utils";
 import { useModel } from "src/hooks";
@@ -90,3 +90,5 @@ export const SaTimePanel = designComponent({
     }
   }
 })
+
+export default SaTimePanel

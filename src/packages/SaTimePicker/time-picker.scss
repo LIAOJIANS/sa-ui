@@ -1,0 +1,42 @@
+@include theme {
+  .sa-time {
+    .sa-time-inner {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+
+      & > span {
+        color: $icc;
+      }
+
+      .sa-time-input-inner {
+        border: none;
+        outline: none;
+        width: 90px;
+        height: 100%;
+        background: transparent;
+      }
+    }
+
+    &.sa-time-range {
+      .sa-time-input-inner {
+        text-align: center;
+      }
+    }
+
+    .sa-input-inner {
+      width: auto !important;
+    }
+  }
+
+  .sa-time-panel-foot {
+    padding: 8px 8px 0 8px;
+    border-top: solid 1px $ibl;
+    display: flex;
+    justify-content: center;
+
+    & > * + * {
+      margin-left: 8px;
+    }
+  }
+}

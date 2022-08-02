@@ -6,6 +6,8 @@ export type IUseModelConfig<T = any> = {
   onChange?: (newVal: T, oldVal: T) => void
 }
 
+export type ModelType<T = any> = { value: T | null | undefined }
+
 export default function useModel<T>(
   getter: () => T,
   emitter: ( val: T ) => void,

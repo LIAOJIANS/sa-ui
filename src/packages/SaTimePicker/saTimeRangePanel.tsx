@@ -1,7 +1,8 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { plainDate, useModel } from "src/hooks";
 import { computed } from "vue";
-import { TimePublicProps, TimeRangePanelType } from "./saTimePicker.utils";
+import { TimePublicProps, TimeRangePanelType } from "./SaTimePicker.utils";
+
 import SaTimeBasePanel from './SaTimeBasePanel'
 
 export const SaTimeRangePanel = designComponent({
@@ -90,7 +91,7 @@ export const SaTimeRangePanel = designComponent({
     })
 
     return {
-      render: () => <div class="pl-time-range-panel">
+      render: () => <div class="sa-time-range-panel">
         <SaTimeBasePanel {...binding.value.start} />
         <SaTimeBasePanel {...binding.value.end} />
       </div>
