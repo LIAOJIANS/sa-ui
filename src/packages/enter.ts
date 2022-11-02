@@ -28,6 +28,9 @@ import SaForm from './SaForm/SaForm'
 import SaFormItem from './SaFormItem/SaFormItem'
 import SaDialog from './SaDialog/SaDialog'
 import SaTimePicker from './SaTimePicker/SaTimePicker'
+import SaCard from './SaCard/SaCard'
+import SaTimeLine from './SaTimeLine/SaTimeLine'
+import SaTimeLineItem from './SaTimeLineItem/SaTimeLineItem'
 
 import { useMessage } from './SaMessage/index'
 
@@ -62,6 +65,9 @@ export {
   SaFormItem,
   SaDialog,
   SaTimePicker,
+  SaCard,
+  SaTimeLine,
+  SaTimeLineItem,
 
   useMessage
 }

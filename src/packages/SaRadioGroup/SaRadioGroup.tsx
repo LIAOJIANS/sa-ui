@@ -53,6 +53,7 @@ export const SaRadioGroup = designComponent({
       render: () => <div
         ref={onRef.el}
         class="sa-radio-group"
+        style={ props.style as any }
       >
         {slots.default()}
       </div>

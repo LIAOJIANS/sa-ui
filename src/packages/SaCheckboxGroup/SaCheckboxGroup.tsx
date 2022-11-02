@@ -40,7 +40,7 @@ export const SaCheckboxGroup = designComponent({
     const { numberState } = useNumber(props, ['min', 'max'])
 
     const child = CheckboxGroupCollector.parent()
-
+    
     const activeChild = computed(() => child.filter(({innerStatus: {props: {checkboxForAll, customReadonly}}}) => !checkboxForAll && !customReadonly))
     
     const allKeys = computed(() => activeChild.value.map(({innerStatus: { props: { value } }}) => value))

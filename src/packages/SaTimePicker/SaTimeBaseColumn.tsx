@@ -2,7 +2,7 @@ import './time-base-column.scss'
 import { delay } from "js-hodgepodge";
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { EditProps, findOne, plainDateUtils, useEdit, useModel, useRefList, useRefs } from "src/hooks";
-import { computed, PropType } from "vue";
+import { computed, onMounted, PropType } from "vue";
 import SaScroll from "../SaScroll/SaScroll";
 import { globalConfig } from "./SaTimePicker.utils";
 
@@ -105,9 +105,11 @@ export const SaTimeBaseColumn = designComponent({
         if (props.max != null && props.max < item) return true
         if (props.min != null && props.min > item) return true
         return false
-    }
+      }
     }
 
+    onMounted(methods.resetPosition)
+    
     return {
       render: () => <div class="sa-time-base-column">
         <SaScroll ref={onRef.scroll} onScroll={handler.onScroll}>

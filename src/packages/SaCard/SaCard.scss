@@ -1,0 +1,157 @@
+@include theme {
+  .sa-card {
+
+    $radius: 4px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: transparent;
+
+    .sa-card-head, .sa-card-content, .sa-card-foot {
+      border: solid 1px $ibl;
+      box-sizing: border-box;
+
+      & + * {
+        border-top: none;
+      }
+
+      &:first-child:not(.sa-card-poster) {
+        border-radius: $radius $radius 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 $radius $radius;
+      }
+    }
+
+    .sa-card-head {
+      padding: 0 24px;
+      display: flex;
+
+      .sa-card-head-content {
+        flex: 1;
+
+        .sa-card-title {
+          font-size: 16px;
+          color: $ihc;
+          padding: 12px 0;
+        }
+
+        .sa-card-desc {
+          font-size: 12px;
+          color: $itl;
+          padding-bottom: 12px;
+        }
+      }
+
+      .sa-card-head-operator {
+        padding: 12px 0 12px 24px;
+      }
+    }
+
+    .sa-card-content {
+      display: inline-block;
+      width: 100%;
+      font-size: 14px;
+      color: $itc;
+      padding: 12px 24px;
+      line-height: 1.515;
+    }
+
+    .sa-card-poster {
+      img {
+        display: block;
+      }
+    }
+
+    .sa-card-foot {
+      display: flex;
+
+      & > .sa-card-foot-button {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0;
+        background-color: white;
+        cursor: pointer;
+        transition: background-color 300ms linear;
+
+        .sa-icon {
+          color: $icc;
+        }
+
+        &:hover {
+          background-color: $ibl;
+        }
+
+        &:not(:first-child) {
+          position: relative;
+
+          &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 1px;
+            background-color: $ibl;
+          }
+        }
+      }
+    }
+
+    &.sa-card-mini {
+      .sa-card-head {
+        padding: 0 8px;
+
+        .sa-card-title {
+          padding: 6px 0;
+          font-size: 14px;
+        }
+
+        .sa-card-desc {
+          padding-bottom: 6px;
+        }
+
+        .sa-card-head-operator {
+          padding: 6px 0 6px 8px;
+        }
+      }
+
+      .sa-card-content {
+        padding: 6px 8px;
+        font-size: 12px;
+      }
+    }
+
+    &.sa-card-shadow-normal, &.sa-card-shadow-hover:hover {
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+    }
+
+    &.sa-card-pointer {
+      cursor: pointer;
+    }
+
+    &.sa-card-no-padding {
+      .sa-card-head {
+        padding: 0;
+
+        .sa-card-title {
+          padding: 0;
+        }
+
+        .sa-card-head-operator {
+          padding: 0;
+        }
+
+        .sa-card-desc {
+          padding: 0;
+        }
+      }
+
+      .sa-card-content {
+        padding: 0;
+      }
+    }
+
+
+  }
+}

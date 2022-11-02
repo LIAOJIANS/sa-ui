@@ -1,0 +1,73 @@
+
+@include theme {
+  
+  .sa-timestamp-item {
+    padding-left: 40px;
+    position: relative;
+
+    .sa-timestamp-item-icon,
+    .sa-timestamp-item-dot {
+      position: absolute;
+    }
+
+    .sa-timestamp-item-icon {
+      left: -1px;
+
+      background-color: $cyan_7;
+      border-radius: 50%;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      @include sizeMixin(timestamp-item) {
+        &.sa-timestamp-item-size-large {
+          left: -2.5px;
+          width: 16px;
+          height: 16px;
+        }
+  
+        &.sa-timestamp-item-size-mini {
+          width: 12px;
+          height: 12px;
+        }
+  
+        &.sa-timestamp-item-size-normal {
+          left: -2;
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+
+    .sa-timestamp-item-clear-bg {
+      background-color: transparent;
+    }
+
+    .sa-timestamp-item-dot {
+      left: 4px;
+      height: 100%;
+      border-left: 2px solid $cyan_7;
+    }
+
+    .sa-timestamp-item-content {
+      padding-bottom: 20px;
+
+      position: relative;
+      top: -3px;
+    }
+
+    .sa-timestamp-item-time {
+      font-size: 14px;
+      color: $gray_7;
+    }
+
+    .is-bottom {
+      margin-top: 10px;
+    }
+
+    .is-top {
+      margin-bottom: 10px;
+    }
+  }
+}

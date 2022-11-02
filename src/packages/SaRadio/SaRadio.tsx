@@ -12,7 +12,7 @@ export const SaRadio = designComponent({
   props: {
     modelValue: {},
     label: { type: String },
-    value: { type: [Number, String] },
+    value: { type: [Number, String, Boolean] },
     readonly: { type: Boolean },
     trueValue: { default: true },
     falseValue: { default: false },
@@ -73,7 +73,6 @@ export const SaRadio = designComponent({
         if (!editComputed.value.editable || props.readonly) {
           return
         }
-        console.log(group);
         
         if (!!group) {
           

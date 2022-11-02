@@ -1,0 +1,10 @@
+
+.sa-timeline {
+  .sa-timestamp-item {
+    &:last-child {
+      .sa-timestamp-item-dot {
+        display: none;
+      }
+    }
+  }
+}

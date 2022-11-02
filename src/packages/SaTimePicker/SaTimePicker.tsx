@@ -76,6 +76,7 @@ export const SaTimePicker = designComponent({
 
       onMousedownStartPanel: async () => {
         agentState.state.focusCounter++
+
         await delay(0)
         refs.startInput!.methods.focus()
       },
@@ -162,7 +163,7 @@ export const SaTimePicker = designComponent({
     return {
       render: () => (
         <SaInput
-          ref={ onRef.saInput }
+          ref={onRef.saInput}
           class="sa-time pl-input-custom"
           modelValue={inputValue.value}
           placeholder={props.placeholder}
@@ -176,8 +177,8 @@ export const SaTimePicker = designComponent({
           onKeydown={handler.keydown}
         >
           <div class="sa-input-custom-inner" {...{ range: String(props.range) }}>
-            { props.range ? (
-              <SaDateTimeInput 
+            {props.range ? (
+              <SaDateTimeInput
                 ref={onRef.valueInput}
                 modelValue={!formatData.value.value ? undefined : formatData.value.value.getDisplay()}
                 displayFormat={props.displayFormat}
@@ -187,7 +188,9 @@ export const SaTimePicker = designComponent({
               />
             ) : (
               <>
-                <SaDateTimeInput 
+                <SaDateTimeInput
+                  ref={onRef.startInput}
+                  width="100"
                   modelValue={!formatData.value.start ? undefined : formatData.value.start.getDisplay()}
                   displayFormat={props.displayFormat}
                   onChange={(val: string | undefined) => customHandler.change(val, 'start')}
@@ -195,7 +198,7 @@ export const SaTimePicker = designComponent({
                   onBlur={handler.customInputBlur}
                 />
                 <span> ~ </span>
-                <SaDateTimeInput 
+                <SaDateTimeInput
                   ref={onRef.endInput}
                   width="100"
                   modelValue={!formatData.value.end ? undefined : formatData.value.end.getDisplay()}
@@ -205,7 +208,7 @@ export const SaTimePicker = designComponent({
                   onBlur={handler.customInputBlur}
                 />
               </>
-            )  }
+            )}
           </div>
         </SaInput>
       )

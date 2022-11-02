@@ -75,15 +75,15 @@ export default defineComponent({
     return () => <div>
       <h1 style={{ color: '#333' }}>Button 按钮</h1>
       <span style={{ color: '#666', fontSize: '14px' }}>常用的操作按钮</span>
-      
+
       <DemoContainer
         label="基础用法"
         describe="按钮的一些基本用法"
         codeText={state.initBtnText}
       >
         <div slot="title">
-          
-        <SaButton> 默认按钮 </SaButton>
+
+          <SaButton> 默认按钮 </SaButton>
           <SaButton status="success"> 成功按钮 </SaButton>
           <SaButton status="warn" > 警告按钮 </SaButton>
           <SaButton status="info" > 信息按钮 </SaButton>
