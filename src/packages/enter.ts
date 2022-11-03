@@ -31,6 +31,7 @@ import SaTimePicker from './SaTimePicker/SaTimePicker'
 import SaCard from './SaCard/SaCard'
 import SaTimeLine from './SaTimeLine/SaTimeLine'
 import SaTimeLineItem from './SaTimeLineItem/SaTimeLineItem'
+import SaProgress from './SaProgress/SaProgress'
 
 import { useMessage } from './SaMessage/index'
 
@@ -68,6 +69,7 @@ export {
   SaCard,
   SaTimeLine,
   SaTimeLineItem,
+  SaProgress,
 
   useMessage
 }

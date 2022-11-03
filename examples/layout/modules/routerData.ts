@@ -43,8 +43,8 @@ const routes: IRoutesData[] = [
       { name: 'LoadingMask', title: 'Loading遮罩层', page: '/DemoLoadingMask', complete: true },
       { name: 'TimePicker', title: 'TimePicker时间组件', page: '/DemoTimePicker', complete: true },
       { name: 'TimeLine', title: '时间线', page: '/DemoTimeLine.tsx', complete: true },
-      
-      { name: 'Card', title: 'Card卡片', page: '/DemoCard', complete: true }
+      { name: 'Card', title: 'Card卡片', page: '/DemoCard', complete: true },
+      { name: 'Progress', title: 'Progress进度条', page: '/DemoProgress', complete: true },
     ]
   },
 
