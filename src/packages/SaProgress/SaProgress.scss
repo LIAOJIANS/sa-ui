@@ -1,5 +1,73 @@
 @include theme {
   .sa-progress {
 
+    .sa-progress-bar {
+      display: inline-block;
+      vertical-align: middle;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    &.sa-progress-bar-line {
+      width: 350px;
+      margin-bottom: 15px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sa-progress-bar-outer {
+      position: relative;
+
+      border-radius: 100px;
+      background-color: $gray_4;
+      overflow: hidden;
+    }
+
+    .sa-progress-bar-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+
+      @include statusMixin(progress-bar-inner) {
+        background: $value;
+      }
+    }
+
+    .sa-progress-bar-amint {
+      position: absolute;
+      top: 0;
+      left: -20px;
+      z-index: 99;
+
+      width: 20px;
+      height: 100%;
+
+      background: radial-gradient(ellipse closest-side, rgba(255,255,255, .8), rgba(255,255,255, .1));
+      animation: left .1S;
+    }
+
+    .sa-progress-text,
+    .sa-progress-innertext {
+      font-size: 14px;
+
+      color: $gray_8;
+    }
+
+    .sa-progress-text {
+      margin-left: 10px;
+    }
+
+    .sa-progress-innertext {
+      color: #fff;
+      margin-right: 10px;
+    }
+  }
+
+  .sa-progress-circle {
+    width: 128px;
+    height: 128px;
   }
 }

@@ -7,7 +7,8 @@ export default defineComponent({
     return () => (
       <SaProgress
         percentage={80}
-        color={'#000'}
+        gradientsAnimation
+        gradients={['#6CC6CB', '#EAE5C9']}
         width={8}
       />
     )

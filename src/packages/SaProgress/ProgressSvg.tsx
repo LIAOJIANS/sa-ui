@@ -14,12 +14,25 @@ export const ProgressSvg = designComponent({
 
     return {
       render: () => (
-        <svg width="150px" height="150px">
-          <circle r="70" cy="75" cx="75" stroke-width={ props.width } stroke="#EAEFF4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
-          <circle class="progress" r="70" cy="75" cx="75" stroke-width={ props.width } stroke={ props.color } stroke-linejoin="round" stroke-linecap="round" fill="none" stroke-dashoffset='0'  stroke-dasharray={ `${Number(props.percentage) * 4.75}, 475` } />
+        <svg viewBox="0 0 100 100">
+          <path
+            d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94"
+            stroke="#e5e9f2"
+            stroke-width="8"
+            fill="none"
+            style="stroke-dasharray: 295.31px, 295.31px; stroke-dashoffset: 0px;"
+          />
+          <path
+            d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94"
+            stroke="#20a0ff"
+            fill="none"
+            stroke-linecap="round"
+            stroke-width="8"
+            style="stroke-dasharray: 73.8274px, 295.31px; stroke-dashoffset: 0px; transition: stroke-dasharray 0.6s ease 0s, stroke 0.6s ease 0s;"
+          />
         </svg>
       )
-      
+
     }
   }
 })
