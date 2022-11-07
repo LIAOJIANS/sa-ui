@@ -1,9 +1,8 @@
 // @ts-nocheck
 
 import { defineComponent, reactive } from "vue";
-import { SaButton, SaDrawerCard, SaTitle } from 'sa-ui'
+import { SaButton } from 'sa-ui'
 import { useRefs } from "src/hooks";
-import { clipboard } from "src/hooks/utils/clipboard";
 import DemoContainer from '../components/container'
 
 export default defineComponent({

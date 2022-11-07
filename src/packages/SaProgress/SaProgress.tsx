@@ -5,32 +5,17 @@ import './SaProgress.scss'
 
 import SaIcon from "../SaIcon/SaIcon";
 import ProgressSvg from './ProgressSvg'
-import { classname, StyleProps, useRefs, useStyles } from "src/hooks";
+import { classname, StatusColor, unit, useModel, useRefs, useStyles } from "src/hooks";
 import { onMounted } from "vue";
-import { onDeactivated } from "vue";
 import { onBeforeUnmount } from "vue";
-
-enum ProgressType {
-  Line = 'line',  // 直线条
-  Circle = 'circle', // 原型
-  Dashboard = 'dashboard'  // 仪表板
-}
+import { progressProps, ProgressType } from "./progress.utils";
+import { StyleStatus } from "src/hooks/use/useStyle";
 
 export const SaProgress = designComponent({
   name: 'SaProgress',
 
   props: {
-    percentage: { type: [Number, String], default: 0 },           // 百分比
-    type: { type: String, default: ProgressType.Line },           // 进度条类型
-    width: { type: [String, Number], default: 4.8 },              // 进度条的宽度，单位 px
-    textInside: { type: Boolean },                                // 进度条显示文字内置在进度条内（只在 type=line 时可用）
-    status: StyleProps.status,                                    // 进度条状态
-    color: { type: String },                                      // 进度条背景颜色
-    gradients: { type: Array },                                    // 渐变色  ---- 只作用于line
-    gradientsAnimation: { type: Boolean },                        // 是否启用渐变动画  ---- 只作用于line
-    contentFormat: { type: Function },                            // 自定义进度条内容  
-    showText: { type: Boolean, default: true },                   // 是否显示进度条文字
-    canvWidth: { type: [Number, String], default: 126 }           // 容器大小
+    ...progressProps
   },
 
   setup({ props }) {
@@ -51,16 +36,17 @@ export const SaProgress = designComponent({
           console.error('contentFormat must be a function ！')
         }
 
-        return props.contentFormat
+        return props.contentFormat(props.percentage)
       }
 
-      return () => null
+      return null
     })
 
     const classes = computed(() => classname([
       'sa-progress',
       {
-        'sa-progress-bar-line': props.type === ProgressType.Line
+        'sa-progress-bar-line': props.type === ProgressType.Line,
+        'sa-progress-bar-circle': props.type !== ProgressType.Line
       }
     ]))
 
@@ -85,15 +71,16 @@ export const SaProgress = designComponent({
 
     const barStyles = useStyles(style => {
       if (props.showText) {
-        style.paddingRight = '30px'
-        style.marginRight = '-30px'
+        style.paddingRight = '50px'
+        style.marginRight = '-50px'
       }
     })
 
     const barInnerStyles = useStyles(style => {
-      style.width = `${props.percentage}%`
+      style.width = `${methods.getPercentage()}%`
       style.height = `${props.width}px`
 
+      style.transition = 'width 0.6s ease 0s'
       if (
         !!props.gradients &&
         props.gradients?.length > 1
@@ -102,28 +89,48 @@ export const SaProgress = designComponent({
         style.background = `linear-gradient(to right, ${first}, ${end})`
 
       } else {
-        style.background = !props.status && !props.color ? '#3C64A0' : props.color
+        style.background = !props.status && !props.color ? StatusColor.primary : props.color
       }
     })
 
-    onMounted(() => {
-      state.animaTimer = setInterval(() => {
-        const left = refs.el?.offsetLeft || 0
-        const barWidth = refs.bar?.clientWidth! + 3
-        
-        refs.el!.style.left = (barWidth === (left - 20) || barWidth < (left - 20)) ? `-40px` : `${left + 3}px`
-      }, 30)
+    const circleStyles = useStyles(style => {
+      style.width = unit(props.canvWidth)
+      style.height = unit(props.canvWidth)
     })
 
-    onBeforeUnmount(() => clearInterval(state.animaTimer))
+    const methods = {
+      getPercentage: () => props.percentage <= 0 ? 0 : props.percentage >= 100 ? 100 : props.percentage
+    }
+
+    onMounted(() => {
+
+      if (props.type === ProgressType.Line && props.gradientsAnimation) {
+        state.animaTimer = setInterval(() => {
+          const left = refs.el?.offsetLeft || 0
+          const barWidth = refs.bar?.clientWidth! + 3
+
+          refs.el!.style.left = (barWidth === (left - 20) || barWidth < (left - 20)) ? `-40px` : `${left + 3}px`
+        }, 30)
+      }
+
+    })
+
+    onBeforeUnmount(() => state.animaTimer && clearInterval(state.animaTimer))
 
     return {
       render: () => {
 
         const content = (
           <div class={textClasses.value} style={{ fontSize: `${textFontSize.value}px` }}>
-            {props.showText ? !!contentFormat.value() ? contentFormat.value() : (
-              !!props.status ? <SaIcon icon={`el-icon-${props.status}`} status={props.status} /> : `${props.percentage || 0}%`
+            {props.showText ? !!contentFormat.value ? (
+              <div class="sa-progress-bar-content--format">
+                <div class="sa-progress-bar-content--wrapper">
+                  { contentFormat.value }
+                </div>
+              </div>
+            ) : (
+              !!props.status && props.status !== StyleStatus.primary ?
+                <SaIcon icon={`el-icon-${props.status === 'warn' ? 'warning' : props.status}`} status={props.status} size={ textFontSize.value } /> : `${methods.getPercentage()}%`
             ) : null}
           </div>
         )
@@ -138,20 +145,21 @@ export const SaProgress = designComponent({
                       {props.textInside && content}
 
                       {props.gradientsAnimation && !!props.gradients && props.gradients?.length > 1 && (
-                      <div class="sa-progress-bar-amint" ref={onRef.el}></div>
-                    )}
+                        <div class="sa-progress-bar-amint" ref={onRef.el}></div>
+                      )}
                     </div>
-                    
+
                   </div>
                 </div>
 
               ) : (
-                <div class="sa-progress-circle">
-                  <ProgressSvg
-                    percentage={props.percentage}
-                    color={props.color}
-                    width={props.width}
-                  />
+                <div class="sa-progress-circle" style={circleStyles.value}>
+                  <ProgressSvg {
+                    ...{
+                      ...props,
+                      percentage: methods.getPercentage()
+                    }
+                  } />
                 </div>
               )
             }

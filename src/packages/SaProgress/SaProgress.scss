@@ -1,5 +1,12 @@
 @include theme {
   .sa-progress {
+    position: relative;
+
+    &.sa-progress-bar-circle {
+      margin-right: 10px;
+      
+      display: inline-block;
+    }
 
     .sa-progress-bar {
       display: inline-block;
@@ -8,13 +15,24 @@
       box-sizing: border-box;
     }
 
+    .sa-progress-bar-content--format {
+      position: relative;
+      width: 28px;
+      height: 20px;
+
+      > .sa-progress-bar-content--wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+
     &.sa-progress-bar-line {
       width: 350px;
       margin-bottom: 15px;
 
       display: flex;
       align-items: center;
-      justify-content: space-between;
     }
 
     .sa-progress-bar-outer {
@@ -58,6 +76,16 @@
 
     .sa-progress-text {
       margin-left: 10px;
+      
+      &.sa-progress-circletext {
+        margin-left: 0;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+      }
     }
 
     .sa-progress-innertext {

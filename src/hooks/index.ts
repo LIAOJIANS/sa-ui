@@ -1,6 +1,6 @@
 
 /* ------------------------------- USE ---------------------------- */
-import { StyleProps, TitleStyleProps, useStyle, useStyles, DEFAULT_STATUS, Styles } from './use/useStyle'
+import { StyleProps, TitleStyleProps, useStyle, useStyles, DEFAULT_STATUS, Styles, StatusColor } from './use/useStyle'
 import { useNumber } from './use/useNumber'
 import useModel, { ModelType } from './use/useModel'
 import useRefs from './use/useRefs'
@@ -19,9 +19,9 @@ import { throttle } from './utils/throttle'
 import { disabledUserSelect, enableUserSelect } from './utils/userSelect'
 import { defer } from './utils/defer'
 import { findOne } from './utils/findOne'
+import { clipboard } from './utils/clipboard'
 
 /* --------------------- POPPER-SERVICE ------------------------------- */
-
 import { createPopperServiceComponent, createCounter } from './popperService/createPopperServiceComponent'
 import { createUseEditPopperAgent } from './popperService/createAgentGetter'
 
@@ -45,6 +45,7 @@ export {
   TitleStyleProps,
   DEFAULT_STATUS,
   EditProps,
+  StatusColor,
 
   unit,
   removeUnit,
@@ -57,6 +58,7 @@ export {
   findOne,
   plainDate,
   plainDateUtils,
+  clipboard,
 
   createPopperServiceComponent,
   createCounter,

@@ -35,6 +35,9 @@ import SaProgress from './SaProgress/SaProgress'
 
 import { useMessage } from './SaMessage/index'
 
+/*--------------------------------------- HOOKS ------------------------------------------ */
+import { clipboard } from '../hooks'
+
 export {
   SaInput,
   SaIcon,
@@ -71,5 +74,6 @@ export {
   SaTimeLineItem,
   SaProgress,
 
-  useMessage
+  useMessage,
+  clipboard
 }

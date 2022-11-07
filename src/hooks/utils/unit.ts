@@ -5,11 +5,11 @@ export function unit (
   unit = 'px'
 ): string | null {
 
-  if (!num) {
+  if (num == null) {
     return null
   }
 
-  if (/^-?[\d]+$/.test(String(num))) {
+  if (/^[-+]?[0-9]*\.?[0-9]+$/.test(String(num))) {
     return `${num}${unit}`
   }
 

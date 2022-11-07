@@ -1,6 +1,14 @@
 import { computed, inject, PropType, provide, CSSProperties } from 'vue'
 import useFunctionWrapper from './useFunctionWrapper'
 
+export enum StatusColor {
+  primary = '#3C64A0',
+  success = '#52c41a',
+  error = '#cf1322',
+  warn = '#d4b106',
+  info = '#8c8c8c'
+}
+
 export enum StyleStatus {
   primary = 'primary',
   success = 'success',

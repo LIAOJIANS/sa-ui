@@ -1,8 +1,7 @@
 // @ts-nocheck
 
 import { defineComponent, ref } from "vue";
-import { SaTitle, SaDrawerCard, SaButton } from 'sa-ui'
-import { clipboard } from "src/hooks/utils/clipboard";
+import { SaTitle, SaDrawerCard, SaButton, clipboard } from 'sa-ui'
 
 export default defineComponent({
 
