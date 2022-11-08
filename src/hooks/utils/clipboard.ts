@@ -1,8 +1,21 @@
+import { useMessage } from "src/packages/SaMessage"
+import { createServiceWithoutContext } from "src/packages/SaRoot/utils/registryRootService"
 
+export function clipboard(
+  option: { text?: string, target?: HTMLElement }, 
+  callback?: () => void, 
+  error?: () => string | void
+) {
 
-export function clipboard(text?: string, target?: HTMLElement) {
+  const {text, target} = option
+  
+  const $message = createServiceWithoutContext(useMessage)
 
-  if(!text && !!target){ return }
+  if(!!text && !!target){
+    error ? error() : $message.success('复制失败，未知错误！')
+    console.error('option.text and option.target, two must exist one!!!')
+    return 
+  }
 
   const input = document.createElement('input')
 
@@ -19,4 +32,5 @@ export function clipboard(text?: string, target?: HTMLElement) {
 
   document.body.removeChild(input)
   
+  callback ? callback() : $message.success('复制成功！')
 }

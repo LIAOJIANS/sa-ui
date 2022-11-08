@@ -1,4 +1,4 @@
-import { App } from "vue"
+import { App, createApp } from "vue"
 import { SaRoot, SaRootInstance } from "../SaRoot"
 
 export const RootMapper = (() => {
@@ -40,7 +40,7 @@ export function createUseService<_,
 
     const use = (getRoot?: () => SaRootInstance | Promise<SaRootInstance> ): ReturnType<CreateService> => {
       let root: SaRootInstance
-
+      
       if(!getRoot) {
         root = SaRoot.use.inject()
         let service = map.get(root)
@@ -75,3 +75,21 @@ export function createUseService<_,
     })
 }
 
+export function createServiceWithoutContext<UseService extends (getRoot: () => SaRootInstance | Promise<SaRootInstance>) => any>(
+  useService: UseService
+): ReturnType<UseService> { // 不需要Root上下文支持的Service
+
+  const getRoot = (() => {
+    let root: SaRootInstance;
+    return () => {
+        if (!root) {
+            const el = document.createElement('div')
+            el.className = el.className + ' sa-design-root-without--context'
+            document.body.appendChild(el)
+            createApp({render: () => <SaRoot ref={(refer: any) => root = refer!}/>}).mount(el)
+        }
+        return root!
+    }
+})();
+return useService(getRoot)
+}

@@ -20,7 +20,7 @@ export function removeUnit (
   num: string | number | undefined | null,
   unit = 'px'
 ): string {
-  if(!num) {
+  if(num == null) {
     return ''
   }
   

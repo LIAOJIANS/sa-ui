@@ -1,5 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { useStyles, StatusColor, unit } from "src/hooks";
+import { useStyles, StatusColor, unit, removeUnit } from "src/hooks";
+import { onBeforeUnmount, onMounted } from "vue";
 import { computed, reactive } from "vue";
 import { progressProps, ProgressType } from "./progress.utils";
 
@@ -10,6 +11,14 @@ export const ProgressSvg = designComponent({
     ...progressProps
   },
   setup({ props }) {
+
+    const state = reactive({
+      animaTimer: null,
+      offset: 0
+    } as {
+      animaTimer: any,
+      offset: number
+    })
 
     const innerRingStyles = useStyles(style => {
       style.strokeDasharray = `${perimeter.value * methods.rate() * (Number(props.percentage) / 100)}px, ${perimeter.value}px`
@@ -22,6 +31,11 @@ export const ProgressSvg = designComponent({
     const outerRingStyles = useStyles(style => {
       style.strokeDasharray = `${unit(perimeter.value * methods.rate())}, ${unit(perimeter.value)}`
       style.strokeDashoffset = strokeDashoffset.value
+    })
+
+    const amintStyles = useStyles(style => {
+      style.strokeDasharray =  `10px, ${perimeter.value}px`
+      style.strokeDashoffset = amintOffset.value
     })
 
     const stroke = computed(() => {
@@ -49,11 +63,35 @@ export const ProgressSvg = designComponent({
 
     const strokeDashoffset = computed(() => unit(-1 * perimeter.value * (1 - methods.rate()) / 2))
 
+    const amintOffset = computed(() => unit(state.offset))
+
     const methods = {
       radius: () => (props.type === ProgressType.Circle || props.type === ProgressType.Dashboard) ? 50 - parseFloat(methods.relativeStrokeWidth()) : 0,
       relativeStrokeWidth: () => (Number(props.width) / Number(props.canvWidth) * 100).toFixed(1),
       rate: () => props.type === 'dashboard' ? 0.75 : 1
     }
+
+    onMounted(() => {
+
+      if (props.gradientsAnimation) {
+        state.offset = Number(removeUnit(strokeDashoffset.value! || 0))
+        state.animaTimer = setInterval(() => {
+
+          state.offset = props.type === ProgressType.Circle ? (
+            state.offset <= (-perimeter.value * methods.rate() * (Number(props.percentage) / 100) - 10) ? 
+            10 : state.offset - 3
+          ) : (
+            -(state.offset - Number(removeUnit(strokeDashoffset.value))) >= perimeter.value * methods.rate() ? 10 : state.offset - 3
+          )
+        
+        }, 30)
+        
+        
+      }
+
+    })
+
+    onBeforeUnmount(() => state.animaTimer && clearInterval(state.animaTimer))
 
     return {
       render: () => (
@@ -72,6 +110,15 @@ export const ProgressSvg = designComponent({
             stroke-linecap="round"
             stroke-width={props.width}
             style={innerRingStyles.value}
+          />
+
+          <path
+            d={trackPath.value}
+            stroke='rgba(255, 255, 255, .6)'
+            fill="none"
+            stroke-linecap="round"
+            stroke-width={props.width}
+            style={amintStyles.value}
           />
         </svg>
       )

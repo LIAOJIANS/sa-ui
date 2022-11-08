@@ -49,6 +49,8 @@
       left: 0;
       overflow: hidden;
 
+      border-radius: 100px;
+
       @include statusMixin(progress-bar-inner) {
         background: $value;
       }
@@ -64,6 +66,8 @@
       height: 100%;
 
       background: radial-gradient(ellipse closest-side, rgba(255,255,255, .8), rgba(255,255,255, .1));
+
+      box-shadow: 0px 0px 40px 4px #fff, 0px 0px 0px 2px rgba(255, 255, 255, 0.19) inset;
       animation: left .1S;
     }
 
@@ -89,8 +93,11 @@
     }
 
     .sa-progress-innertext {
-      color: #fff;
+      margin-top: -3px;
       margin-right: 10px;
+
+      text-align: right;
+      color: #fff;
     }
   }
 

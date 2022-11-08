@@ -14,7 +14,7 @@ export const progressProps = {
   status: StyleProps.status,                                    // 进度条状态
   color: { type: String },                                      // 进度条背景颜色
   gradients: { type: Array },                                   // 渐变色  ---- 只作用于line
-  gradientsAnimation: { type: Boolean },                        // 是否启用渐变动画  ---- 只作用于line
+  gradientsAnimation: { type: Boolean },                        // 是否启用过度动画
   contentFormat: { type: Function },                            // 自定义进度条内容  
   showText: { type: Boolean, default: true },                   // 是否显示进度条文字
   canvWidth: { type: [Number, String], default: 126 }           // 容器大小

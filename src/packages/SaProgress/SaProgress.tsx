@@ -5,7 +5,7 @@ import './SaProgress.scss'
 
 import SaIcon from "../SaIcon/SaIcon";
 import ProgressSvg from './ProgressSvg'
-import { classname, StatusColor, unit, useModel, useRefs, useStyles } from "src/hooks";
+import { classname, StatusColor, unit, useRefs, useStyles } from "src/hooks";
 import { onMounted } from "vue";
 import { onBeforeUnmount } from "vue";
 import { progressProps, ProgressType } from "./progress.utils";
@@ -98,6 +98,10 @@ export const SaProgress = designComponent({
       style.height = unit(props.canvWidth)
     })
 
+    // const barAmintStyles = useStyles(style => {
+    //   style.background = `radial-gradient(ellipse closest-side, rgba(255,255,255, .8), rgba(255,255,255, .1))`
+    // })
+
     const methods = {
       getPercentage: () => props.percentage <= 0 ? 0 : props.percentage >= 100 ? 100 : props.percentage
     }
@@ -144,7 +148,7 @@ export const SaProgress = designComponent({
                     <div class={barInnerClasses.value} style={barInnerStyles.value} ref={onRef.bar}>
                       {props.textInside && content}
 
-                      {props.gradientsAnimation && !!props.gradients && props.gradients?.length > 1 && (
+                      {props.gradientsAnimation && (
                         <div class="sa-progress-bar-amint" ref={onRef.el}></div>
                       )}
                     </div>

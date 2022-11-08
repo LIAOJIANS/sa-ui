@@ -45,7 +45,7 @@ export default defineComponent({
 
           <div slot="content" v-highlight style={{ padding: '20px', position: 'relative' }}>
             {contentSlot ? contentSlot : <div slot="content">
-              <SaButton mode="text" style={{ position: 'absolute', right: '1%', top: '1%' }} onClick={e => clipboard(props.codeText, codeRef.value)}>复制</SaButton>
+              <SaButton mode="text" style={{ position: 'absolute', right: '1%', top: '1%' }} onClick={e => clipboard({ text:props.codeText, target: codeRef.value })}>复制</SaButton>
               <pre ref={codeRef.value}>
                 <code class="language-html" v-text={props.codeText}>
                 </code>
