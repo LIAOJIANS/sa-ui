@@ -32,6 +32,7 @@ import SaCard from './SaCard/SaCard'
 import SaTimeLine from './SaTimeLine/SaTimeLine'
 import SaTimeLineItem from './SaTimeLineItem/SaTimeLineItem'
 import SaProgress from './SaProgress/SaProgress'
+import SaSlider from './SaSlider/SaSlider'
 
 import { useMessage } from './SaMessage/index'
 
@@ -73,6 +74,7 @@ export {
   SaTimeLine,
   SaTimeLineItem,
   SaProgress,
+  SaSlider,
 
   useMessage,
   clipboard
