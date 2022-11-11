@@ -58,6 +58,9 @@ export const SaTooltip = designComponent({
     }
 
     return {
+      refer: {
+        setPos: () => SaPopper.use.inject(null)?.refreshReference
+      },
       render: () => {
         return <>
           <SaPopper

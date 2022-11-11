@@ -1,13 +1,12 @@
 @include theme {
   .sa-slider {
-    
     width: 70%;
     margin: 16px 0;
 
     .sa-slider-bar {
       width: 100%;
       height: 6px;
-      
+
       background-color: $gray_4;
       border-radius: 3px;
       position: relative;
@@ -18,6 +17,23 @@
 
       border-radius: 3px;
       background: $colorPrimary;
+    }
+
+    .sa-slider-stop {
+      height: 6px;
+      width: 6px;
+
+      position: absolute;
+      top: 0;
+
+      border-radius: 100%;
+      background-color: #fff;
+      transform: translateX(-50%);
+    }
+
+    .sa-slider-stop_first {
+      height: 0;
+      width: 0;
     }
 
     .sa-slider--hover {
@@ -58,7 +74,7 @@
       background-color: #fff;
       border-radius: 50%;
 
-      transition: .2s;
+      transition: 0.2s;
       user-select: none;
 
       &:hover {
@@ -66,5 +82,5 @@
         height: 18px;
       }
     }
-  } 
+  }
 }
