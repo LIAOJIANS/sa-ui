@@ -64,6 +64,18 @@
       &:hover {
         cursor: grab;
       }
+
+      &.sa-slider-button__disabled {
+        cursor: not-allowed
+      }
+    }
+
+    .sa-slider-tip {
+      position: absolute;
+      z-index: 1001;
+      top: 10px;
+
+      transform: translateX(-50%);
     }
 
     .sa-slider-button--wrapper {
