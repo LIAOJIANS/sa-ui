@@ -53,6 +53,7 @@ const routes: IRoutesData[] = [
       { name: 'Tag', title: 'Tag 标签', page: '/DemoTag', complete: true },
       { name: 'TimePicker', title: 'TimePicker时间组件', page: '/DemoTimePicker', complete: true },
       { name: 'TimeLine', title: '时间线', page: '/DemoTimeLine.tsx', complete: true },
+      { name: 'Tree', title: '树形', page: '/DemoTree.tsx', complete: true },
     ]
   },
 

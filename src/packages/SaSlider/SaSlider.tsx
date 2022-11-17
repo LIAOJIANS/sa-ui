@@ -17,7 +17,7 @@ export const SaSlider = designComponent({
     max: { type: Number, default: 100 },                                  // 范围最大值
     min: { type: Number, default: 0 },                                    // 范围最小值
     disabled: { type: Boolean, default: false },                          // 是否禁用
-    marks: { type: Object }                                               // 接收自定义X提示，key是值，value是一个返回元素
+    marks: { type: Object }                                               // 接收自定义提示，key是值，value是一个返回元素
   },
 
   emits: {
