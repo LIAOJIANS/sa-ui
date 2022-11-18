@@ -1,0 +1,111 @@
+@include theme {
+  .sa-tree {
+    width: 100%;
+    position: relative;
+
+    .sa-tree-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: $icc;
+
+      & > .sa-icon {
+        font-size: 3em;
+        margin-bottom: 8px;
+      }
+    }
+
+    .sa-tree-node-list {
+      overflow: hidden;
+    }
+
+    .sa-tree-node {
+      width: 100%;
+      // display: flex;
+      // align-items: center;
+      // justify-content: flex-start;
+      font-size: 14px;
+      box-sizing: border-box;
+      // border-bottom: solid 1px $ibl;
+      color: $itc;
+
+     
+
+      & > .sa-tree-node-content {
+        padding: 5px 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex: 1;
+
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f6f6f6;
+        }
+      }
+
+      & > .sa-tree-node-operator {
+        display: flex;
+        align-items: center;
+        font-size: 1.2em;
+
+        .sa-tree-node-expander {
+          width: 1em;
+        }
+
+        & > * {
+          display: flex;
+          align-items: center;
+          margin-right: 8px;
+          color: $colorPrimary;
+          user-select: none;
+          width: 1em;
+          transition: all 300ms linear;
+        }
+
+        .sa-icon {
+          cursor: pointer;
+
+          &.sa-tree-node-draggier {
+            cursor: move;
+          }
+        }
+      }
+
+      // &:first-child {
+      //   border-top: solid 1px $ibl;
+      // }
+
+      
+
+      &.sa-tree-node-current {
+        background-color: rgba($colorPrimary, 0.1);
+        color: $colorPrimary;
+      }
+
+      &.sa-tree-empty-node {
+        color: $colorWarn;
+
+        & > .sa-tree-node-operator > * {
+          color: $colorWarn;
+        }
+      }
+
+      &.sa-tree-node-not-checkable {
+        color: $disabledText;
+
+        & > .sa-tree-node-operator > * {
+          color: $disabledText;
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,12 @@
-import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { computed, PropType } from "vue";
+
+import { designComponent } from "src/advancedComponentionsApi/designComponent";
+import './SaTree.scss'
+import SaIcon from "../SaIcon/SaIcon";
 import { ReWriteTreeTime, TreeItem, TreeItems } from "./cros/type";
+import { useTree } from "./cros/use/useTree";
+
+// 下一步实现点击展开child,  ---- 想办法把child 和 parent关联起来
 
 export const SaTree = designComponent({
   name: 'SaTree',
@@ -8,43 +14,30 @@ export const SaTree = designComponent({
   props: {
     data: { type: Array as PropType<TreeItems>, default: [] },
     props: { type: Object as PropType<ReWriteTreeTime> },
-    level: { type: Number }
+    defaultExpandAll: { type: Boolean, default: false }
   },
   setup({ props }) {
 
-    const formatData = computed(() => !!props.level ? props.data : methods.treeDataFomrat(props.data))
+    const { methods, treeData } = useTree({ props })
 
-    const methods = {
-      treeDataFomrat: (data: TreeItems) => {
-        let level = 1
-        const recursion = (data: any) => {
-
-          for (let i = 0; i < data.length; i++) {
-            const item = data[i]
-            item.level = level
-            if (item.childrens && item.childrens.length > 0) {
-              level += 1
-              recursion(item.childrens)
-            }
-            level = 1
-          }
-        }
-
-        recursion(data)
-
-        return data
-      }
-    }
+    const formatData = computed(() =>  treeData)
+    const isOpenChild = computed(() => 'el-icon-caret-right')
 
     return {
 
       render: () => (
-        formatData.value.map((c: TreeItem) => (
-          <div style={{ paddingLeft: `${(c.level - 1)*18}px` }}>
-            <span>{c.label}</span>
-            {c.childrens?.length > 0 && <SaTree {...{ ...props, data: c.childrens }} level={ c.level } />}
-          </div>)
-        )
+        <div class='sa-tree'>
+          {
+            formatData.value.map((c: TreeItem) => (
+              <div class="sa-tree-node" style={{ paddingLeft: `${(c.level - 1) * 18}px` }}>
+                <div class="sa-tree-node-content">
+                  { !!c.childrens && c.childrens.length > 0 && <SaIcon class="sa-tree-node-icon" icon={isOpenChild.value} /> }
+                  <span>{c.label}</span>
+                </div>
+              </div>)
+            )
+          }
+        </div>
       )
     }
   }

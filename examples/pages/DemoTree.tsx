@@ -15,14 +15,39 @@ export default defineComponent({
                   label: '节点1-1',
                   childrens: [
                     {
-                      label: '节点1-1-1'
+                      label: '节点1-1-1',
+                      childrens: [
+                        {
+                          label: '节点1-1-1-1'
+                        },
+                        {
+                          label: '节点1-1-2-2'
+                        },
+                        {
+                          label: '节点1-1-3-3'
+                        }
+                      ]
+                    },
+                    {
+                      label: '节点1-1-2'
+                    },
+                    {
+                      label: '节点1-1-3'
                     }
                   ]
+                },
+                {
+                  label: '节点1-2'
                 }
               ]
             },
             { 
-              label: '节点2'
+              label: '节点2',
+              childrens: [
+                {
+                  label: '节点2-1',
+                }
+              ]
             }
           ]
         }
