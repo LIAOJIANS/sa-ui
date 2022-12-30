@@ -1,14 +1,31 @@
+import { computed, reactive, VNode } from "vue"
 import { TreeItems } from "../type"
 
-export function useTree({
+export function useTree<Node extends {}>({
   props
 }: {
   props: {
-    data: TreeItems
+    data: TreeItems,
+    props: Record<string, string> | undefined
   }
 }) {
+  
+  const filds = reactive({
+    label: computed(() => props.props?.label || 'label'),
+    childrens: computed(() => props.props?.childrens || 'childrens')
+  })
 
-  const methods = {
+  // const rootData = {
+  //   []
+  // }
+
+  const handle = {
+    toggleExpand: (keyOrNode: string | VNode) => {
+
+    }
+  }
+
+  const methods = { 
     treeDataFomrat: () => {
       let level = 1
       let oldLevel = 0

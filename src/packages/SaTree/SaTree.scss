@@ -35,7 +35,9 @@
       // border-bottom: solid 1px $ibl;
       color: $itc;
 
-     
+      &:hover {
+        background-color: #f6f6f6;
+      }
 
       & > .sa-tree-node-content {
         padding: 5px 0;
@@ -47,9 +49,7 @@
 
         cursor: pointer;
 
-        &:hover {
-          background-color: #f6f6f6;
-        }
+        
       }
 
       & > .sa-tree-node-operator {
