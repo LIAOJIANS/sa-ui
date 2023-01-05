@@ -8,7 +8,8 @@ export const SaCollapseGroup = designComponent({
   props: {
     modelValue: { type: [String, Array] },
     limit: { type: Number, default: 1 }, // 默认展开数量
-    disabled: { type: Boolean, default: null }
+    disabled: { type: Boolean, default: null },
+    defaultClass: { type: Boolean, default: true },
   },
   
   provideRefer: true,
@@ -66,7 +67,7 @@ export const SaCollapseGroup = designComponent({
         handler
       },
 
-      render: () => <div class="sa-collapse-group" ref={onRef.el}>
+      render: () => <div class={ props.defaultClass ? 'sa-collapse-group' : '' } ref={onRef.el}>
         {slots.default()}
       </div>
     }

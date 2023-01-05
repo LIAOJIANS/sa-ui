@@ -15,7 +15,8 @@ export const SaCollapse = designComponent({
     disabled: { type: Boolean, default: null },
     title: { type: String },
     value: { type: String },
-    content: { type: String }
+    content: { type: String },
+    customClass: { type: String }
   },
 
   emits: {
@@ -74,13 +75,17 @@ export const SaCollapse = designComponent({
       render: () => <div class={classes.value}>
         {
           (slots.head.isExist() || props.title) &&
-          <div class="sa-collapse-title">
-            <SaIcon icon="el-icon-caret-right" onClick={handler.onClickTitle} />
-            <div onClick={handler.onClickTitle}>{slots.head(props.title)}</div>
+          <div class={ 'sa-collapse-title ' + (props.customClass || '') } >
+            <div style={{ width: '100%' }} onClick={handler.onClickTitle}>{slots.head((
+              <>
+                <SaIcon icon="el-icon-caret-right" />
+                <span>{ props.title }</span>
+              </>
+            ))}</div>
           </div>
         }
 
-        <div class="sa-collapse-detail" style={{ display: isOpen.value && (!!props.content || slots.default.isExist()) ? '' : 'none' }}>
+        <div class="sa-collapse-detail" style={{ height: isOpen.value && (!!props.content || slots.default.isExist()) ? 'auto' : '0' }}>
           {slots.default(props.content)}
         </div>
       </div>

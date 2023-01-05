@@ -1,4 +1,6 @@
 import { computed, reactive, VNode } from "vue"
+import { decopy } from 'js-hodgepodge'
+
 import { TreeItems } from "../type"
 
 export function useTree<Node extends {}>({
@@ -29,6 +31,7 @@ export function useTree<Node extends {}>({
     treeDataFomrat: () => {
       let level = 1
       let oldLevel = 0
+      const treeData = decopy(props.data)
       const recursion = (data: TreeItems) => {
 
         for (let i = 0; i < data.length; i++) {
@@ -45,8 +48,8 @@ export function useTree<Node extends {}>({
 
         level = oldLevel
       }
-      recursion(props.data)
-      return props.data
+      recursion(treeData)
+      return treeData
     },
 
     fattenData: (data: TreeItems, list: TreeItems) => {
@@ -64,6 +67,7 @@ export function useTree<Node extends {}>({
 
   return {
     methods,
-    treeData: methods.fattenData(methods.treeDataFomrat(), [])
+    flatTreeData: methods.fattenData(methods.treeDataFomrat(), []), // 扁平化的tree数据
+    treeData: methods.treeDataFomrat()
   }
 }

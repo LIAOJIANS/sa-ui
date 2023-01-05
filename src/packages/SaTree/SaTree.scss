@@ -3,6 +3,21 @@
     width: 100%;
     position: relative;
 
+    .sa-collapse-tree {
+      font-size: 14px;
+      color: $itc;
+      padding: 0;
+      border-bottom: none;
+    }
+
+    .sa-collapse-is-open {
+      .sa-collapse-tree {
+        div > .sa-icon:first-child {
+          transform: rotate(90deg);
+        }
+      }
+    }
+
     .sa-tree-placeholder {
       position: absolute;
       top: 0;
@@ -35,11 +50,9 @@
       // border-bottom: solid 1px $ibl;
       color: $itc;
 
-      &:hover {
-        background-color: #f6f6f6;
-      }
+     
 
-      & > .sa-tree-node-content {
+      .sa-tree-node-content {
         padding: 5px 0;
 
         display: flex;
@@ -49,7 +62,9 @@
 
         cursor: pointer;
 
-        
+        &:hover {
+          background-color: #f6f6f6;
+        }
       }
 
       & > .sa-tree-node-operator {
