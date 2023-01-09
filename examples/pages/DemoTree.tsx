@@ -9,48 +9,61 @@ export default defineComponent({
         data={
           [
             { 
-              label: '节点1',
-              childrens: [
+              title: '节点1',
+              data: [
                 {
-                  label: '节点1-1',
-                  childrens: [
+                  title: '节点1-1',
+                  data: [
                     {
-                      label: '节点1-1-1',
-                      childrens: [
+                      title: '节点1-1-1',
+                      data: [
                         {
-                          label: '节点1-1-1-1'
+                          title: '节点1-1-1-1'
                         },
                         {
-                          label: '节点1-1-2-2'
+                          title: '节点1-1-2-2'
                         },
                         {
-                          label: '节点1-1-3-3'
+                          title: '节点1-1-3-3'
                         }
                       ]
                     },
                     {
-                      label: '节点1-1-2'
+                      title: '节点1-1-2',
+                      data: [
+                        {
+                          title: '节点1-1-2-2'
+                        },
+                        {
+                          title: '节点1-1-3-3'
+                        }
+                      ]
                     },
                     {
-                      label: '节点1-1-3'
+                      title: '节点1-1-3'
                     }
                   ]
                 },
                 {
-                  label: '节点1-2'
+                  title: '节点1-2'
                 }
               ]
             },
             { 
-              label: '节点2',
-              childrens: [
+              title: '节点2',
+              data: [
                 {
-                  label: '节点2-1',
+                  title: '节点2-1',
                 }
               ]
             }
           ]
         }
+        nodeKey='title'
+        props={{
+          label: 'title',
+          childrens: 'data'
+        }}
       />
     </div>
   }

@@ -11,7 +11,7 @@
     }
 
     .sa-collapse-is-open {
-      .sa-collapse-tree {
+      & > .sa-collapse-tree {
         div > .sa-icon:first-child {
           transform: rotate(90deg);
         }

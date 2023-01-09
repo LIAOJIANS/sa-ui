@@ -9,6 +9,12 @@ export interface TreeItem {
   key: string                          
 }
 
+export interface DataProps {
+  label: string,
+  childrens: string
+}
+
+
 export type TreeItems = TreeItem[]
 
 export type ReWriteTreeTime = Omit<TreeItem, 'label'> & {

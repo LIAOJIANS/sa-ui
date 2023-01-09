@@ -1,4 +1,4 @@
-import { computed, reactive, VNode } from "vue";
+import { computed, reactive, VNode, watch } from "vue";
 
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import './SaTree.scss'
@@ -18,14 +18,33 @@ export const SaTreeNodePanel = designComponent({
   props: TreeProps,
   setup({ props }) {
 
+    const collapseGroup = SaCollapseGroup.use.inject()
+
     const state = reactive({
       openVal: ''
     })
 
-    const { methods, treeData } = useTree<TreeItem>({ props } as any)
+    const { treeData, flatTreeData } = useTree<TreeItem>({ props } as any)
 
     const formatData = computed(() => props.isChild ? props.data : treeData)
+    
+    const collpaseLimit = computed(() => flatTreeData.length)
+    const isOpen = computed(() => {
+      if (!!collapseGroup) {
+        return collapseGroup.utils.isOpen(state.openVal)
+      } else {
+        return false
+      }
+    })
 
+    watch(() => state.openVal, () => {
+      console.log(
+        state.openVal, isOpen.value);
+      
+
+    })
+
+    // console.log(collapseGroup);
     return {
       render: () => {
         const labelContent = (
@@ -45,7 +64,11 @@ export const SaTreeNodePanel = designComponent({
               formatData.value.map((c: TreeItem) => (
                 <div class="sa-tree-node" >
                   {!!c.childrens && c.childrens.length > 0 ? (
-                    <SaCollapseGroup v-model={ state.openVal } defaultClass={false}>
+                    <SaCollapseGroup 
+                      v-model={ state.openVal } 
+                      defaultClass={false} 
+                      limit={ props.accordion ? 1 : collpaseLimit.value }
+                    >
                       <SaCollapse v-slots={{
                         head: () => labelContent(
                           c.level,
@@ -53,11 +76,13 @@ export const SaTreeNodePanel = designComponent({
                           () => <SaIcon icon="el-icon-caret-right" />
                         )
                       }} 
-                      customClass='sa-collapse-tree' 
+                      customClass='sa-collapse-tree'
+                      // @ts-ignore
+                      value={ c[props.nodeKey] }
                     >
                         <SaTreeNodePanel {...{ ...props, data: c.childrens }} isChild />
                       </SaCollapse>
-                    </SaCollapseGroup>
+                   </SaCollapseGroup>
                   ) : labelContent(
                     c.level,
                     c.label,

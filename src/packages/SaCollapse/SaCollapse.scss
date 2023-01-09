@@ -18,13 +18,11 @@
     }
 
     &.sa-collapse-is-open {
-      .sa-collapse-title {
-        & > .sa-icon:first-child {
+      & > .sa-collapse-title {
+        & div > .sa-icon:first-child {
           transform: rotate(90deg);
         }
       }
-
-     
     }
 
     & > .sa-collapse-detail {

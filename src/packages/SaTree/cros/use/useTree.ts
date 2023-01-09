@@ -1,20 +1,23 @@
 import { computed, reactive, VNode } from "vue"
 import { decopy } from 'js-hodgepodge'
 
-import { TreeItems } from "../type"
+import { DataProps, TreeItems } from "../type"
 
 export function useTree<Node extends {}>({
   props
 }: {
   props: {
     data: TreeItems,
-    props: Record<string, string> | undefined
+    props: DataProps | undefined
   }
 }) {
   
   const filds = reactive({
-    label: computed(() => props.props?.label || 'label'),
-    childrens: computed(() => props.props?.childrens || 'childrens')
+    label: computed(() => props.props?.label || 'label').value,
+    childrens: computed(() => props.props?.childrens || 'childrens').value
+  } as {
+    label: string,
+    childrens: string
   })
 
   // const rootData = {
@@ -38,6 +41,13 @@ export function useTree<Node extends {}>({
           const item = data[i]
           item.level = level
 
+          if(methods.isCustomProps()) { // 自定义属性
+            // @ts-ignore
+            item.label = item[filds.label]
+            // @ts-ignore
+            item.childrens = item[filds.childrens]
+          }
+
           if (item.childrens && item.childrens.length > 0) {
             level += 1
             recursion(item.childrens)
@@ -51,6 +61,8 @@ export function useTree<Node extends {}>({
       recursion(treeData)
       return treeData
     },
+
+    isCustomProps: () => props.props?.label || props.props?.childrens,
 
     fattenData: (data: TreeItems, list: TreeItems) => {
       const treeData = list
