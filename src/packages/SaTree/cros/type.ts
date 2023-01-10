@@ -14,7 +14,6 @@ export interface DataProps {
   childrens: string
 }
 
-
 export type TreeItems = TreeItem[]
 
 export type ReWriteTreeTime = Omit<TreeItem, 'label'> & {
@@ -22,6 +21,6 @@ export type ReWriteTreeTime = Omit<TreeItem, 'label'> & {
 }
 
 export interface RootTreeItem extends TreeItem {
-  id: string,
-  parentId: string
+  _id?: string,
+  parentId?: string
 }

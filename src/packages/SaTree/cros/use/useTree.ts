@@ -1,7 +1,7 @@
 import { computed, reactive, VNode } from "vue"
 import { decopy } from 'js-hodgepodge'
 
-import { DataProps, TreeItems } from "../type"
+import { DataProps, RootTreeItem, TreeItems } from "../type"
 
 export function useTree<Node extends {}>({
   props
@@ -35,12 +35,12 @@ export function useTree<Node extends {}>({
       let level = 1
       let oldLevel = 0
       const treeData = decopy(props.data)
-      const recursion = (data: TreeItems) => {
+      const recursion = (data: RootTreeItem[]) => {
 
         for (let i = 0; i < data.length; i++) {
           const item = data[i]
           item.level = level
-
+          item._id = methods.randomId() + methods.randomId() 
           if(methods.isCustomProps()) { // 自定义属性
             // @ts-ignore
             item.label = item[filds.label]
@@ -74,7 +74,9 @@ export function useTree<Node extends {}>({
       })
 
       return treeData
-    }
+    },
+
+    randomId: () => Math.random().toString(16).slice(2, 40)
   }
 
   return {

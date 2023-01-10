@@ -59,7 +59,6 @@ export default defineComponent({
             }
           ]
         }
-        nodeKey='title'
         props={{
           label: 'title',
           childrens: 'data'

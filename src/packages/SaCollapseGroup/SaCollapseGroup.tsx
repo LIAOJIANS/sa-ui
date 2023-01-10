@@ -16,7 +16,9 @@ export const SaCollapseGroup = designComponent({
   inheritPropsType: HTMLDivElement,
 
   emits: {
-    onUpdateModelValue: (val: string | string[] | undefined) => true
+    onUpdateModelValue: (val: string | string[] | undefined) => true,
+    onChangeOpen: (item: string, val: string | string[]) => true,
+    onChangeClose: (item: string, val: string | string[]) => true
   },
 
   slots: ['default'],
@@ -46,8 +48,12 @@ export const SaCollapseGroup = designComponent({
           const value = (model.value as string[] | undefined) || []
           const index = value.indexOf(val)
           if (index > -1) {
+            emit.onChangeClose(value[index], value)
+
             value.splice(index, 1)
           } else {
+            emit.onChangeOpen(val, value)
+
             value.push(val)
             if (value.length > props.limit) {
               value.shift()
