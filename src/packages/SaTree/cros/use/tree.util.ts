@@ -8,6 +8,7 @@ export const TreeProps = {
   isChild: { type: Boolean, default: false },                                // 内部属性
   accordion: { type: Boolean, default: false },                              // 是否每次只打开一个同级树节点展开
   nodeKey: { type: String, default: null },                                  // 节点的唯一标识，理论上是整棵树的唯一
+  highlightCurrent: { type: Boolean, default: false },                        // 是否高亮当前选中节点
 }
 
 export default {}

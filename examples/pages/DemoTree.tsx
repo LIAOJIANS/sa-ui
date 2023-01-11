@@ -63,6 +63,7 @@ export default defineComponent({
           label: 'title',
           childrens: 'data'
         }}
+        highlightCurrent
       />
     </div>
   }

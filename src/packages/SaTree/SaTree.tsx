@@ -14,25 +14,29 @@ export const SaTree = designComponent({
   setup({ props }) {
 
     const state = reactive({
-      treeExpands: []
+      treeExpands: [],
+      current: ''
     } as {
-      treeExpands: string[]
+      treeExpands: string[],
+      current: string
     })
 
-    const methods = {
+    const handle = {
       collapseOpen: (item: string) => !state.treeExpands.includes(item) && state.treeExpands.push(item),
 
       collapseClose: (item: string) => {
         const index = state.treeExpands.findIndex(c => c === item)
         
         index > -1 && state.treeExpands.splice(index, 1)
-      }
+      },
+
+      setCurrent: (item: string) => (state.current = item)
     }
 
     return {
       refer: {
         state,
-        methods
+        handle
       },
 
       render: () => (

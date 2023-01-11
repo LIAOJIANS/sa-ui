@@ -23,14 +23,14 @@
           transform: rotate(90deg);
         }
       }
-    }
 
-    & > .sa-collapse-detail {
-      transition: all 0.3s ease-in-out;
+      & > .sa-collapse-detail {
+        transition: all 0.3s ease-in-out;
+      }
     }
 
     .sa-collapse-detail {
-      height: auto;
+      // height: 0;
       overflow: hidden;
     }
   }

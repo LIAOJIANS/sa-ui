@@ -18,7 +18,8 @@ export const SaCollapseGroup = designComponent({
   emits: {
     onUpdateModelValue: (val: string | string[] | undefined) => true,
     onChangeOpen: (item: string, val: string | string[]) => true,
-    onChangeClose: (item: string, val: string | string[]) => true
+    onChangeClose: (item: string, val: string | string[]) => true,
+    onClick: (item: string) => true
   },
 
   slots: ['default'],
@@ -42,11 +43,15 @@ export const SaCollapseGroup = designComponent({
 
     const handler = {
       clickCollapseTitle: (val: string) => {
+          
+        emit.onClick(val)
+
         if (props.limit === 1) {
           model.value = model.value == val ? undefined : val
         } else {
           const value = (model.value as string[] | undefined) || []
           const index = value.indexOf(val)
+
           if (index > -1) {
             emit.onChangeClose(value[index], value)
 

@@ -41,6 +41,7 @@ export function useTree<Node extends {}>({
           const item = data[i]
           item.level = level
           item._id = methods.randomId() + methods.randomId() 
+          
           if(methods.isCustomProps()) { // 自定义属性
             // @ts-ignore
             item.label = item[filds.label]

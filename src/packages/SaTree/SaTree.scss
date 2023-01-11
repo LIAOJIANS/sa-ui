@@ -10,6 +10,10 @@
       border-bottom: none;
     }
 
+    .sa-collapse-tree__highlight {
+      background: rgba($color: $cyan_7, $alpha: .1);
+    }
+
     .sa-collapse-is-open {
       & > .sa-collapse-tree {
         div > .sa-icon:first-child {
@@ -63,7 +67,7 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #f6f6f6;
+          background: rgba($color: $cyan_7, $alpha: .1);
         }
       }
 
