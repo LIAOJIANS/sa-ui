@@ -1,4 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
+import { onMounted } from "vue";
+import { onDeactivated } from "vue";
 import { reactive } from "vue";
 import { TreeProps } from "./cros/use/tree.util";
 import SaTreeNodePanel from "./SaTreeNodePanel";
@@ -32,6 +34,16 @@ export const SaTree = designComponent({
 
       setCurrent: (item: string) => (state.current = item)
     }
+
+    onMounted(() => {
+      document.querySelector('body')?.addEventListener('click', (e: MouseEvent) => {
+        if(state.current) {
+          state.current = ''
+        }
+      })
+    })
+
+    onDeactivated(() => document.querySelector('body')?.removeEventListener('click', () => {}))
 
     return {
       refer: {

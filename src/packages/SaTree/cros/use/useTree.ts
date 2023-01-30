@@ -19,10 +19,7 @@ export function useTree<Node extends {}>({
     label: string,
     childrens: string
   })
-
-  // const rootData = {
-  //   []
-  // }
+  
 
   const handle = {
     toggleExpand: (keyOrNode: string | VNode) => {

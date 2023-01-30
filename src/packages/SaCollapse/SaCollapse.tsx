@@ -27,19 +27,24 @@ export const SaCollapse = designComponent({
   slots: ['head', 'default'],
 
   setup({ props, event: { emit }, slots }) {
+    
+    const model = useModel(() => props.modelValue, emit.onUpdateModelValue)
+
+    const group = SaCollapseGroup.use.inject()
+
     const { onRef, refs } = useRefs({
       el: HTMLDivElement
     })
 
     const state = reactive({
-      realDetailStyle: {}
+      realDetailStyle: {
+        display: 'none'
+      },
+      detailContentWidth: 0
     } as {
-      realDetailStyle: {}
+      realDetailStyle: {},
+      detailContentWidth: number
     })
-
-    const model = useModel(() => props.modelValue, emit.onUpdateModelValue)
-
-    const group = SaCollapseGroup.use.inject()
 
     const slefValue = computed(() => props.value || value())
 
@@ -68,27 +73,27 @@ export const SaCollapse = designComponent({
       return false
     })
 
-    watch(() => isOpen.value, async () => {
+    watch(() => isOpen.value, () => {
       const flag = isOpen.value && (!!props.content || slots.default.isExist())
 
-      console.log(refs.el?.scrollHeight);
+      if (
+        refs.el?.clientHeight! > 0 &&
+        state.detailContentWidth !== refs.el?.clientHeight
+      ) {
 
+        state.detailContentWidth = refs.el?.clientHeight!  // 记录当前第一次点击时的容器高度，以便还原赋值
+      }
 
       state.realDetailStyle = {
         height: flag ?
-          `${29 * refs.el?.children.length!}px` : '0'
-      }
-
-      await delay(500)
-
-      state.realDetailStyle = {
-        display: isOpen.value && (!!props.content || slots.default.isExist()) ? 'block' : 'none',
-        height: flag ? 'auto' : 'none'
+          `${state.detailContentWidth}px` : '0px'
       }
     })
 
     const handler = {
-      onClickTitle: () => {
+      onClickTitle: (e: MouseEvent) => {
+        e.stopPropagation()
+
         if (isDisabled.value) {
           return
         }

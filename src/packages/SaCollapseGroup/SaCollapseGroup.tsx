@@ -9,7 +9,7 @@ export const SaCollapseGroup = designComponent({
     modelValue: { type: [String, Array] },
     limit: { type: Number, default: 1 }, // 默认展开数量
     disabled: { type: Boolean, default: null },
-    defaultClass: { type: Boolean, default: true },
+    defaultClass: { type: Boolean, default: true }
   },
   
   provideRefer: true,

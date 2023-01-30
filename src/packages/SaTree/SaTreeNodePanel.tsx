@@ -28,6 +28,9 @@ export const SaTreeNodePanel = designComponent({
 
     const collpaseLimit = computed(() => flatTreeData.length)
 
+    const state = {
+      collpases: []
+    }
 
     const methods = {
 
@@ -67,7 +70,7 @@ export const SaTreeNodePanel = designComponent({
                     <SaCollapseGroup
                       defaultClass={false}
                       limit={props.accordion ? 1 : collpaseLimit.value}
-                      onChangeOpen={parent.handle.collapseOpen}
+                      onChangeOpen={parent.handle.setCurrent}
                       onChangeClose={parent.handle.collapseClose}
                       onClick={parent.handle.setCurrent}
                     >
