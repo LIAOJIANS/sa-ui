@@ -26,14 +26,18 @@
       
     }
 
-   .sa-collapse-detail {
-      transition: all 0.3s ease-in-out;
-    }
+  //  .sa-collapse-detail {
+      // transition: all 0.3s ease-in-out;
 
-    .sa-collapse-detail {
-      // height: 0;
-      overflow: hidden;
-    }
+      // transition-property:height;
+      // transition-duration:.3s;
+      // transition-delay:.5s;
+    // }
+
+    // .sa-collapse-detail {
+    //   // height: 0;
+    //   overflow: hidden;
+    // }
   }
 
   .sa-collapse-group {

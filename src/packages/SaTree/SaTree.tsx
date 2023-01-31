@@ -23,7 +23,7 @@ export const SaTree = designComponent({
       current: string
     })
 
-    const handle = {
+    const handler = {
       collapseOpen: (item: string) => !state.treeExpands.includes(item) && state.treeExpands.push(item),
 
       collapseClose: (item: string) => {
@@ -48,7 +48,7 @@ export const SaTree = designComponent({
     return {
       refer: {
         state,
-        handle
+        handler
       },
 
       render: () => (

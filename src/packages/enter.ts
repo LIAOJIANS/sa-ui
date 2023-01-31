@@ -16,6 +16,7 @@ import SaCheckbox from './SaCheckbox/SaCheckbox'
 import SaCheckboxGroup from './SaCheckboxGroup/SaCheckboxGroup'
 import SaCollapse from './SaCollapse/SaCollapse'
 import SaCollapseGroup from './SaCollapseGroup/SaCollapseGroup'
+import SaCollapseTransition from './SaCollapseTransition/SaCollapseTransition'
 import SaRadio from './SaRadio/SaRadio'
 import SaRadioGroup from './SaRadioGroup/SaRadioGroup'
 import SaLoadingMask from './SaLoadingMask/SaLoadingMask'
@@ -59,6 +60,7 @@ export {
   SaCheckboxGroup,
   SaCollapse,
   SaCollapseGroup,
+  SaCollapseTransition,
   SaRadio,
   SaRadioGroup,
   SaLoadingMask,

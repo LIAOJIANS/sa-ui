@@ -21,7 +21,7 @@ export function useTree<Node extends {}>({
   })
   
 
-  const handle = {
+  const handler = {
     toggleExpand: (keyOrNode: string | VNode) => {
 
     }

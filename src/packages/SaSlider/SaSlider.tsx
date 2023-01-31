@@ -54,7 +54,7 @@ export const SaSlider = designComponent({
 
     const stepMedian = computed(() => (Math.floor(100 / props.setp! / 2)))
 
-    const handle = {
+    const handler = {
       barClick: (e: MouseEvent) => methods.drogging(e),
 
       btnMouseLeve: (e: MouseEvent) => {
@@ -93,19 +93,19 @@ export const SaSlider = designComponent({
 
       addListenWindowEvent: () => {
         window.addEventListener('mousemove', methods.drogging)
-        window.addEventListener('mouseup', handle.btnMouseLeve)
+        window.addEventListener('mouseup', handler.btnMouseLeve)
       },
 
       removeListenWindowEvent: () => {
         window.removeEventListener('mousemove', methods.drogging)
-        window.removeEventListener('mouseup', handle.btnMouseLeve)
+        window.removeEventListener('mouseup', handler.btnMouseLeve)
       }
     }
 
     return {
       render: () => (
         <div class="sa-slider">
-          <div class="sa-slider-bar sa-slider--hover" ref={onRef.bar} onClick={ handle.barClick }>
+          <div class="sa-slider-bar sa-slider--hover" ref={onRef.bar} onClick={ handler.barClick }>
             <div class="sa-slider-bar--wrapper sa-slider--hover" style={innerBarStyles.value}></div>
             {
               !!props.setp &&
@@ -119,9 +119,9 @@ export const SaSlider = designComponent({
             <div
               class={buttonClasses.value}
               style={buttonStyle.value}
-              onMousedown={handle.btnTouchStart}
-              // onMouseleave={ handle.btnMouseLeave }
-              onMouseup={handle.btnMouseLeve}
+              onMousedown={handler.btnTouchStart}
+              // onMouseleave={ handler.btnMouseLeave }
+              onMouseup={handler.btnMouseLeve}
             >
               {
                 props.showTip ? (

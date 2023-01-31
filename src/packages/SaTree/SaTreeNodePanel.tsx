@@ -70,9 +70,11 @@ export const SaTreeNodePanel = designComponent({
                     <SaCollapseGroup
                       defaultClass={false}
                       limit={props.accordion ? 1 : collpaseLimit.value}
-                      onChangeOpen={parent.handle.setCurrent}
-                      onChangeClose={parent.handle.collapseClose}
-                      onClick={parent.handle.setCurrent}
+                      {...{
+                        onChangeOpen: parent.handler.setCurrent,
+                        onChangeClose: parent.handler.collapseClose,
+                        onClick: parent.handler.setCurrent
+                      }}
                     >
                       <SaCollapse v-slots={{
                         head: () => labelContent(
@@ -97,7 +99,7 @@ export const SaTreeNodePanel = designComponent({
                     () => ((c[props.nodeKey] || c['_id']) === parent.state.current) && !!props.highlightCurrent ? ['sa-collapse-tree__highlight'] : [],
                     {
                       // @ts-ignore
-                      onClick: () => parent.handle.setCurrent(c[props.nodeKey] || c['_id'])
+                      onClick: () => parent.handler.setCurrent(c[props.nodeKey] || c['_id'])
                     }
                   )}
                 </div>)

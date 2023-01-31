@@ -20,6 +20,8 @@ import { disabledUserSelect, enableUserSelect } from './utils/userSelect'
 import { defer } from './utils/defer'
 import { findOne } from './utils/findOne'
 import { clipboard } from './utils/clipboard'
+import { addClass } from './utils/addClass'
+import { removeClass } from './utils/removeClass'
 
 /* --------------------- POPPER-SERVICE ------------------------------- */
 import { createPopperServiceComponent, createCounter } from './popperService/createPopperServiceComponent'
@@ -59,6 +61,8 @@ export {
   plainDate,
   plainDateUtils,
   clipboard,
+  addClass,
+  removeClass,
 
   createPopperServiceComponent,
   createCounter,

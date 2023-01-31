@@ -12,7 +12,7 @@ export default defineComponent({
       loading: true
     })
 
-    const handle = {
+    const handler = {
       onScroll: (e: Event) => {
         // console.log(e);
       }
@@ -33,7 +33,7 @@ export default defineComponent({
 
         max-height="500px"
         width="800px"
-        onScroll={ handle.onScroll }
+        onScroll={ handler.onScroll }
       >
         <div >
           { new Array(12).fill('text').map(c => <p style={{ height: '30px', }}>{ c }</p>) }

@@ -1,10 +1,12 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { classname, createCounter, useModel, useRefs } from "src/hooks";
-import { computed, reactive, watch } from "vue";
+import { computed, CSSProperties, reactive, watch } from "vue";
 import SaCollapseGroup from "../SaCollapseGroup/SaCollapseGroup";
 import './SaCollapse.scss'
 import SaIcon from '../SaIcon/SaIcon'
+import { onMounted } from "vue";
 import { delay } from "js-hodgepodge";
+import SaCollapseTransition from "../SaCollapseTransition/SaCollapseTransition";
 
 const value = createCounter('collapse')
 
@@ -27,23 +29,13 @@ export const SaCollapse = designComponent({
   slots: ['head', 'default'],
 
   setup({ props, event: { emit }, slots }) {
-    
+
     const model = useModel(() => props.modelValue, emit.onUpdateModelValue)
 
     const group = SaCollapseGroup.use.inject()
 
     const { onRef, refs } = useRefs({
       el: HTMLDivElement
-    })
-
-    const state = reactive({
-      realDetailStyle: {
-        display: 'none'
-      },
-      detailContentWidth: 0
-    } as {
-      realDetailStyle: {},
-      detailContentWidth: number
     })
 
     const slefValue = computed(() => props.value || value())
@@ -71,23 +63,6 @@ export const SaCollapse = designComponent({
         return group.props.disabled
       }
       return false
-    })
-
-    watch(() => isOpen.value, () => {
-      const flag = isOpen.value && (!!props.content || slots.default.isExist())
-
-      if (
-        refs.el?.clientHeight! > 0 &&
-        state.detailContentWidth !== refs.el?.clientHeight
-      ) {
-
-        state.detailContentWidth = refs.el?.clientHeight!  // 记录当前第一次点击时的容器高度，以便还原赋值
-      }
-
-      state.realDetailStyle = {
-        height: flag ?
-          `${state.detailContentWidth}px` : '0px'
-      }
     })
 
     const handler = {
@@ -119,9 +94,11 @@ export const SaCollapse = designComponent({
           </div>
         }
 
-        <div class="sa-collapse-detail" ref={onRef.el} style={state.realDetailStyle}>
-          {slots.default(props.content)}
-        </div>
+        <SaCollapseTransition>
+          <div class="sa-collapse-detail" ref={onRef.el} v-show={isOpen.value && (!!props.content || slots.default.isExist())}>
+            {slots.default(props.content)}
+          </div>
+        </SaCollapseTransition>
       </div>
     }
   }
