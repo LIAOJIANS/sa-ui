@@ -1,5 +1,5 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { onDeactivated } from "vue";
 import { reactive } from "vue";
 import { TreeProps } from "./cros/use/tree.util";

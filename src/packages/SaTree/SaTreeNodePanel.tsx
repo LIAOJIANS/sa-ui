@@ -1,4 +1,4 @@
-import { computed, reactive, VNode, watch } from "vue";
+import { computed, reactive, VNode } from "vue";
 
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import './SaTree.scss'
@@ -22,15 +22,16 @@ export const SaTreeNodePanel = designComponent({
 
     const parent = SaTree.use.inject()
 
-    const { treeData, flatTreeData } = useTree<TreeItem>({ props } as any)
+    const { treeData, flatTreeData, getTreeKey } = useTree<TreeItem>({ props } as any)
 
     const formatData = computed(() => props.isChild ? props.data : treeData)
 
-    const collpaseLimit = computed(() => flatTreeData.length)
+    const collpaseLimit = computed(() => props.defaultExpandAll ? flatTreeData.length : props.accordion ? 1 : flatTreeData.length)
 
-    const state = {
-      collpases: []
-    }
+    const state = reactive({
+      // @ts-ignore
+      collapses: props.defaultExpandAll ? formatData.value.map(c => c[getTreeKey()]) : []
+    })
 
     const methods = {
 
@@ -52,7 +53,7 @@ export const SaTreeNodePanel = designComponent({
           handleFun?: Record<string, () => void>
         ) => (
           <div
-            class={"sa-tree-node-content " + extendClsses?.().join(' ')}
+            class={"sa-tree-node-content " + (extendClsses?.().join(' ') || '')}
             style={{ paddingLeft: `${(level - 1) * 18}px` }}
             {...handleFun}
           >
@@ -63,19 +64,21 @@ export const SaTreeNodePanel = designComponent({
 
         return (
           <>
-            {
-              formatData.value.map((c: RootTreeItem) => (
-                <div class="sa-tree-node" >
-                  {!!c.childrens && c.childrens.length > 0 ? (
-                    <SaCollapseGroup
-                      defaultClass={false}
-                      limit={props.accordion ? 1 : collpaseLimit.value}
-                      {...{
-                        onChangeOpen: parent.handler.setCurrent,
-                        onChangeClose: parent.handler.collapseClose,
-                        onClick: parent.handler.setCurrent
-                      }}
-                    >
+            <SaCollapseGroup
+              v-model={ state.collapses }
+              defaultClass={false}
+              limit={collpaseLimit.value}
+              {...{
+                onChangeOpen: parent.handler.collapseOpen,
+                onChangeClose: parent.handler.collapseClose,
+                onClick: parent.handler.setCurrent
+              }}
+            >
+              {
+                formatData.value.map((c: RootTreeItem) => (
+                  <div class="sa-tree-node" >
+                    {!!c.childrens && c.childrens.length > 0 ? (
+
                       <SaCollapse v-slots={{
                         head: () => labelContent(
                           c.level,
@@ -84,27 +87,29 @@ export const SaTreeNodePanel = designComponent({
                         )
                       }}
                         // @ts-ignore
-                        customClass={methods.collpaseClasses(c[props.nodeKey] || c['_id']).value}
+                        customClass={methods.collpaseClasses(c[getTreeKey()]).value}
                         // @ts-ignore
-                        value={c[props.nodeKey] || c['_id']}
+                        value={c[getTreeKey()]}
                       >
                         <SaTreeNodePanel {...{ ...props, data: c.childrens }} isChild />
                       </SaCollapse>
-                    </SaCollapseGroup>
-                  ) : labelContent(
-                    c.level,
-                    c.label,
-                    () => <i style={{ width: '16px', height: '16px', display: 'inline-block' }}></i>,
-                    // @ts-ignore
-                    () => ((c[props.nodeKey] || c['_id']) === parent.state.current) && !!props.highlightCurrent ? ['sa-collapse-tree__highlight'] : [],
-                    {
+                    ) : labelContent(
+                      c.level,
+                      c.label,
+                      () => <i style={{ width: '16px', height: '16px', display: 'inline-block' }}></i>,
                       // @ts-ignore
-                      onClick: () => parent.handler.setCurrent(c[props.nodeKey] || c['_id'])
-                    }
-                  )}
-                </div>)
-              )
-            }
+                      () => ((c[getTreeKey()]) === parent.state.current) && !!props.highlightCurrent ? ['sa-collapse-tree__highlight'] : [],
+                      {
+                        // @ts-ignore
+                        onClick: () => parent.handler.setCurrent(c[getTreeKey()])
+                      }
+                    )}
+                  </div>)
+                )
+              }
+
+            </SaCollapseGroup>
+
           </>
         )
       }

@@ -8,7 +8,8 @@ export function useTree<Node extends {}>({
 }: {
   props: {
     data: TreeItems,
-    props: DataProps | undefined
+    props: DataProps | undefined,
+    nodeKey: string | null
   }
 }) {
   
@@ -18,11 +19,10 @@ export function useTree<Node extends {}>({
   } as {
     label: string,
     childrens: string
-  })
-  
+  })  
 
   const handler = {
-    toggleExpand: (keyOrNode: string | VNode) => {
+    toggleExpand: (keyOrNode: string | VNode) => { 
 
     }
   }
@@ -80,6 +80,7 @@ export function useTree<Node extends {}>({
   return {
     methods,
     flatTreeData: methods.fattenData(methods.treeDataFomrat(), []), // 扁平化的tree数据
-    treeData: methods.treeDataFomrat()
+    treeData: methods.treeDataFomrat(),
+    getTreeKey: (): string => props.nodeKey || '_id'
   }
 }
