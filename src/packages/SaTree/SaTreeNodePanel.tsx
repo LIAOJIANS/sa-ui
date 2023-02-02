@@ -5,10 +5,13 @@ import './SaTree.scss'
 import SaIcon from "../SaIcon/SaIcon";
 import SaCollapseGroup from '../SaCollapseGroup/SaCollapseGroup'
 import SaCollapse from '../SaCollapse/SaCollapse'
+import SaTree from './SaTree'
+import SaCheckbox from '../SaCheckbox/SaCheckbox'
+import SaCheckboxGroup from '../SaCheckboxGroup/SaCheckboxGroup'
+
 import { RootTreeItem, TreeItem } from "./cros/type";
 import { useTree } from "./cros/use/useTree";
 import { TreeProps } from "./cros/use/tree.util";
-import SaTree from './SaTree'
 import { classname } from "src/hooks";
 
 // 下一步实现点击展开child,  ---- 想办法把child 和 parent关联起来， 可以利用绑定key作为关联，不该给用户知道的关联
@@ -24,12 +27,12 @@ export const SaTreeNodePanel = designComponent({
 
     const { treeData, flatTreeData, getTreeKey } = useTree<TreeItem>({ props } as any)
 
-    const formatData = computed(() => props.isChild ? props.data : treeData)
+    const formatData = computed(() => props.isChild ? (props.data as RootTreeItem[]) : treeData)
 
     const collpaseLimit = computed(() => props.defaultExpandAll ? flatTreeData.length : props.accordion ? 1 : flatTreeData.length)
 
     const state = reactive({
-      // @ts-ignore
+
       collapses: props.defaultExpandAll ? formatData.value.map(c => c[getTreeKey()]) : []
     })
 
@@ -58,14 +61,30 @@ export const SaTreeNodePanel = designComponent({
             {...handleFun}
           >
             {extendEl()}
-            <span>{content}</span>
+            <span> {typeof content === 'function' ? content() : content}</span>
           </div>
+        )
+
+        const hasCheckLabel = (c: RootTreeItem) => (
+          <SaCollapse v-slots={{
+            head: () => labelContent(
+              c.level,
+              () => props.checkbox ? <SaCheckbox label={c.label} value={ c[getTreeKey()] } checkboxForAll onChange={ parent.handler.setChecked } /> : <>{c.label}</>,
+              () => <SaIcon icon="el-icon-caret-right" />
+            )
+          }}
+            // @ts-ignore
+            customClass={methods.collpaseClasses(c[getTreeKey()]).value}
+            value={c[getTreeKey()]}
+          >
+            <SaTreeNodePanel {...{ ...props, data: c.childrens }} isChild />
+          </SaCollapse>
         )
 
         return (
           <>
             <SaCollapseGroup
-              v-model={ state.collapses }
+              v-model={state.collapses}
               defaultClass={false}
               limit={collpaseLimit.value}
               {...{
@@ -78,30 +97,22 @@ export const SaTreeNodePanel = designComponent({
                 formatData.value.map((c: RootTreeItem) => (
                   <div class="sa-tree-node" >
                     {!!c.childrens && c.childrens.length > 0 ? (
+                      (() => props.checkStrictly ? hasCheckLabel(c) : (
+                        <SaCheckboxGroup>
+                          {hasCheckLabel(c)}
+                        </SaCheckboxGroup>
+                      ))()
 
-                      <SaCollapse v-slots={{
-                        head: () => labelContent(
-                          c.level,
-                          c.label,
-                          () => <SaIcon icon="el-icon-caret-right" />
-                        )
-                      }}
-                        // @ts-ignore
-                        customClass={methods.collpaseClasses(c[getTreeKey()]).value}
-                        // @ts-ignore
-                        value={c[getTreeKey()]}
-                      >
-                        <SaTreeNodePanel {...{ ...props, data: c.childrens }} isChild />
-                      </SaCollapse>
                     ) : labelContent(
                       c.level,
-                      c.label,
+
+                      () => props.checkbox ? <SaCheckbox label={c.label} value={ c[getTreeKey()] } onChange={ parent.handler.setChecked } /> : <>{c.label}</>,
                       () => <i style={{ width: '16px', height: '16px', display: 'inline-block' }}></i>,
-                      // @ts-ignore
+
                       () => ((c[getTreeKey()]) === parent.state.current) && !!props.highlightCurrent ? ['sa-collapse-tree__highlight'] : [],
                       {
-                        // @ts-ignore
-                        onClick: () => parent.handler.setCurrent(c[getTreeKey()])
+
+                        onClick: () => parent.handler.setCurrent(c[getTreeKey()] as string)
                       }
                     )}
                   </div>)

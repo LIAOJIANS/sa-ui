@@ -24,7 +24,8 @@ export const SaCheckbox = designComponent({
 
   emits: {
     onUpdateModelValue: (val: any) => true,
-    onClick: (e?: MouseEvent) => true
+    onClick: (e?: MouseEvent) => true,
+    onChange: (val: any) => true
   },
 
   scopeSlots: {
@@ -78,6 +79,8 @@ export const SaCheckbox = designComponent({
         }
 
         emit.onClick(e)
+        
+        emit.onChange(model.value)
 
         if (!editComputed.value.editable || props.customReadonly) {
           return
@@ -86,9 +89,8 @@ export const SaCheckbox = designComponent({
         if (!!checkboxGroup) {
           return checkboxGroup.handler.clickCheckbox(refer)
         }
-
+        
         model.value = checkStatus.value === CheckboxStatus.check ? props.falseValye : props.tureValue
-
         if (!!e) {
           e.stopPropagation()
           e.preventDefault()

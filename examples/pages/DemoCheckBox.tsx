@@ -100,7 +100,9 @@ export default defineComponent({
             state.initInfo.checkboxStatus1 ? '点我选中' : '点我取消'
           }</SaButton>
           <p style={{ margin: '10px 0' }}></p>
-          <SaCheckbox v-model={state.initInfo.checkboxStatus1} label={ `测试${state.initInfo.checkboxStatus1}` }></SaCheckbox>
+          <SaCheckbox v-model={state.initInfo.checkboxStatus1} label={ `测试${state.initInfo.checkboxStatus1}`} onChange={ val => {
+            console.log(val)
+          } }></SaCheckbox>
           <p style={{ margin: '10px 0' }}>自定义内容：优先级别label 大于 slot</p>
           <SaCheckbox v-model={state.initInfo.checkboxStatus2}>
             <SaButton mode="plain">我是自定义内容</SaButton>

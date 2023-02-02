@@ -32,7 +32,12 @@ export const SaTree = designComponent({
         index > -1 && state.treeExpands.splice(index, 1)
       },
 
-      setCurrent: (item: string) => (state.current = item)
+      setCurrent: (item: string) => (state.current = item),
+
+      setChecked: (val: any) => {
+        console.log(val);
+        
+      }
     }
 
     onMounted(() => {

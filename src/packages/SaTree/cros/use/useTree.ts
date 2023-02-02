@@ -28,7 +28,7 @@ export function useTree<Node extends {}>({
   }
 
   const methods = { 
-    treeDataFomrat: () => {
+    treeDataFomrat: (): RootTreeItem[] => {
       let level = 1
       let oldLevel = 0
       const treeData = decopy(props.data)
@@ -60,7 +60,7 @@ export function useTree<Node extends {}>({
       return treeData
     },
 
-    isCustomProps: () => props.props?.label || props.props?.childrens,
+    isCustomProps: () => props.props?.label && props.props?.childrens,
 
     fattenData: (data: TreeItems, list: TreeItems) => {
       const treeData = list
@@ -81,6 +81,6 @@ export function useTree<Node extends {}>({
     methods,
     flatTreeData: methods.fattenData(methods.treeDataFomrat(), []), // 扁平化的tree数据
     treeData: methods.treeDataFomrat(),
-    getTreeKey: (): string => props.nodeKey || '_id'
+    getTreeKey: (): keyof RootTreeItem => props.nodeKey || '_id' as any
   }
 }
