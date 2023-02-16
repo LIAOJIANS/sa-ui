@@ -1,3 +1,4 @@
+import { CheckboxStatus } from "src/hooks";
 import { VNode } from "vue";
 
 export interface TreeItem {
@@ -16,11 +17,14 @@ export interface DataProps {
 
 export type TreeItems = TreeItem[]
 
-export type ReWriteTreeTime = Omit<TreeItem, 'label'> & {
+export type TreeCheckbox = keyof typeof CheckboxStatus   //  内部树选中状态类型
+
+export type ReWriteTreeTime = Omit<TreeItem, 'label'> & {   // 重写label类型
   label: string
 }
 
 export interface RootTreeItem extends TreeItem {
   _id?: string,
-  parentId?: string
+  parentId?: string,
+  isCheck?: TreeCheckbox | boolean | null
 }

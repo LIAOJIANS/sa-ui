@@ -19,7 +19,13 @@ export function useTree<Node extends {}>({
   } as {
     label: string,
     childrens: string
-  })  
+  })
+
+  const state = reactive({
+    rootData: []
+  } as {
+    rootData: RootTreeItem[]
+  })
 
   const handler = {
     toggleExpand: (keyOrNode: string | VNode) => { 
@@ -74,13 +80,44 @@ export function useTree<Node extends {}>({
       return treeData
     },
 
-    randomId: () => Math.random().toString(16).slice(2, 40)
+    randomId: () => Math.random().toString(16).slice(2, 40),
+
+    setTreeItemAttr: (keys: string[], attr: any) => {
+      
+      const nodeKey = methods.getTreeKey()
+      const recursion = (data: RootTreeItem[]) => {
+        for(let i = 0; i < data.length; i++) {
+          const item = data[i]
+
+          if(!(nodeKey in item)) {
+            return
+          }
+
+          if(keys.indexOf(item[nodeKey] as any) > -1) {
+            data[i] = {
+              ...item,
+              ...attr
+            }
+          }
+
+          if(!!item.childrens && item.childrens.length > 0) {
+            recursion(item.childrens)
+          }
+        }
+      }
+
+      recursion(state.rootData)
+    },
+
+    getTreeKey: (): keyof RootTreeItem => props.nodeKey || '_id' as any
   }
+
+  state.rootData = methods.treeDataFomrat()
 
   return {
     methods,
-    flatTreeData: methods.fattenData(methods.treeDataFomrat(), []), // 扁平化的tree数据
-    treeData: methods.treeDataFomrat(),
-    getTreeKey: (): keyof RootTreeItem => props.nodeKey || '_id' as any
+    flatTreeData: methods.fattenData(state.rootData, []), // 扁平化的tree数据
+    treeData: state.rootData,
+    getTreeKey: methods.getTreeKey
   }
 }

@@ -65,7 +65,6 @@ export default defineComponent({
           childrens: 'data'
         }}
         highlightCurrent
-        defaultExpandAll
         accordion
       />
 

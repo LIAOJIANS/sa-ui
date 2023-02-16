@@ -1,7 +1,8 @@
+import { typeOf } from "js-hodgepodge";
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { CheckboxStatus, classname, DEFAULT_STATUS, EditProps, StyleProps, unit, useEdit, useModel, useRefs, useStyle, useStyles } from "src/hooks";
 import { SimpleFunction } from "src/hooks/utils/event";
-import { computed, Transition } from "vue";
+import { computed, Transition, watch } from "vue";
 import { CheckboxGroupCollector } from "../SaCheckboxGroup/SaCheckboxGroup";
 import { SaCheckboxInner } from '../SaCheckboxInner/SaCheckboxInner'
 import './SaCheckbox.scss'
@@ -17,7 +18,7 @@ export const SaCheckbox = designComponent({
     checkStatus: { type: String },  // 自定义状态
     value: { type: [String, Number] },
     tureValue: { default: true as any },
-    falseValye: { default: false as any },
+    falseValue: { default: false as any },
     label: { type: String },
     checkboxForAll: { type: Boolean },
   },
@@ -25,7 +26,7 @@ export const SaCheckbox = designComponent({
   emits: {
     onUpdateModelValue: (val: any) => true,
     onClick: (e?: MouseEvent) => true,
-    onChange: (val: any) => true
+    onChangeStatus: (val: any) => true
   },
 
   scopeSlots: {
@@ -59,6 +60,11 @@ export const SaCheckbox = designComponent({
       if (!!checkboxGroup) {
         return checkboxGroup.utils.getCheckStatus(refer)
       } else {
+        
+        if(!!props.value || typeOf(props.value) === 'boolean') {
+          model.value = typeof props.value === 'boolean' ? props.value : props.value === CheckboxStatus.check
+        }
+
         return model.value === props.tureValue ? CheckboxStatus.check : CheckboxStatus.uncheck
       }
 
@@ -79,8 +85,6 @@ export const SaCheckbox = designComponent({
         }
 
         emit.onClick(e)
-        
-        emit.onChange(model.value)
 
         if (!editComputed.value.editable || props.customReadonly) {
           return
@@ -90,13 +94,16 @@ export const SaCheckbox = designComponent({
           return checkboxGroup.handler.clickCheckbox(refer)
         }
         
-        model.value = checkStatus.value === CheckboxStatus.check ? props.falseValye : props.tureValue
+        model.value = checkStatus.value === CheckboxStatus.check ? props.falseValue : props.tureValue
+        
         if (!!e) {
           e.stopPropagation()
           e.preventDefault()
         }
       }
     }
+
+    watch(() => model.value, (isCheck) => emit.onChangeStatus(checkStatus.value))
 
     const styles = useStyles(style => {
       if(!!checkboxGroup) {
