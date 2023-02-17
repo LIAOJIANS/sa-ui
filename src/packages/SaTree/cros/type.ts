@@ -4,7 +4,7 @@ import { VNode } from "vue";
 export interface TreeItem {
   label: string | (() => VNode),
   disabled: boolean,
-  childrens: TreeItems,
+  childrens: RootTreeItem[],
   level: number,                        // 层级
   expand: boolean,                      // 是否展开
   key: string                          
@@ -25,6 +25,6 @@ export type ReWriteTreeTime = Omit<TreeItem, 'label'> & {   // 重写label类型
 
 export interface RootTreeItem extends TreeItem {
   _id?: string,
-  parentId?: string,
+  parentId?: string | number,
   isCheck?: TreeCheckbox | boolean | null
 }

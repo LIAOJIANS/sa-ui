@@ -1,4 +1,3 @@
-import { typeOf } from "js-hodgepodge";
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { CheckboxStatus, classname, DEFAULT_STATUS, EditProps, StyleProps, unit, useEdit, useModel, useRefs, useStyle, useStyles } from "src/hooks";
 import { SimpleFunction } from "src/hooks/utils/event";
@@ -60,10 +59,6 @@ export const SaCheckbox = designComponent({
       if (!!checkboxGroup) {
         return checkboxGroup.utils.getCheckStatus(refer)
       } else {
-        
-        if(!!props.value || typeOf(props.value) === 'boolean') {
-          model.value = typeof props.value === 'boolean' ? props.value : props.value === CheckboxStatus.check
-        }
 
         return model.value === props.tureValue ? CheckboxStatus.check : CheckboxStatus.uncheck
       }
@@ -103,7 +98,7 @@ export const SaCheckbox = designComponent({
       }
     }
 
-    watch(() => model.value, (isCheck) => emit.onChangeStatus(checkStatus.value))
+    watch(() => model.value, (isCheck) => emit.onChangeStatus(isCheck === props.tureValue ? CheckboxStatus.check : CheckboxStatus.uncheck))
 
     const styles = useStyles(style => {
       if(!!checkboxGroup) {

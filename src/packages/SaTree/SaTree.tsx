@@ -47,18 +47,34 @@ export const SaTree = designComponent({
 
       setCurrent: (item: string) => (state.current = item),
 
-      setChecked: (val: TreeCheckbox, node: RootTreeItem) => {
-        node.isCheck = val
+      setChecked: (val: TreeCheckbox, node: RootTreeItem) => { // 点击只有两种状态（check / uncheck）
+        
+        node.isCheck = val  // 利用浅拷贝特性
 
-        emit.getCurrentNode({
+        if(props.checkStrictly) {  // 选中关联父子
+
+          let keys = []
+          let attr: any = {}
+
+          // 选中当前节点，如果存在子节点则子节点全部选中，如果存在父节点，则判断当前父节点所属的子节点是否全部选中，否则半选，是则全选
+          // 如果是顶节点则子节点全部选中
+          // 如果childrens 不存在或者length 为0则 往上修改父节点的状态
+
+          // 获取需要修改状态的节点keys
+          attr = methods.getCheckboxStauses(node, val)
+
+          // 获取需要修改节点状态对应的key对象
+          keys = Object.keys(attr)
+          
+          
+          methods.setTreeItemAttr(keys, attr)
+        } 
+
+        emit.getCurrentNode({ // 派发事件
           ...node,
-          isCheck: val === CheckboxStatus.check || null
+          isCheck: val
         })
 
-        methods.setTreeItemAttr([node[methods.getTreeKey()] as string], { isCheck: val === CheckboxStatus.check || null })
-
-        
-        console.log(treeData); // 响应没生效
       }
     }
 
@@ -81,7 +97,7 @@ export const SaTree = designComponent({
       render: () => (
         <div class="sa-tree">
           <SaTreeNodePanel 
-            {...props}
+            {...{...props, isChild: true, data: treeData}}
           />
         </div>
       )

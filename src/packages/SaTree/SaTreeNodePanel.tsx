@@ -25,9 +25,9 @@ export const SaTreeNodePanel = designComponent({
 
     const parent = SaTree.use.inject()
 
-    const { treeData, flatTreeData, getTreeKey } = useTree<TreeItem>({ props } as any)
+    const { flatTreeData, getTreeKey, methods: golMethods } = useTree<TreeItem>({ props, cache: true } as any)
 
-    const formatData = computed(() => props.isChild ? (props.data as RootTreeItem[]) : treeData)
+    const formatData = computed(():RootTreeItem[] => props.data)
 
     const collpaseLimit = computed(() => props.defaultExpandAll ? flatTreeData.length : props.accordion ? 1 : flatTreeData.length)
 
@@ -72,8 +72,8 @@ export const SaTreeNodePanel = designComponent({
                 props.checkbox ?
                   <SaCheckbox
                     label={c.label}
-                    value={c.isCheck}
                     checkboxForAll
+                    checkStatus={ c.isCheck }
                     onChangeStatus={(e: TreeCheckbox) => parent.handler.setChecked(e, c)}
                   /> : <>{c.label}</>
               ),
@@ -104,11 +104,13 @@ export const SaTreeNodePanel = designComponent({
                 formatData.value.map((c: RootTreeItem) => (
                   <div class="sa-tree-node" >
                     {!!c.childrens && c.childrens.length > 0 ? (
-                      (() => props.checkStrictly ? hasCheckLabel(c) : (
-                        <SaCheckboxGroup>
-                          {hasCheckLabel(c)}
-                        </SaCheckboxGroup>
-                      ))()
+                      // (() => props.checkStrictly ? hasCheckLabel(c) : (
+                      //   <SaCheckboxGroup>
+                      //  {hasCheckLabel(c)}
+                      //   </SaCheckboxGroup>
+                      // ))()
+
+                      hasCheckLabel(c)
 
                     ) : labelContent(
                       c.level,
@@ -117,7 +119,7 @@ export const SaTreeNodePanel = designComponent({
                         props.checkbox ?
                           <SaCheckbox
                             label={c.label}
-                            value={c.isCheck}
+                            checkStatus={ c.isCheck }
                             onChangeStatus={(e: TreeCheckbox) => parent.handler.setChecked(e, c)}
                           /> : <>{c.label}</>
                       ),
