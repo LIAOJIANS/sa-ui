@@ -1,4 +1,4 @@
-import { computed, reactive, VNode, ref } from "vue";
+import { computed, reactive, VNode, ref, watch } from "vue";
 
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import './SaTree.scss'
@@ -7,12 +7,11 @@ import SaCollapseGroup from '../SaCollapseGroup/SaCollapseGroup'
 import SaCollapse from '../SaCollapse/SaCollapse'
 import SaTree from './SaTree'
 import SaCheckbox from '../SaCheckbox/SaCheckbox'
-import SaCheckboxGroup from '../SaCheckboxGroup/SaCheckboxGroup'
 
 import { RootTreeItem, TreeCheckbox, TreeItem } from "./cros/type";
 import { useTree } from "./cros/use/useTree";
 import { TreeProps } from "./cros/use/tree.util";
-import { CheckboxStatus, classname } from "src/hooks";
+import { classname } from "src/hooks";
 
 // 下一步实现点击展开child,  ---- 想办法把child 和 parent关联起来， 可以利用绑定key作为关联，不该给用户知道的关联
 // 一个内部操作的数据rootData，可以对外抛给用户的data
@@ -25,14 +24,19 @@ export const SaTreeNodePanel = designComponent({
 
     const parent = SaTree.use.inject()
 
-    const { flatTreeData, getTreeKey, methods: golMethods } = useTree<TreeItem>({ props, cache: true } as any)
+    const { flatTreeData, nodeKey } = useTree<TreeItem>({ props, cache: true } as any)
 
     const formatData = computed(():RootTreeItem[] => props.data)
 
     const collpaseLimit = computed(() => props.defaultExpandAll ? flatTreeData.length : props.accordion ? 1 : flatTreeData.length)
 
     const state = reactive({
-      collapses: props.defaultExpandAll ? formatData.value.map(c => c[getTreeKey()]) : []
+      collapses: props.defaultExpandAll ? formatData.value.map(c => c[nodeKey.value]) : []
+    })
+
+    watch(() => state.collapses, val => {
+      console.log(val);
+      
     })
 
     const methods = {
@@ -40,9 +44,12 @@ export const SaTreeNodePanel = designComponent({
       collpaseClasses: (val: string) => computed(() => classname([
         'sa-collapse-tree',
         {
-          'sa-collapse-tree__highlight': val === parent.state.current && !!props.highlightCurrent
+          'sa-collapse-tree__highlight': methods.isHighlight(val)
         }
-      ]))
+      ])),
+
+
+      isHighlight: (val: string) => (val === parent.state.current && !!props.highlightCurrent)
     }
 
     return {
@@ -81,8 +88,8 @@ export const SaTreeNodePanel = designComponent({
             )
           }}
             // @ts-ignore
-            customClass={methods.collpaseClasses(c[getTreeKey()]).value}
-            value={c[getTreeKey()]}
+            customClass={methods.collpaseClasses(c[nodeKey.value]).value}
+            value={c[nodeKey.value]}
           >
             <SaTreeNodePanel {...{ ...props, data: c.childrens }} isChild />
           </SaCollapse>
@@ -125,9 +132,9 @@ export const SaTreeNodePanel = designComponent({
                       ),
                       () => <i style={{ width: '16px', height: '16px', display: 'inline-block' }}></i>,
 
-                      () => ((c[getTreeKey()]) === parent.state.current) && !!props.highlightCurrent ? ['sa-collapse-tree__highlight'] : [],
+                      () => methods.isHighlight(c[nodeKey.value] as string) ? ['sa-collapse-tree__highlight'] : [],
                       {
-                        onClick: () => parent.handler.setCurrent(c[getTreeKey()] as string)
+                        onClick: () => parent.handler.setCurrent(c[nodeKey.value] as string)
                       }
                     )}
                   </div>)
@@ -135,7 +142,6 @@ export const SaTreeNodePanel = designComponent({
               }
 
             </SaCollapseGroup>
-
           </>
         )
       }

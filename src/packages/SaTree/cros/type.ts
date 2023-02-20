@@ -19,6 +19,8 @@ export type TreeItems = TreeItem[]
 
 export type TreeCheckbox = keyof typeof CheckboxStatus   //  内部树选中状态类型
 
+export type AssociationAttr = Record<string, { isCheck: TreeCheckbox }>
+
 export type ReWriteTreeTime = Omit<TreeItem, 'label'> & {   // 重写label类型
   label: string
 }

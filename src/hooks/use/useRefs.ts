@@ -1,9 +1,7 @@
 import { Ref, shallowReactive } from "vue";
 
-
 type RefValueType<V> = V extends { use: { ref: () => Ref<infer Refer | null> } } ? Refer :
 V extends new (...args: any[]) => infer Refer ? Refer : V
-
 
 export default function useRefs<T extends { [k: string]: any }>(config: T): {
   refs: {
