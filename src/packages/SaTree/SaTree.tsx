@@ -47,13 +47,7 @@ export const SaTree = designComponent({
         index > -1 && state.treeExpands.splice(index, 1)
       },
 
-      setCurrent: (item: string) => {
-        console.log(item);
-        
-        console.log(treeData);
-        
-        state.current = item
-      },
+      setCurrent: (item: string) => state.current = item,
 
       setChecked: (val: TreeCheckbox, node: RootTreeItem) => { // 点击只有两种状态（check / uncheck）
 
@@ -73,6 +67,9 @@ export const SaTree = designComponent({
 
           // 获取需要修改节点状态对应的key对象
           keys = Object.keys(attr)
+
+          console.log(keys);
+          
 
           methods.setTreeItemAttr(keys, attr)
         }

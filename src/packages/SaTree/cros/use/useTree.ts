@@ -144,7 +144,7 @@ export function useTree<Node extends {}>({
       singleBranch.forEach(v => {
         attr = {
           ...attr,
-          ...methods.getCheckboxStauses(v, status)
+          ...methods.getCheckboxStauses(v, status, true)
         }
       })
       
@@ -154,11 +154,15 @@ export function useTree<Node extends {}>({
       }
     },
 
-    getCheckboxStauses: (node: RootTreeItem, status: TreeCheckbox) => {
+    getCheckboxStauses: (
+      node: RootTreeItem, 
+      status: TreeCheckbox,
+      isNature: Boolean = false
+    ) => {
 
       let attr = {}
 
-      if(node.isCheck === status) {  // 防止设置重复状态浪费性能
+      if(node.isCheck === status && isNature) {  // 防止设置重复状态浪费性能
         return {}
       }
       

@@ -1,7 +1,7 @@
 import { Ref, shallowReactive } from "vue";
 
 type RefValueType<V> = V extends { use: { ref: () => Ref<infer Refer | null> } } ? Refer :
-V extends new (...args: any[]) => infer Refer ? Refer : V
+  V extends new (...args: any[]) => infer Refer ? Refer : V
 
 export default function useRefs<T extends { [k: string]: any }>(config: T): {
   refs: {
@@ -14,7 +14,7 @@ export default function useRefs<T extends { [k: string]: any }>(config: T): {
   const refs = shallowReactive((() => {
     const obj = {} as any
 
-    for(let key in config) {
+    for (let key in config) {
       obj[key] = undefined
     }
 
@@ -24,10 +24,10 @@ export default function useRefs<T extends { [k: string]: any }>(config: T): {
   const onRef = (() => {
     const obj = {} as any
     for (let key in config) {
-        obj[key] = (refer: any) => {refs[key] = refer}
+      obj[key] = (refer: any) => { refs[key] = refer }
     }
     return obj
-})()
+  })()
 
   return {
     refs,

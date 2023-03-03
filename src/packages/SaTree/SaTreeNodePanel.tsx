@@ -26,7 +26,7 @@ export const SaTreeNodePanel = designComponent({
 
     const { flatTreeData, nodeKey } = useTree<TreeItem>({ props, cache: true } as any)
 
-    const formatData = computed(():RootTreeItem[] => props.data)
+    const formatData = computed((): RootTreeItem[] => props.data)
 
     const collpaseLimit = computed(() => props.defaultExpandAll ? flatTreeData.length : props.accordion ? 1 : flatTreeData.length)
 
@@ -36,7 +36,7 @@ export const SaTreeNodePanel = designComponent({
 
     watch(() => state.collapses, val => {
       console.log(val);
-      
+
     })
 
     const methods = {
@@ -49,7 +49,12 @@ export const SaTreeNodePanel = designComponent({
       ])),
 
 
-      isHighlight: (val: string) => (val === parent.state.current && !!props.highlightCurrent)
+      isHighlight: (val: string) => {
+        console.log('child', val);
+        console.log('parent', parent.state.current);
+
+        return (val === parent.state.current && !!props.highlightCurrent)
+      }
     }
 
     return {
@@ -80,7 +85,7 @@ export const SaTreeNodePanel = designComponent({
                   <SaCheckbox
                     label={c.label}
                     checkboxForAll
-                    checkStatus={ c.isCheck }
+                    checkStatus={c.isCheck}
                     onChangeStatus={(e: TreeCheckbox) => parent.handler.setChecked(e, c)}
                   /> : <>{c.label}</>
               ),
@@ -126,7 +131,7 @@ export const SaTreeNodePanel = designComponent({
                         props.checkbox ?
                           <SaCheckbox
                             label={c.label}
-                            checkStatus={ c.isCheck }
+                            checkStatus={c.isCheck}
                             onChangeStatus={(e: TreeCheckbox) => parent.handler.setChecked(e, c)}
                           /> : <>{c.label}</>
                       ),
