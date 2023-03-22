@@ -47,7 +47,12 @@ export const SaTree = designComponent({
         index > -1 && state.treeExpands.splice(index, 1)
       },
 
-      setCurrent: (item: string) => state.current = item,
+      setCurrent: (item: string, e?: MouseEvent) => {
+        if(e) {
+          e.stopPropagation()
+        }
+        state.current = item
+      },
 
       setChecked: (val: TreeCheckbox, node: RootTreeItem) => { // 点击只有两种状态（check / uncheck）
 
@@ -68,9 +73,6 @@ export const SaTree = designComponent({
           // 获取需要修改节点状态对应的key对象
           keys = Object.keys(attr)
 
-          console.log(keys);
-          
-
           methods.setTreeItemAttr(keys, attr)
         }
 
@@ -88,46 +90,46 @@ export const SaTree = designComponent({
       reverseSelection: () => {
         const fattenData = methods.fattenData(treeData, [])
         const checkMap = new Map()
-        
+
         fattenData
           .forEach((c: RootTreeItem) => {
-            if(c.isCheck === CheckboxStatus.check) {
+            if (c.isCheck === CheckboxStatus.check) {
               checkMap.set(
                 c[nodeKey.value],
-                {[c[nodeKey.value] as string]: { isCheck: CheckboxStatus.uncheck }}
+                { [c[nodeKey.value] as string]: { isCheck: CheckboxStatus.uncheck } }
               )
 
-            } else if(c.isCheck === CheckboxStatus.uncheck) {
+            } else if (c.isCheck === CheckboxStatus.uncheck) {
 
               checkMap.set(
                 c[nodeKey.value],
-                {[c[nodeKey.value] as string]: { isCheck: CheckboxStatus.check }}
+                { [c[nodeKey.value] as string]: { isCheck: CheckboxStatus.check } }
               )
             }
           })
 
 
-          const consolidateData = () => {
-            let keys: string[] = []
-            let attr = {}
-            checkMap.forEach((v, k) => {
-              keys.push(k)
-              attr = {
-                ...attr,
-                ...v
-              }
-            })
-
-            return {
-              keys,
-              attr
+        const consolidateData = () => {
+          let keys: string[] = []
+          let attr = {}
+          checkMap.forEach((v, k) => {
+            keys.push(k)
+            attr = {
+              ...attr,
+              ...v
             }
-          }
-          
-          const { keys, attr } = consolidateData()
+          })
 
-          methods
-            .setTreeItemAttr(keys, attr)
+          return {
+            keys,
+            attr
+          }
+        }
+
+        const { keys, attr } = consolidateData()
+
+        methods
+          .setTreeItemAttr(keys, attr)
       },
 
       setCheckStatusByNodeKey: (keys: string[], status: TreeCheckbox) => {
@@ -142,7 +144,7 @@ export const SaTree = designComponent({
         }
 
         // 如果选中模式是上下关联状态则过滤出每个分支下的level最大值
-        if(props.checkStrictly) {
+        if (props.checkStrictly) {
           const { keys: nodeKeys, attr: treeItem } = methods.associationSelection(keys, status)
 
           keys = [
@@ -182,11 +184,13 @@ export const SaTree = designComponent({
     }
 
     onMounted(() => {
-      document.querySelector('body')?.addEventListener('click', (e: MouseEvent) => {
-        if (state.current) {
-          state.current = ''
-        }
-      })
+      document
+        .querySelector('body')
+        ?.addEventListener('click', (e: MouseEvent) => {
+          if (state.current) {
+            state.current = ''
+          }
+        })
     })
 
     onDeactivated(() => document.querySelector('body')?.removeEventListener('click', () => { }))
@@ -196,7 +200,7 @@ export const SaTree = designComponent({
         state,
         handler,
         methods: {
-          ...insideMethods 
+          ...insideMethods
         }
       },
 

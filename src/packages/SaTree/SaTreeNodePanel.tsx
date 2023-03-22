@@ -34,11 +34,6 @@ export const SaTreeNodePanel = designComponent({
       collapses: props.defaultExpandAll ? formatData.value.map(c => c[nodeKey.value]) : []
     })
 
-    watch(() => state.collapses, val => {
-      console.log(val);
-
-    })
-
     const methods = {
 
       collpaseClasses: (val: string) => computed(() => classname([
@@ -49,12 +44,7 @@ export const SaTreeNodePanel = designComponent({
       ])),
 
 
-      isHighlight: (val: string) => {
-        console.log('child', val);
-        console.log('parent', parent.state.current);
-
-        return (val === parent.state.current && !!props.highlightCurrent)
-      }
+      isHighlight: (val: string) => (val === parent.state.current && !!props.highlightCurrent)
     }
 
     return {
@@ -64,7 +54,7 @@ export const SaTreeNodePanel = designComponent({
           content: string | (() => VNode),
           extendEl: () => VNode,
           extendClsses?: () => String[],
-          handleFun?: Record<string, () => void>
+          handleFun?: Record<string, (e: MouseEvent) => void>
         ) => (
           <div
             class={"sa-tree-node-content " + (extendClsses?.().join(' ') || '')}
@@ -116,11 +106,6 @@ export const SaTreeNodePanel = designComponent({
                 formatData.value.map((c: RootTreeItem) => (
                   <div class="sa-tree-node" >
                     {!!c.childrens && c.childrens.length > 0 ? (
-                      // (() => props.checkStrictly ? hasCheckLabel(c) : (
-                      //   <SaCheckboxGroup>
-                      //  {hasCheckLabel(c)}
-                      //   </SaCheckboxGroup>
-                      // ))()
 
                       hasCheckLabel(c)
 
@@ -139,7 +124,7 @@ export const SaTreeNodePanel = designComponent({
 
                       () => methods.isHighlight(c[nodeKey.value] as string) ? ['sa-collapse-tree__highlight'] : [],
                       {
-                        onClick: () => parent.handler.setCurrent(c[nodeKey.value] as string)
+                        onClick: (e: MouseEvent) => parent.handler.setCurrent(c[nodeKey.value] as string, e)
                       }
                     )}
                   </div>)
