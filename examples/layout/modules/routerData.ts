@@ -54,6 +54,7 @@ const routes: IRoutesData[] = [
       { name: 'TimePicker', title: 'TimePicker时间组件', page: '/DemoTimePicker', complete: true },
       { name: 'TimeLine', title: '时间线', page: '/DemoTimeLine.tsx', complete: true },
       { name: 'Tree', title: '树形', page: '/DemoTree.tsx', complete: true },
+      { name: 'Upload', title: '上传组件', page: '/DemoUpload.tsx', complete: true },
     ]
   },
 
