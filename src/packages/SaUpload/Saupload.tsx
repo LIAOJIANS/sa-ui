@@ -1,30 +1,28 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
+import { onDeactivated } from "vue";
 import './SaUpload.scss'
 
 import { useRefs } from "src/hooks";
 import { SaButton } from '../SaButton/SaButton'
-import { reactive } from "vue";
 import { SimpleFunction } from "src/hooks/utils/event";
+import { useUpload } from "./cros/use/useUpload";
+import SaUploadList from './SaUploadList'
+import { UploadProp } from "./cros/use/upload.util";
 
 const SaUpload = designComponent({
   name: 'Sa-Upload',
 
-  props: {
-    accept: { type: String, default: '*' },
-    multiple: { type: Boolean },
-    showFileList: { type: Boolean, default: true },
-    limit: { type: Number }
-  },
+  props: UploadProp,
 
   scopeSlots: {
-    default: (scope: { click: SimpleFunction }) => {}
+    uploadLoad: (scope: { click: SimpleFunction }) => {}
   },
+
+  slots: ['default'],
 
   setup({ props, slots, scopeSlots }) {
 
-    const state = reactive({
-      fileList: null
-    } as { fileList: FileList | null })
+    const { state, methods } = useUpload(props as any)
 
     const { onRef, refs } = useRefs({
       input: HTMLInputElement
@@ -41,17 +39,22 @@ const SaUpload = designComponent({
         if (!file) {
           return
         }
-
         
-
-        state.fileList = file
-        console.log(state.fileList);
+        methods.uploadFiles(file)
+        
       }
     }
 
-    // console.log(slots.default());
+    onDeactivated(() => {
+      state
+        .fileList
+        .forEach(f => {
+          if(f.url && f.url.indexOf('blob:') === 0) { // 删除上传图片生成的内存地址，防止浪费内存导致内存溢出
+            URL.revokeObjectURL(f.url)
+          }
+        })
+    })
     
-
     return {
 
       render: () => (
@@ -66,21 +69,19 @@ const SaUpload = designComponent({
           />
 
           {
-            scopeSlots.default.isExist() ? scopeSlots.default({
+            scopeSlots.uploadLoad.isExist() ? scopeSlots.uploadLoad({
               click: handle.handleUploadBtn
             }) : (
               <SaButton label="上传" onClick={handle.handleUploadBtn} />
             )
           }
 
-          {/* {
-            state.fileList!.length > 0 && (
-              state.fileList!.map(file => (
-                // <span>{ file.name }</span>
-                1
-              ))
-            )
-          } */}
+          <div class="sa-upload__toolpit">
+            { slots.default.isExist() && slots.default() }
+          </div>
+          {
+            state.fileList.length > 0 && <SaUploadList {...{...props, fileList: state.fileList}} />
+          }
         </div>
       )
     }

@@ -3,4 +3,57 @@
   .sa-upload__input {
     display: none;
   }
+
+  .sa-upload__toolpit {
+    margin: 10px 0;
+
+    font-size: 12px;
+    color: #606266;
+  }
+
+  .sa-upload-file {
+    margin-top: 5px;
+    width: 100%;
+
+  }
+
+  .sa-upload-file-item {
+    padding: 0 5px;
+
+    cursor: pointer;
+    
+    font-size: 14px;
+    color: #606266;
+    line-height: 1.8;
+
+    position: relative;
+
+    box-sizing: border-box;
+    border-radius: 4px;
+    transition: all .5s cubic-bezier(.55,0,.1,1);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:hover {
+      background: rgba($color: $colorPrimary, $alpha: .1);
+    }
+
+    .sa-upload__filename {
+      padding-left: 4px;
+  
+      color: #606266;
+      
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      transition: color .3s;
+    }
+
+    .sa-upload-status-success {
+      color:red
+    }
+  }
 }

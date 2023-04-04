@@ -1,5 +1,15 @@
 
-export type FileUploadStatus = 'ready' | 'uploading' | 'success' | 'fail'
+export enum FileUploadStatus {
+  ready = 'ready',
+  uploading = 'uploading',
+  success = 'success',
+  fail = 'fail'
+}
+
+export enum FileListType {
+  list = 'list',
+  image = 'image'
+}
 
 export interface UploadInternalRawFile extends File {
   uid: number
