@@ -14,7 +14,50 @@
   .sa-upload-file {
     margin-top: 5px;
     width: 100%;
+  }
 
+  .sa-upload__img {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .sa-upload-file__image {
+    width: 180px;
+    height: 180px;
+    margin-left: 15px;
+    margin-top: 10px;
+
+    border: 1px dashed $colorPrimaryLight;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background-color: $disabledLight;
+
+    .sa-upload-file__image_icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    > img {
+      width: 180px;
+      height: 180px;
+    }
+
+    .sa-upload__image-close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 1999;
+
+      color: $colorPrimary;
+    }
+
+    &:hover {
+      border: 1px dashed $colorPrimary;
+    }
   }
 
   .sa-upload-file-item {
@@ -50,10 +93,6 @@
       white-space: nowrap;
 
       transition: color .3s;
-    }
-
-    .sa-upload-status-success {
-      color:red
     }
   }
 }

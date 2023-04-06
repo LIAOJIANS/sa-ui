@@ -8,6 +8,8 @@ import { SimpleFunction } from "src/hooks/utils/event";
 import { useUpload } from "./cros/use/useUpload";
 import SaUploadList from './SaUploadList'
 import { UploadProp } from "./cros/use/upload.util";
+import { FileListType, UploadInternalFileDetail } from "./cros/SaUpload.type";
+import { decopy } from "js-hodgepodge";
 
 const SaUpload = designComponent({
   name: 'Sa-Upload',
@@ -15,8 +17,11 @@ const SaUpload = designComponent({
   props: UploadProp,
 
   scopeSlots: {
-    uploadLoad: (scope: { click: SimpleFunction }) => {}
+    uploadLoad: (scope: { click: SimpleFunction }) => { },
+    files: (scope: { files: UploadInternalFileDetail[] }) => { }
   },
+
+  provideRefer: true,
 
   slots: ['default'],
 
@@ -28,7 +33,7 @@ const SaUpload = designComponent({
       input: HTMLInputElement
     })
 
-    const handle = {
+    const handler = {
       handleUploadBtn() {
         refs.input?.click()
       },
@@ -39,8 +44,24 @@ const SaUpload = designComponent({
         if (!file) {
           return
         }
-        
+
         methods.uploadFiles(file)
+
+        // @ts-ignore
+        refs.input.value = '' //  清空文件选项，目的是可以同文件多次上传
+      },
+
+      handleRemove(file: UploadInternalFileDetail) {
+
+        if(props.beforeRomve) { // 删除前
+          props.beforeRomve({...file}, decopy(state.fileList))
+        }
+
+        console.log(file);
+        
+      },
+
+      beforRemove() {
         
       }
     }
@@ -49,13 +70,18 @@ const SaUpload = designComponent({
       state
         .fileList
         .forEach(f => {
-          if(f.url && f.url.indexOf('blob:') === 0) { // 删除上传图片生成的内存地址，防止浪费内存导致内存溢出
+          if (f.url && f.url.indexOf('blob:') === 0) { // 删除上传图片生成的内存地址，防止浪费内存导致内存溢出
             URL.revokeObjectURL(f.url)
           }
         })
     })
-    
+
     return {
+
+      refer: {
+        handler,
+        inputInstance: refs
+      },
 
       render: () => (
         <div>
@@ -65,22 +91,23 @@ const SaUpload = designComponent({
             multiple={props.multiple}
             type="file"
             accept={props.accept}
-            onChange={handle.handleUploadChange}
+            onChange={handler.handleUploadChange}
           />
 
           {
-            scopeSlots.uploadLoad.isExist() ? scopeSlots.uploadLoad({
-              click: handle.handleUploadBtn
-            }) : (
-              <SaButton label="上传" onClick={handle.handleUploadBtn} />
-            )
+           props.listType === FileListType.list && scopeSlots.uploadLoad({
+              click: handler.handleUploadBtn
+            }, <SaButton label="上传" onClick={handler.handleUploadBtn} />)
           }
 
           <div class="sa-upload__toolpit">
-            { slots.default.isExist() && slots.default() }
+            {slots.default.isExist() && slots.default()}
           </div>
+
           {
-            state.fileList.length > 0 && <SaUploadList {...{...props, fileList: state.fileList}} />
+            state.fileList.length > 0 && (
+              scopeSlots.files({ files: state.fileList }, <SaUploadList {...{ ...props, fileList: state.fileList }} />)
+            )
           }
         </div>
       )

@@ -8,7 +8,8 @@ export enum FileUploadStatus {
 
 export enum FileListType {
   list = 'list',
-  image = 'image'
+  image = 'image',
+  'image-card' = 'image-card'
 }
 
 export interface UploadInternalRawFile extends File {

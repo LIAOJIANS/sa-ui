@@ -1,15 +1,17 @@
+import { decopy } from "js-hodgepodge";
 import { computed, reactive, watch } from "vue";
 import { UploadInternalFileDetail, UploadInternalRawFile, FileUploadStatus } from "../SaUpload.type";
 
 export function useUpload(
   props: {
     limit: Number | null,
-    multiple: Boolean
+    multiple: Boolean,
+    fileList: UploadInternalFileDetail[]
   }
 ) {
 
   const state = reactive({
-    fileList: [],
+    fileList: decopy(props.fileList) || [],
     tempIndex: 0
   } as { fileList: UploadInternalFileDetail[], tempIndex: number })
 
@@ -54,6 +56,10 @@ export function useUpload(
       state
         .fileList
         .push(row)
+
+        console.log(state
+          .fileList);
+        
       
     },
   }
