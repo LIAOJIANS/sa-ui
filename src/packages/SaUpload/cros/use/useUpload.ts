@@ -57,16 +57,17 @@ export function useUpload(
         .fileList
         .push(row)
 
-        console.log(state
-          .fileList);
-        
-      
     },
+
+    handleDelete(index: number) {
+      state.fileList = state.fileList.filter((f, i) => i !== index)
+    }
   }
 
   return {
     state,
     methods,
+    handler,
     fileList: computed(() =>  state.fileList)
   }
 }

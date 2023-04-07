@@ -9,7 +9,7 @@ import { useUpload } from "./cros/use/useUpload";
 import SaUploadList from './SaUploadList'
 import { UploadProp } from "./cros/use/upload.util";
 import { FileListType, UploadInternalFileDetail } from "./cros/SaUpload.type";
-import { decopy } from "js-hodgepodge";
+import { decopy, typeOf } from "js-hodgepodge";
 
 const SaUpload = designComponent({
   name: 'Sa-Upload',
@@ -27,7 +27,7 @@ const SaUpload = designComponent({
 
   setup({ props, slots, scopeSlots }) {
 
-    const { state, methods } = useUpload(props as any)
+    const { state, methods, handler: uploadHandler } = useUpload(props as any)
 
     const { onRef, refs } = useRefs({
       input: HTMLInputElement
@@ -51,13 +51,24 @@ const SaUpload = designComponent({
         refs.input.value = '' //  清空文件选项，目的是可以同文件多次上传
       },
 
-      handleRemove(file: UploadInternalFileDetail) {
+      handleRemove(
+        file: UploadInternalFileDetail, 
+        index: number
+      ) {
+
+        console.log(index);
+        
 
         if(props.beforeRomve) { // 删除前
-          props.beforeRomve({...file}, decopy(state.fileList))
+          const flag = props.beforeRomve({...file}, decopy(state.fileList), index)
+
+          if(flag && typeOf(flag) === 'boolean') { // 删除前阻止删除行为，只需返回true
+            return
+          }
         }
 
-        console.log(file);
+        uploadHandler
+          .handleDelete(index)
         
       },
 
@@ -95,7 +106,7 @@ const SaUpload = designComponent({
           />
 
           {
-           props.listType === FileListType.list && scopeSlots.uploadLoad({
+           props.listType !== FileListType.image && scopeSlots.uploadLoad({
               click: handler.handleUploadBtn
             }, <SaButton label="上传" onClick={handler.handleUploadBtn} />)
           }
@@ -105,9 +116,9 @@ const SaUpload = designComponent({
           </div>
 
           {
-            state.fileList.length > 0 && (
+            // state.fileList.length > 0 && (
               scopeSlots.files({ files: state.fileList }, <SaUploadList {...{ ...props, fileList: state.fileList }} />)
-            )
+            // )
           }
         </div>
       )

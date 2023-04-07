@@ -31,6 +31,9 @@ const SaUploadList = designComponent({
 
     const icon = computed(() => (status: FileUploadStatus, percentage: number, index: number) => {
 
+      status = status || FileUploadStatus.success // 自定义fileList可能存在没有status的情况
+      percentage = percentage || 100
+
       if (
         status === FileUploadStatus.success &&
         percentage === 100 &&
@@ -40,7 +43,7 @@ const SaUploadList = designComponent({
       }
 
       if (status === FileUploadStatus.success) {
-        return 'el-icon-circle-check'
+        return props.listType === FileListType["image-card"] ? 'el-icon-check' : 'el-icon-circle-check'
       }
 
       if (status === FileUploadStatus.fail) {
@@ -63,42 +66,60 @@ const SaUploadList = designComponent({
     }
 
     return {
-      render: () => (
-        props.listType === FileListType.image ? ( // 实现图片列表
-          <div class="sa-upload__img">
-            {
-              props.fileList.map((file, index) => (
-                <div class='sa-upload-file__image' >
-                  <img src={file.url} alt="" />
-                  <SaIcon size={18} icon='el-icon-close' class="sa-upload__image-close" onClick={() => parent.handler.handleRemove(file)}></SaIcon>
-                </div>
-              ))
-            }
-
-            <div class='sa-upload-file__image' onClick={parent.handler.handleUploadBtn}>
-              <SaIcon class="sa-upload-file__image_icon" icon='el-icon-jiahao' size="32" color="#8c939d"></SaIcon>
-            </div>
-          </div>
-        ) : props.listType === FileListType["image-card"] ? (
-          <div class='sa-upload-file__iamge-card'>2</div>
-        ) : (
-          <div class='sa-upload-file'>
-            {
-              props.fileList.map((file, index) => (
-                <div class="sa-upload-file-item" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
-                  <span class="sa-upload__filename"><SaIcon icon='el-icon-document' style="padding-right: 5px"></SaIcon>{file.name}</span>
-                  <SaIcon
-                    size={14}
-                    icon={icon.value(file.status, file.percentage, index)}
-                    status={iconStatus.value(file.status)}
-                    onClick={() => icon.value(file.status, file.percentage, index) === 'el-icon-close' && parent.handler.handleRemove(file)}
-                  ></SaIcon>
-                </div>
-              ))
-            }
-          </div>
+      render: () => {
+        const iconContent = (file: UploadInternalFileDetail, index: number) => (
+          <SaIcon
+            size={14}
+            icon={icon.value(file.status, file.percentage, index)}
+            status={iconStatus.value(file.status)}
+            onClick={() => icon.value(file.status, file.percentage, index) === 'el-icon-close' && parent.handler.handleRemove(file, index)}
+          ></SaIcon>
         )
-      )
+
+        return (
+
+          props.listType === FileListType.image ? ( // 实现图片列表
+            <div class="sa-upload__img">
+              {
+                props.fileList.map((file, index) => (
+                  <div class='sa-upload-file__image' >
+                    <img src={file.url} alt="" />
+                    <SaIcon size={18} icon='el-icon-close' class="sa-upload__image-close" onClick={() => parent.handler.handleRemove(file, index)}></SaIcon>
+                  </div>
+                ))
+              }
+              <div class='sa-upload-file__image' onClick={parent.handler.handleUploadBtn}>
+                <SaIcon class="sa-upload-file__image_icon" icon='el-icon-jiahao' size="32" color="#8c939d"></SaIcon>
+              </div>
+            </div>
+          ) : props.listType === FileListType["image-card"] ? (
+            <div class='sa-upload-file__iamge-card'>
+              {
+                props.fileList.map((file, index) => (
+                  <div class="sa-upload__card" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
+                    <img src={file.url} alt="" />
+                    <span>{file.name}</span>
+                    <i class="sa-upload__card-icon" >
+                      {iconContent(file, index)}
+                    </i>
+                  </div>
+                ))
+              }
+            </div>
+          ) : (
+            <div class='sa-upload-file'>
+              {
+                props.fileList.map((file, index) => (
+                  <div class="sa-upload-file-item" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
+                    <span class="sa-upload__filename"><SaIcon icon='el-icon-document' style="padding-right: 5px"></SaIcon>{file.name}</span>
+                    {iconContent(file, index)}
+                  </div>
+                ))
+              }
+            </div>
+          )
+        )
+      }
     }
   }
 })

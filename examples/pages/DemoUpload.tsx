@@ -34,15 +34,16 @@ export default defineComponent({
           <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </SaUpload>
 
-        {/* <p>img Card List</p>
+        <p>img Card List</p>
         <SaUpload
           class="upload-demo"
           multiple
-          listType="image"
+          listType="image-card"
+          v-slots={{ uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} /> }}
           fileList={state.fileList}
         >
           <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </SaUpload> */}
+        </SaUpload>
       </div>
     )
   }

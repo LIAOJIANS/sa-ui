@@ -21,6 +21,46 @@
     flex-wrap: wrap;
   }
 
+  .sa-upload-file__iamge-card {
+    margin-top: 5px;
+    
+    .sa-upload__card {
+      margin-top: 10px;
+      
+      padding: 10px;
+
+      border-radius: 8px;
+      border: 1px solid $colorPrimary;
+      cursor: pointer;
+
+      display: flex;
+      // justify-content: space-between;
+      align-items: center;
+    
+      position: relative;
+
+      font-size: 14px;
+      color: $colorPrimary;
+
+      > img {
+        width: 70px;
+        height: 70px;
+        margin-right: 15px;
+
+        background-color: #fff;
+      }
+
+      .sa-upload__card-icon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 1999;
+
+        // color: #fff;
+      }
+    }
+  }
+
   .sa-upload-file__image {
     width: 180px;
     height: 180px;
