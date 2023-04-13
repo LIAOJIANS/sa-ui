@@ -25,3 +25,11 @@ export interface UploadInternalFileDetail {
   raw: UploadInternalRawFile,
   url?: string
 }
+
+export enum RequestMethods {
+  post = 'post',
+  get = 'get',
+  delete = 'delete'
+}
+
+export type RequestError = Error & { status?: number, method?: keyof typeof RequestMethods, url?: string }

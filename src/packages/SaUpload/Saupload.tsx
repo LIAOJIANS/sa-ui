@@ -55,10 +55,7 @@ const SaUpload = designComponent({
         file: UploadInternalFileDetail, 
         index: number
       ) {
-
-        console.log(index);
         
-
         if(props.beforeRomve) { // 删除前
           const flag = props.beforeRomve({...file}, decopy(state.fileList), index)
 
@@ -69,6 +66,8 @@ const SaUpload = designComponent({
 
         uploadHandler
           .handleDelete(index)
+
+        props.onReomve?.({...file}, decopy(state.fileList), index)
         
       },
 
@@ -93,7 +92,6 @@ const SaUpload = designComponent({
         handler,
         inputInstance: refs
       },
-
       render: () => (
         <div>
           <input
