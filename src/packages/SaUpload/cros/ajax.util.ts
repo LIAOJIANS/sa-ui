@@ -1,5 +1,5 @@
 import { typeOf } from "js-hodgepodge";
-import { RequestError, UploadInternalRawFile } from "./SaUpload.type";
+import { RequestError, RequestMethods, UploadInternalRawFile } from "./SaUpload.type";
 
 function getBody(xhr: XMLHttpRequest) {
   const text = xhr.responseText || xhr.response
@@ -41,6 +41,8 @@ export default function upload({
   data,
   filename,
   file,
+  headers,
+  withCredentials,
 
   onProgress,
   onError,
@@ -58,8 +60,10 @@ export default function upload({
   onSuccess: (e: any) => void,
 }) {
   if (!XMLHttpRequest && typeOf(XMLHttpRequest) === 'undefined') {
-    return
+    return null
   }
+
+  // debugger
 
   const xhr = new XMLHttpRequest()
 
@@ -93,4 +97,22 @@ export default function upload({
 
     onSuccess(getBody(xhr))
   }
+
+  xhr.open(RequestMethods.post, action, true);
+
+  if (withCredentials && 'withCredentials' in xhr) {
+    xhr.withCredentials = true
+  }
+
+  const header = headers || {}
+
+  for (let item in header) {
+    if (header.hasOwnProperty(item) && header[item] !== null) {
+      xhr.setRequestHeader(item, header[item])
+    }
+  }
+
+  xhr.send(formData)
+
+  return xhr
 }

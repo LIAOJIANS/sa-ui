@@ -23,8 +23,9 @@
 
   .sa-upload-file__iamge-card {
     margin-top: 5px;
-    
-    .sa-upload__card {
+
+    .sa-upload__ccontent {
+      
       margin-top: 10px;
       
       padding: 10px;
@@ -33,6 +34,9 @@
       border: 1px solid $colorPrimary;
       cursor: pointer;
 
+    }
+    
+    .sa-upload__card {
       display: flex;
       // justify-content: space-between;
       align-items: center;
@@ -134,5 +138,19 @@
 
       transition: color .3s;
     }
+  }
+
+  .sa-upload__progress,
+  .sa-upload-image__progress {
+    margin-bottom: 0!important;
+  }
+
+  .sa-upload-image__progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    z-index: 2999;
   }
 }

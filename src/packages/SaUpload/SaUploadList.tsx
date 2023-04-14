@@ -4,6 +4,8 @@ import SaIcon from "../SaIcon/SaIcon";
 import { FileListType, FileUploadStatus, UploadInternalFileDetail } from "./cros/SaUpload.type";
 import { UploadProp } from "./cros/use/upload.util";
 import SaUpload from './Saupload'
+import SaProgress from "../SaProgress/SaProgress";
+import { ProgressType } from "../SaProgress/progress.utils";
 
 const SaUploadList = designComponent({
 
@@ -29,7 +31,11 @@ const SaUploadList = designComponent({
       [FileUploadStatus.uploading]: '',
     }[status]))
 
-    const icon = computed(() => (status: FileUploadStatus, percentage: number, index: number) => {
+    const icon = computed(() => (
+      status: FileUploadStatus, 
+      percentage: number, 
+      index: number
+    ) => {
 
       status = status || FileUploadStatus.success // 自定义fileList可能存在没有status的情况
       percentage = percentage || 100
@@ -76,6 +82,15 @@ const SaUploadList = designComponent({
           ></SaIcon>
         )
 
+        const progressContent = (file: UploadInternalFileDetail) => (
+          <SaProgress
+            class={props.listType === FileListType.image  ? 'sa-upload-image__progress' : 'sa-upload__progress' }
+            type={props.listType === FileListType.image ? ProgressType.Circle : ProgressType.Line}
+            percentage={file.percentage}
+            width={props.listType === FileListType.image ? 6 : 2}
+          />
+        )
+
         return (
 
           props.listType === FileListType.image ? ( // 实现图片列表
@@ -85,6 +100,7 @@ const SaUploadList = designComponent({
                   <div class='sa-upload-file__image' >
                     <img src={file.url} alt="" />
                     <SaIcon size={18} icon='el-icon-close' class="sa-upload__image-close" onClick={() => parent.handler.handleRemove(file, index)}></SaIcon>
+                    {file.status === FileUploadStatus.uploading && progressContent(file)}
                   </div>
                 ))
               }
@@ -96,12 +112,15 @@ const SaUploadList = designComponent({
             <div class='sa-upload-file__iamge-card'>
               {
                 props.fileList.map((file, index) => (
-                  <div class="sa-upload__card" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
-                    <img src={file.url} alt="" />
-                    <span>{file.name}</span>
-                    <i class="sa-upload__card-icon" >
-                      {iconContent(file, index)}
-                    </i>
+                  <div class="sa-upload__ccontent">
+                    <div class="sa-upload__card" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
+                      <img src={file.url} alt="" />
+                      <span>{file.name}</span>
+                      <i class="sa-upload__card-icon" >
+                        {iconContent(file, index)}
+                      </i>
+                    </div>
+                    {file.status === FileUploadStatus.uploading && progressContent(file)}
                   </div>
                 ))
               }
@@ -110,10 +129,13 @@ const SaUploadList = designComponent({
             <div class='sa-upload-file'>
               {
                 props.fileList.map((file, index) => (
-                  <div class="sa-upload-file-item" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
-                    <span class="sa-upload__filename"><SaIcon icon='el-icon-document' style="padding-right: 5px"></SaIcon>{file.name}</span>
-                    {iconContent(file, index)}
-                  </div>
+                  <>
+                    <div class="sa-upload-file-item" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
+                      <span class="sa-upload__filename"><SaIcon icon='el-icon-document' style="padding-right: 5px"></SaIcon>{file.name}</span>
+                      {iconContent(file, index)}
+                    </div>
+                    {file.status === FileUploadStatus.uploading && progressContent(file)}
+                  </>
                 ))
               }
             </div>
