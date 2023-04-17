@@ -47,7 +47,7 @@ const SaUploadList = designComponent({
       ) {
         return 'el-icon-close'
       }
-
+      
       if (status === FileUploadStatus.success) {
         return props.listType === FileListType["image-card"] ? 'el-icon-check' : 'el-icon-circle-check'
       }
@@ -75,7 +75,7 @@ const SaUploadList = designComponent({
       render: () => {
         const iconContent = (file: UploadInternalFileDetail, index: number) => (
           <SaIcon
-            size={14}
+            size={28}
             icon={icon.value(file.status, file.percentage, index)}
             status={iconStatus.value(file.status)}
             onClick={() => icon.value(file.status, file.percentage, index) === 'el-icon-close' && parent.handler.handleRemove(file, index)}
@@ -101,6 +101,7 @@ const SaUploadList = designComponent({
                     <img src={file.url} alt="" />
                     <SaIcon size={18} icon='el-icon-close' class="sa-upload__image-close" onClick={() => parent.handler.handleRemove(file, index)}></SaIcon>
                     {file.status === FileUploadStatus.uploading && progressContent(file)}
+                    {file.status === FileUploadStatus.uploading && (<div class="sa-upload__image-mask"></div>)}
                   </div>
                 ))
               }

@@ -1,7 +1,7 @@
 import { decopy } from "js-hodgepodge";
-import { computed, reactive, watch } from "vue";
+import { computed, reactive } from "vue";
 import upload from "../ajax.util";
-import { UploadInternalFileDetail, UploadInternalRawFile, FileUploadStatus, RequestError } from "../SaUpload.type";
+import { UploadInternalFileDetail, UploadInternalRawFile, FileUploadStatus, RequestError, UploadProgress } from "../SaUpload.type";
 
 export function useUpload(
   props: {
@@ -15,22 +15,26 @@ export function useUpload(
     withCredentials: boolean,
 
     onStart: (rowFile: UploadInternalRawFile) => void,
-    onProgress: (e: ProgressEvent<EventTarget>, rowFile: UploadInternalRawFile) => void,
-    onSuccess: (e: any, rowFile: UploadInternalRawFile) => void,
-    onError: (e: RequestError, rowFile: UploadInternalRawFile) => void,
+    onProgress: (e: UploadProgress, rowFile: UploadInternalFileDetail) => void,
+    onSuccess: (res: XMLHttpRequest, rowFile: UploadInternalFileDetail, fileList: UploadInternalFileDetail[]) => void,
+    onError: (e: RequestError, rowFile: UploadInternalFileDetail) => void,
+    onChange: (file: UploadInternalFileDetail, fileList: UploadInternalFileDetail[]) => void,
+    onExceed: (file: FileList, fileList: UploadInternalFileDetail[]) => void,
     httpRequest: (option: any) => void
   }
 ) {
 
   const state = reactive({
     fileList: decopy(props.fileList) || [],
-    tempIndex: 0
-  } as { fileList: UploadInternalFileDetail[], tempIndex: number })
+    tempIndex: 0,
+    reqs: {}
+  } as { fileList: UploadInternalFileDetail[], tempIndex: number, reqs: { [k in string]: XMLHttpRequest | null | void } })
 
   const methods = {
     uploadFiles(files: FileList) {
       if (props.limit && state.fileList.length + files.length > props.limit) { // 超过设置的上传个数
-
+        props.onExceed(files, state.fileList)
+        return
       }
 
       let postFiles = Array.prototype.slice.call(files)
@@ -45,8 +49,9 @@ export function useUpload(
       })
     },
 
-    uploadAjax(rawFile: UploadInternalRawFile) {
-      // const { uid } = rawFile
+    uploadAjax(rawFile: UploadInternalFileDetail) {
+      const { uid } = rawFile
+
       const {
         action,
         name,
@@ -54,9 +59,6 @@ export function useUpload(
         withCredentials,
         data,
 
-        onError,
-        onProgress,
-        onSuccess,
         httpRequest
       } = props
 
@@ -66,20 +68,70 @@ export function useUpload(
         headers,
         withCredentials,
         data,
-        file: rawFile,
+        file: rawFile.raw,
 
-        onProgress: (e: ProgressEvent<EventTarget>) => onProgress(e, rawFile),
-        onError: (e: RequestError) => onError(e, rawFile),
-        onSuccess: (e: any) => onSuccess(e, rawFile)
+        onProgress: (e: UploadProgress) => handler.handleProgress(e, rawFile),
+
+        onError: (e: RequestError) => {
+          handler.handleError(e, rawFile)
+          delete state.reqs[uid]
+        },
+
+        onSuccess: (res: XMLHttpRequest) => {
+          handler.handleSuccess(res, rawFile)
+          delete state.reqs[uid]
+        }
       }
 
-      const res = httpRequest ? httpRequest(config) : upload(config)
-
-      console.log(res);
+      const req = httpRequest ? httpRequest(config) : upload(config)
+      state.reqs[uid] = req
+      if(
+        req &&
+        // @ts-ignore
+        req.then
+      ) {
+        req
+          // @ts-ignore
+          .then(
+            config.onSuccess, 
+            config.onError
+          )
+      }
 
     },
 
-    createUid: () => Date.now() + state.tempIndex++
+    createUid: () => Date.now() + state.tempIndex++,
+
+    setFileAttr(
+      file: UploadInternalFileDetail, 
+      attr: { [K in keyof UploadInternalFileDetail]?: UploadInternalFileDetail[K] },
+
+      getter?: (file: UploadInternalFileDetail) => void
+    ) {
+
+      if(!file) {
+        return file
+      }
+
+      state
+        .fileList
+        .forEach((f, i) => {
+
+        if(f.uid === file.uid) {
+          state.fileList[i] = {
+            ...f,
+            ...attr
+          }
+        }
+      })
+
+      getter?.(decopy({
+        ...file,
+        ...attr
+      }) as UploadInternalFileDetail)
+    },
+
+    getFile: (file: UploadInternalFileDetail) => state.fileList.find(f => f.uid === file.uid)
   }
 
   const handler = {
@@ -89,7 +141,7 @@ export function useUpload(
         name: file.name,
         status: FileUploadStatus.ready,
         size: file.size,
-        percentage: 100,
+        percentage: 0,
         uid: file.uid || methods.createUid(),
         raw: file
       }
@@ -106,7 +158,65 @@ export function useUpload(
         .fileList
         .push(row)
 
-      methods.uploadAjax(file)
+      methods.uploadAjax(row)
+    },
+
+    handleProgress(e: UploadProgress, rawFile: UploadInternalFileDetail) {
+      
+      const file = methods.getFile(rawFile)
+
+      methods
+        .setFileAttr(
+          rawFile, 
+          {
+            status: FileUploadStatus.uploading,
+            percentage: e.percent
+          }
+        )
+      
+      props
+        .onProgress?.(e, file!)
+    },
+
+    handleError(e: RequestError, rawFile: UploadInternalFileDetail) {
+      const file = methods.getFile(rawFile)
+      
+      methods
+        .setFileAttr(
+          rawFile, 
+          {
+            status: FileUploadStatus.fail,
+          }
+        )
+      
+      props
+        .onError?.(e, file!)
+      
+      props
+        .onChange?.(file!, state.fileList)
+    },
+
+    handleSuccess(res: XMLHttpRequest, rawFile: UploadInternalFileDetail) {
+      const file = methods.getFile(rawFile)
+
+      if(!file) {
+        return
+      }
+
+      methods
+        .setFileAttr(
+          rawFile, 
+          {
+            status: FileUploadStatus.success,
+            response: res
+          }
+        )
+      
+      props
+        .onSuccess?.(res, file, state.fileList)
+
+      props
+        .onChange?.(file, state.fileList)
     },
 
     handleDelete(index: number) {
@@ -120,8 +230,4 @@ export function useUpload(
     handler,
     fileList: computed(() => state.fileList)
   }
-}
-
-export function useProgress() {
-
 }

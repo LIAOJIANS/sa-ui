@@ -20,5 +20,6 @@ export const UploadProp = {
   onProgress: { type: Function },                                                       // 上传中的回调
   onSuccess: { type: Function },                                                        // 上传成功回调
   onError: { type: Function },                                                          // 上传失败回调
+  onExceed: { type: Function },                                                         // 上传超出上限的钩子
   httpRequest: { type: Function }                                                       // 阻止默认上传逻辑，可以自定义上传方式
 }

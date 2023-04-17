@@ -145,12 +145,23 @@
     margin-bottom: 0!important;
   }
 
-  .sa-upload-image__progress {
+  .sa-upload-image__progress,
+  .sa-upload__image-mask {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
 
+  .sa-upload-image__progress {
     z-index: 2999;
+  }
+
+  .sa-upload__image-mask {
+    width: 100%;
+    height: 100%;
+    z-index: 1999;
+
+    background-color: rgba($color: $cyan_1, $alpha: .7);
   }
 }

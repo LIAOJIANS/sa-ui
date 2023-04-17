@@ -17,6 +17,7 @@ export default defineComponent({
       <div>
         <p>File List</p>
         <SaUpload
+          action="https://jsonplaceholder.typicode.com/posts/"
           class="upload-demo"
           multiple
           v-slots={{ uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} /> }}
@@ -28,6 +29,7 @@ export default defineComponent({
         <SaUpload
           multiple
           listType="image"
+          action="https://jsonplaceholder.typicode.com/posts/"
           fileList={state.fileList}
           beforeRomve={ (file: any) => file.name="111" }
         >

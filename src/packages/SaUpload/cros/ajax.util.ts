@@ -1,5 +1,5 @@
 import { typeOf } from "js-hodgepodge";
-import { RequestError, RequestMethods, UploadInternalRawFile } from "./SaUpload.type";
+import { RequestError, RequestMethods, UploadInternalRawFile, UploadProgress } from "./SaUpload.type";
 
 function getBody(xhr: XMLHttpRequest) {
   const text = xhr.responseText || xhr.response
@@ -55,24 +55,24 @@ export default function upload({
   filename: string,
   data: Record<string, any>,
 
-  onProgress: (e: ProgressEvent<EventTarget>) => void,
+  onProgress: (e: UploadProgress) => void,
   onError: (e: RequestError) => void,
   onSuccess: (e: any) => void,
 }) {
   if (!XMLHttpRequest && typeOf(XMLHttpRequest) === 'undefined') {
     return null
   }
-
+  
   // debugger
 
   const xhr = new XMLHttpRequest()
 
   if (xhr.upload) {
-    xhr.upload.onprogress = function progress(e) {
+    xhr.upload.onprogress = function progress(e: UploadProgress) {
       if (e.total > 0) {
-        // @ts-ignore
-        e.percent = e.loaded / e.total * 100
+        e.percent = parseInt((e.loaded / e.total * 100).toFixed(2))
       }
+      
       onProgress(e)
     }
   }
@@ -89,6 +89,8 @@ export default function upload({
   xhr.onerror = function error(e: any) {
     onError(e)
   }
+  console.log(xhr);
+  
 
   xhr.onload = function onload() {
     if (xhr.status < 200 || xhr.status >= 300) {

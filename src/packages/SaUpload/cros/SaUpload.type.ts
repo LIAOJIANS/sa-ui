@@ -23,7 +23,8 @@ export interface UploadInternalFileDetail {
   percentage: number,
   uid: number,
   raw: UploadInternalRawFile,
-  url?: string
+  url?: string,
+  response?: XMLHttpRequest
 }
 
 export enum RequestMethods {
@@ -33,3 +34,5 @@ export enum RequestMethods {
 }
 
 export type RequestError = Error & { status?: number, method?: keyof typeof RequestMethods, url?: string }
+
+export type UploadProgress = ProgressEvent<EventTarget> & { percent?: number }
