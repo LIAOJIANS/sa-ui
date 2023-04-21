@@ -7,6 +7,7 @@ import { SaButton } from '../SaButton/SaButton'
 import { SimpleFunction } from "src/hooks/utils/event";
 import { useUpload } from "./cros/use/useUpload";
 import SaUploadList from './SaUploadList'
+import SaUploadByDrag from './SaUploadByDrag'
 import { UploadProp } from "./cros/use/upload.util";
 import { FileListType, UploadInternalFileDetail } from "./cros/SaUpload.type";
 import { decopy, typeOf } from "js-hodgepodge";
@@ -52,14 +53,14 @@ const SaUpload = designComponent({
       },
 
       handleRemove(
-        file: UploadInternalFileDetail, 
+        file: UploadInternalFileDetail,
         index: number
       ) {
-        
-        if(props.beforeRomve) { // 删除前
-          const flag = props.beforeRomve({...file}, decopy(state.fileList), index)
 
-          if(flag && typeOf(flag) === 'boolean') { // 删除前阻止删除行为，只需返回true
+        if (props.beforeRomve) { // 删除前
+          const flag = props.beforeRomve({ ...file }, decopy(state.fileList), index)
+
+          if (flag && typeOf(flag) === 'boolean') { // 删除前阻止删除行为，只需返回true
             return
           }
         }
@@ -67,13 +68,9 @@ const SaUpload = designComponent({
         uploadHandler
           .handleDelete(index)
 
-        props.onReomve?.({...file}, decopy(state.fileList), index)
-        
-      },
+        props.onReomve?.({ ...file }, decopy(state.fileList), index)
 
-      beforRemove() {
-        
-      }
+      },
     }
 
     onDeactivated(() => {
@@ -104,9 +101,17 @@ const SaUpload = designComponent({
           />
 
           {
-           props.listType !== FileListType.image && scopeSlots.uploadLoad({
-              click: handler.handleUploadBtn
-            }, <SaButton label="上传" onClick={handler.handleUploadBtn} />)
+            props.drag ? <SaUploadByDrag
+              {...props}
+            /> : (
+              <>
+                {
+                  props.listType !== FileListType.image && scopeSlots.uploadLoad({
+                    click: handler.handleUploadBtn
+                  }, <SaButton label="上传" onClick={handler.handleUploadBtn} />)
+                }
+              </>
+            )
           }
 
           <div class="sa-upload__toolpit">
@@ -114,10 +119,9 @@ const SaUpload = designComponent({
           </div>
 
           {
-            // state.fileList.length > 0 && (
-              scopeSlots.files({ files: state.fileList }, <SaUploadList {...{ ...props, fileList: state.fileList }} />)
-            // )
+            scopeSlots.files({ files: state.fileList }, <SaUploadList {...{ ...props, fileList: state.fileList }} />)
           }
+
         </div>
       )
     }

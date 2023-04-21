@@ -1,6 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { CheckboxStatus } from "src/hooks";
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted } from "vue";
 import { onDeactivated } from "vue";
 import { reactive } from "vue";
 import { AssociationAttr, RootTreeItem, TreeCheckbox, TreeItem } from "./cros/type";

@@ -164,4 +164,19 @@
 
     background-color: rgba($color: $cyan_1, $alpha: .7);
   }
+
+  .sa-upload-drag {
+    width: 420px;
+    height: 220px;
+
+    cursor: pointer;
+  
+    border: 1px dashed $colorPrimaryLight;
+    border-radius: 10px;
+
+    &:hover {
+      
+      border: 1px dashed $colorPrimary;
+    }
+  }
 }

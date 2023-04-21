@@ -46,6 +46,17 @@ export default defineComponent({
         >
           <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </SaUpload>
+
+        
+        <p>Drag Upload</p>
+
+        <SaUpload
+          action="https://jsonplaceholder.typicode.com/posts/"
+          class="upload-demo"
+          drag
+        >
+          <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </SaUpload>
       </div>
     )
   }

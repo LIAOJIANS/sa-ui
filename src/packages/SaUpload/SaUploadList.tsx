@@ -32,8 +32,8 @@ const SaUploadList = designComponent({
     }[status]))
 
     const icon = computed(() => (
-      status: FileUploadStatus, 
-      percentage: number, 
+      status: FileUploadStatus,
+      percentage: number,
       index: number
     ) => {
 
@@ -47,7 +47,7 @@ const SaUploadList = designComponent({
       ) {
         return 'el-icon-close'
       }
-      
+
       if (status === FileUploadStatus.success) {
         return props.listType === FileListType["image-card"] ? 'el-icon-check' : 'el-icon-circle-check'
       }
@@ -75,16 +75,19 @@ const SaUploadList = designComponent({
       render: () => {
         const iconContent = (file: UploadInternalFileDetail, index: number) => (
           <SaIcon
-            size={28}
+            size={props.listType === FileListType.list ? 28 : 16}
             icon={icon.value(file.status, file.percentage, index)}
             status={iconStatus.value(file.status)}
-            onClick={() => icon.value(file.status, file.percentage, index) === 'el-icon-close' && parent.handler.handleRemove(file, index)}
+            onClick={() =>
+              ['el-icon-circle-close', 'el-icon-close'].includes(icon.value(file.status, file.percentage, index)!) &&
+              parent.handler.handleRemove(file, index)
+            }
           ></SaIcon>
         )
 
         const progressContent = (file: UploadInternalFileDetail) => (
           <SaProgress
-            class={props.listType === FileListType.image  ? 'sa-upload-image__progress' : 'sa-upload__progress' }
+            class={props.listType === FileListType.image ? 'sa-upload-image__progress' : 'sa-upload__progress'}
             type={props.listType === FileListType.image ? ProgressType.Circle : ProgressType.Line}
             percentage={file.percentage}
             width={props.listType === FileListType.image ? 6 : 2}
@@ -97,7 +100,7 @@ const SaUploadList = designComponent({
             <div class="sa-upload__img">
               {
                 props.fileList.map((file, index) => (
-                  <div class='sa-upload-file__image' >
+                  <div class='sa-upload-file__image' onClick={() => props.clikcFileItem?.(file, index, props.fileList)} >
                     <img src={file.url} alt="" />
                     <SaIcon size={18} icon='el-icon-close' class="sa-upload__image-close" onClick={() => parent.handler.handleRemove(file, index)}></SaIcon>
                     {file.status === FileUploadStatus.uploading && progressContent(file)}
@@ -113,7 +116,7 @@ const SaUploadList = designComponent({
             <div class='sa-upload-file__iamge-card'>
               {
                 props.fileList.map((file, index) => (
-                  <div class="sa-upload__ccontent">
+                  <div class="sa-upload__ccontent" onClick={() => props.clikcFileItem?.(file, index, props.fileList)} >
                     <div class="sa-upload__card" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
                       <img src={file.url} alt="" />
                       <span>{file.name}</span>
@@ -131,7 +134,12 @@ const SaUploadList = designComponent({
               {
                 props.fileList.map((file, index) => (
                   <>
-                    <div class="sa-upload-file-item" onMouseover={() => handler.handleSetCurIndex(index)} onMouseout={() => handler.handleSetCurIndex(-1)}>
+                    <div
+                      class="sa-upload-file-item"
+                      onClick={() => props.clikcFileItem?.(file, index, props.fileList)}
+                      onMouseover={() => handler.handleSetCurIndex(index)}
+                      onMouseout={() => handler.handleSetCurIndex(-1)}
+                    >
                       <span class="sa-upload__filename"><SaIcon icon='el-icon-document' style="padding-right: 5px"></SaIcon>{file.name}</span>
                       {iconContent(file, index)}
                     </div>

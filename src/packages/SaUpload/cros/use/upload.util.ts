@@ -13,6 +13,7 @@ export const UploadProp = {
   name: { type: String },                                                               // 定义上传文件名
   data: { type: Object },                                                               // 上传文件请求Body
   withCredentials: { type: Boolean },                                                   // 支持发送 cookie 凭证信息
+  drag: { type: Boolean },                                                              // 拖拽上传
 
   beforeRomve: { type: Function },                                                      // 删除前的回调
   onReomve: { type: Function },                                                         // 删除回调
@@ -21,5 +22,6 @@ export const UploadProp = {
   onSuccess: { type: Function },                                                        // 上传成功回调
   onError: { type: Function },                                                          // 上传失败回调
   onExceed: { type: Function },                                                         // 上传超出上限的钩子
-  httpRequest: { type: Function }                                                       // 阻止默认上传逻辑，可以自定义上传方式
+  httpRequest: { type: Function },                                                      // 阻止默认上传逻辑，可以自定义上传方式
+  clikcFileItem: { type: Function }                                                     // 点击文件列表时的钩子
 }
