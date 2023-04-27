@@ -1,4 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
+import { classname } from "src/hooks";
+import { computed, reactive } from "vue";
 
 import { UploadProp } from "./cros/use/upload.util";
 import SaUpload from './Saupload'
@@ -13,34 +15,43 @@ export const SaUploadByDrag = designComponent({
 
     const parent = SaUpload.use.inject()
 
+    const state = reactive({
+      active: false
+    })
+
+    const classes = computed(() => classname([
+      'sa-upload-drag',
+      {
+        'sa-upload-drag-active': state.active
+      }
+    ]))
+
     const handler = {
       handleDrag(e: DragEvent) {
         e.preventDefault()
-
-        console.log(e, '2');
-        
       },
 
       handleDragover(e: DragEvent) {
         e.preventDefault()
 
-        console.log(e, '1');
+        if(!state.active) {
+          state.active = true
+        }
+        
+        console.log(e);
         
       },
 
       handleDragLeave(e: DragEvent) {
-        e.preventDefault()
-
-        console.log('离开了');
-        
+        state.active = false
       }
     }
 
     return {
       render: () => (
         <div
-          class="sa-upload-drag"
-          onDrag={ handler.handleDrag }
+          class={ classes.value }
+          onDrop={ handler.handleDrag }
           onDragover={ handler.handleDragover }
           onDragleave={ handler.handleDragLeave }
 
