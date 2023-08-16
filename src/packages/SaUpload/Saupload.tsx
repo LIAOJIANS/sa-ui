@@ -24,7 +24,7 @@ const SaUpload = designComponent({
 
   provideRefer: true,
 
-  slots: ['default'],
+  slots: ['default', 'tip'],
 
   setup({ props, slots, scopeSlots }) {
 
@@ -86,6 +86,7 @@ const SaUpload = designComponent({
     return {
 
       refer: {
+        parentSlots: slots,
         handler,
         inputInstance: refs
       },
@@ -115,7 +116,7 @@ const SaUpload = designComponent({
           }
 
           <div class="sa-upload__toolpit">
-            {slots.default.isExist() && slots.default()}
+            {slots.tip.isExist() && slots.tip()}
           </div>
 
           {

@@ -1,4 +1,4 @@
-import { SaUpload, SaButton } from 'sa-ui'
+import { SaUpload, SaButton, SaIcon } from 'sa-ui'
 import { defineComponent, reactive } from 'vue'
 import './scss/DemoUpload.scss'
 
@@ -32,8 +32,10 @@ export default defineComponent({
           action="https://jsonplaceholder.typicode.com/posts/"
           fileList={state.fileList}
           beforeRomve={ (file: any) => file.name="111" }
+          v-slots={{ tip: () => (
+            <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          ) }}
         >
-          <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </SaUpload>
 
         <p>img Card List</p>
@@ -41,7 +43,12 @@ export default defineComponent({
           class="upload-demo"
           multiple
           listType="image-card"
-          v-slots={{ uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} /> }}
+          v-slots={{ 
+            uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} />,
+            tip: () => (
+              <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            )
+          }}
           fileList={state.fileList}
         >
           <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -54,8 +61,12 @@ export default defineComponent({
           action="https://jsonplaceholder.typicode.com/posts/"
           class="upload-demo"
           drag
-        >
-          <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          v-slots={{ tip: () => (
+            <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          ) }}
+        > 
+          <SaIcon class="sa-icon-upload" icon="el-icon-upload" size={ 67 } />
+          <div class="sa-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </SaUpload>
       </div>
     )

@@ -29,6 +29,13 @@ export const SaUploadByDrag = designComponent({
     const handler = {
       handleDrag(e: DragEvent) {
         e.preventDefault()
+
+        const ev = { target: { files: e.dataTransfer?.files} } as any
+
+        parent
+          .handler
+          .handleUploadChange(ev)
+        
       },
 
       handleDragover(e: DragEvent) {
@@ -37,9 +44,6 @@ export const SaUploadByDrag = designComponent({
         if(!state.active) {
           state.active = true
         }
-        
-        console.log(e);
-        
       },
 
       handleDragLeave(e: DragEvent) {
@@ -57,7 +61,7 @@ export const SaUploadByDrag = designComponent({
 
           onClick={ parent.handler.handleUploadBtn }
         >
-          Drag
+          { parent.parentSlots.default.isExist() && parent.parentSlots.default() }
         </div>
       )
     }

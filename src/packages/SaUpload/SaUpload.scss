@@ -170,6 +170,7 @@
     height: 220px;
 
     cursor: pointer;
+    text-align: center;
   
     border: 1px dashed $colorPrimaryLight;
     border-radius: 10px;
@@ -183,5 +184,23 @@
   .sa-upload-drag-active {
     
     border: 1px dashed $colorPrimary;
+  }
+
+  .sa-icon-upload {
+    margin: 40px 0 16px;
+
+    color: #c0c4cc;
+    line-height: 50px;
+  }
+
+  .sa-upload__text {
+    color: #606266;
+    font-size: 14px;
+    text-align: center;
+
+    em {
+      color: #409eff;
+      font-style: normal;
+    }
   }
 }
