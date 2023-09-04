@@ -36,6 +36,8 @@ import SaProgress from './SaProgress/SaProgress'
 import SaSlider from './SaSlider/SaSlider'
 import SaTree from './SaTree/SaTree'
 import SaUpload from './SaUpload/Saupload'
+import SaTable from './SaTable/SaTable'
+import SaTableColumn from './SaTableColumn/SaTableColumn'
 
 import { useMessage } from './SaMessage/index'
 
@@ -81,6 +83,8 @@ export {
   SaSlider,
   SaTree,
   SaUpload,
+  SaTable,
+  SaTableColumn,
 
   useMessage,
   clipboard
