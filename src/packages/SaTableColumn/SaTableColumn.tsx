@@ -1,13 +1,21 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { getElement, useRefs } from "src/hooks";
-import { computed } from "vue";
+import { PropType, computed } from "vue";
+
+import { getElement, useRefs, useStyles } from "src/hooks";
+import { TableAlignEnum } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
+import SaCheckbox from "../SaCheckbox/SaCheckbox";
 
 const SaTableColumn = designComponent({
   name: 'sa-table-column',
+
   props: {
     label: { type: String },                                                   // 表名标题
     prop: { type: String },                                                    // 绑定的指
+    type: { type: String },                                                    // 当type为index时默认显示序号
+    width: { type: [String, Number] },                                         // 单个单元格宽度
+    align: { type: String as PropType<TableAlignEnum> },                       // 当前单元格的对齐方式
+    selected: { type: Boolean },                                               // 是否开启选择表格
   },
 
   scopeSlots: {
@@ -21,17 +29,29 @@ const SaTableColumn = designComponent({
 
     const group = SaTableCollect.child()
 
-    const tableRow = computed(() => {
+    const tableRow = computed(() => (!!tableRowIndex.value || tableRowIndex.value == 0) ? group.props.data![tableRowIndex.value] : {})
+
+    const tableRowIndex = computed(() => {
       const childrens = getElement(group.refs.tbody)?.children || []
 
       if(childrens.length < 1) {
-        return {}
+        return null
       }
 
-      const index = methods.getColumnIndex(childrens, refs.tableColumn?.parentElement)
-      
-      return group.props.data![index]
-    
+      return methods.getColumnIndex(childrens, refs.tableColumn?.parentElement)
+    })
+
+    const columStyle = useStyles(style => {
+
+      if(props.width) {
+        style.width = `${props.width}`.indexOf('px') > -1 ? props.width : `${props.width}px`
+      }
+
+      if(props.align) {
+        style["text-align"] = props.align
+      }
+
+      return style
     })
 
     const methods = {
@@ -42,11 +62,15 @@ const SaTableColumn = designComponent({
     }
     
     return {
-      render: () => <td ref={ onRef.tableColumn } style={{ display: 'inline-block' }}>
-        <div>
+      render: () => <td ref={ onRef.tableColumn } style={{ ...columStyle.value }}>
+        <div class="sa-table-item">
           {
-            scopeSlots.default(tableRow.value,
-              <span>{ (tableRow.value as any)[props.prop!] }</span>
+            props.selected ? (
+              <SaCheckbox />
+            ) : (
+              scopeSlots.default(tableRow.value,
+                <>{ (props.type && props.type === 'index') ? tableRowIndex.value! + 1 : (tableRow.value as any)[props.prop!] }</>
+              )
             )
           }
         </div>

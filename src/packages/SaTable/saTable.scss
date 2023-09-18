@@ -4,12 +4,42 @@
 
     width: 100%;
 
-    > tbody {
+    > table {
+      width: 100%;
+      border-collapse: collapse;
 
+      > thead {
+        text-align: left;
+      }
     }
 
-    > thead {
-      
+    .sa-table-item {
+      padding: 0 10px;
+
+      color: #909399;
+      font-size: 14px;
     }
+
+    .sa-table-head {
+      font-weight: bold;
+    }
+  }
+
+  .sa-table-border {
+    border-top: 1px solid $border;
+    border-left: 1px solid $border;
+
+   th,
+   td {
+      padding: 16px 0;
+      box-sizing: border-box;
+
+      border-bottom: 1px solid $border;
+      border-right: 1px solid $border;
+    }
+  }
+
+  .sa-table-cell {
+
   }
 }

@@ -7,38 +7,64 @@ export default defineComponent({
 
     const state = reactive({
       tableList: [
-        { test1: 1, test2: 1, test3: 1,test4: 1,test5: 1 },
-        { test1: 2, test2: 2, test3: 2,test4: 2,test5: 2 },
-        { test1: 3, test2: 3, test3: 3,test4: 3,test5: 3 },
-        { test1: 4, test2: 4, test3: 4,test4: 4,test5: 4 },
-        { test1: 5, test2: 5, test3: 5,test4: 5,test5: 5 },
+        { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
+        { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 },
+        { test1: 31, test2: 32, test3: 33,test4: 34,test5: 35 },
+        { test1: 41, test2: 42, test3: 43,test4: 44,test5: 45 },
+        { test1: 51, test2: 52, test3: 53,test4: 54,test5: 55 },
       ]
     })
 
     return () => (
       <SaTable
         data={state.tableList}
+        tableStyle={{
+          thead: { 'text-align': 'center' },
+          tbody: { 'text-align': 'center' }
+        }}
       >
+        <SaTableColumn
+          selected
+          width="50"
+        />
+
+        <SaTableColumn
+          type="index"
+          label="序号"
+          prop="test1"
+          width="50"
+        />
+
         <SaTableColumn 
           label="测试表格1"
           prop="test1"
+          align="left"
+          width="180"
         />
          <SaTableColumn 
           label="测试表格2"
           prop="test2"
+          width="180"
         />
          <SaTableColumn 
           label="测试表格3"
           prop="test3"
+          width="180"
         />
          <SaTableColumn 
           label="测试表格4"
           prop="test4"
+          width="180"
         />
          <SaTableColumn 
           label="测试表格5"
           prop="test5"
-        />
+          align="right"
+          v-slots={{
+            default: (row: Record<string, string>) => <>{ row.test5 }</>
+          }}
+        >
+        </SaTableColumn>
       </SaTable>
     )
   }
