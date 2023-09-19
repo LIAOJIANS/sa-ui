@@ -17,7 +17,7 @@ const SaTbody = designComponent({
         <tbody>
           {
             methods.toArray(props.layout?.trLen).map(() => (
-              <tr>
+              <tr class="sa-table-column--hover">
                  { slots.default() }
               </tr>
             ))

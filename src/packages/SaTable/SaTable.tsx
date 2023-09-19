@@ -5,9 +5,9 @@ import SaTbody from './SaTbody'
 import SaThead from './SaThead'
 import './saTable.scss'
 
-import { classname, useCollect, useRefs } from "src/hooks";
+import { CheckboxStatus, classname, useCollect, useRefs } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
-import { TabelStyle } from "./cros/table.type";
+import { ColumnProp, TabelStyle } from "./cros/table.type";
 import { useTable } from "./use/useTable";
 
 const SaTable = designComponent({
@@ -22,7 +22,7 @@ const SaTable = designComponent({
 
   slots: ['default'],
 
-  setup({ props, slots }){
+  setup({ props, slots }) {
 
     const { onRef, refs } = useRefs({
       table: HTMLTableElement,
@@ -32,6 +32,8 @@ const SaTable = designComponent({
     const { methods: TableMethods, state } = useTable()
 
     SaTableCollect.parent()
+
+    // const selects = computed(() => childs.filter(({ props: c }) => c.selected).map(({ props: c }) => c))
     
     const tableRows = computed(() => {
       return (slots.default() as any).map((row: VNode, i: number) => ({
@@ -48,36 +50,47 @@ const SaTable = designComponent({
     ]))
 
     const methods = {
-      getTableRow: (index: number) => tableRows.value[index].prop
+      getTableRow: (index: number) => tableRows.value[index].prop,
+
+      checkStautsCheck: (e: CheckboxStatus, checkId: string) => {
+
+        TableMethods
+          .setCheckAll(
+           e,
+           checkId,
+           props.data?.length || 0
+          )
+      }
     }
 
     return {
       refer: {
         refs,
         props,
-        methods
+        methods,
+        tableData: TableMethods.formatTableData(props.data! as any, props.rowKey)
       },
 
       render: () => (
-        <div class={ tableClasses.value }>
+        <div class={tableClasses.value}>
 
-          <table ref={ onRef.table }>
-            <SaThead 
-              thRows={ tableRows.value }
+          <table ref={onRef.table}>
+            <SaThead
+              thRows={tableRows.value}
               style={props.tableStyle?.thead}
-              selectAll={ state.selectAll }
+              selectAll={state.selectAll}
             />
 
             <SaTbody
-              ref={ onRef.tbody }
+              ref={onRef.tbody}
               class="sa-tbody"
-              style={ props.tableStyle?.tbody }
+              style={props.tableStyle?.tbody}
               layout={{
                 trLen: props.data?.length,
                 tdLen: tableRows.value.length
               }}
             >
-              { slots.default() }
+              {slots.default()}
             </SaTbody>
           </table>
         </div>

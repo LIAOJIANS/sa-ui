@@ -6,17 +6,20 @@ export interface TabelStyle {
 } 
 
 export interface ColumnProp {
-  label: string | VNode,
+  label: string,
   prop: string,
-  type: 'index' | 'default',
-  width: number | string,
-  align: TableAlignEnum
+  type?: string,
+  width?: number | string,
+  align?: TableAlignEnum,
+  selected?: boolean,
+  check?: boolean
 }
 
 export type TableColumnRow = {
   $index: number,
-  row: Record<string, any>
-}
+  row: Record<string, any>,
+  _id: string
+} & ColumnProp
 
 export enum TableAlignEnum {
   Left = 'left',

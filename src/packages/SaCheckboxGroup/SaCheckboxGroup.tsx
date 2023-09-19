@@ -54,6 +54,9 @@ export const SaCheckboxGroup = designComponent({
         return CheckboxStatus.uncheck
       }
 
+      console.log(activeChild.value);
+      
+
       activeChild
         .value
         .forEach(c => model.value!.indexOf(c.innerStatus.props.value!) > -1 ? hasCheck = true : hasunCheck = true)

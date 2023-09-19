@@ -1,8 +1,8 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { PropType, computed } from "vue";
+import { PropType, computed, VNode, reactive } from "vue";
 
-import { getElement, useRefs, useStyles } from "src/hooks";
-import { TableAlignEnum } from "../SaTable/cros/table.type";
+import { CheckboxStatus, getElement, useRefs, useStyles } from "src/hooks";
+import { ColumnProp, TableAlignEnum } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
 
@@ -10,7 +10,7 @@ const SaTableColumn = designComponent({
   name: 'sa-table-column',
 
   props: {
-    label: { type: String },                                                   // 表名标题
+    label: { type: String },                       // 表名标题
     prop: { type: String },                                                    // 绑定的指
     type: { type: String },                                                    // 当type为index时默认显示序号
     width: { type: [String, Number] },                                         // 单个单元格宽度
@@ -27,9 +27,18 @@ const SaTableColumn = designComponent({
       tableColumn: HTMLElement
     })
 
+    let internalProps = reactive({...props} as ColumnProp)
+
+    if(props.selected) {
+      internalProps = {
+        ...internalProps,
+        check: false
+      }
+    }
+
     const group = SaTableCollect.child()
 
-    const tableRow = computed(() => (!!tableRowIndex.value || tableRowIndex.value == 0) ? group.props.data![tableRowIndex.value] : {})
+    const tableRow = computed(() => (!!tableRowIndex.value || tableRowIndex.value == 0) ? group.tableData![tableRowIndex.value] : {})
 
     const tableRowIndex = computed(() => {
       const childrens = getElement(group.refs.tbody)?.children || []
@@ -62,14 +71,24 @@ const SaTableColumn = designComponent({
     }
     
     return {
+      refer: {
+        props: {
+          ...internalProps
+        }
+      },
       render: () => <td ref={ onRef.tableColumn } style={{ ...columStyle.value }}>
         <div class="sa-table-item">
           {
-            props.selected ? (
-              <SaCheckbox />
+            internalProps.selected! ? (
+              <SaCheckbox 
+                v-model={ internalProps.check }
+                onChangeStatus={ (e: CheckboxStatus) => {
+                  group.methods.checkStautsCheck(e, (tableRow.value as any)[group.props.rowKey || '_id'])
+                } }
+              />
             ) : (
               scopeSlots.default(tableRow.value,
-                <>{ (props.type && props.type === 'index') ? tableRowIndex.value! + 1 : (tableRow.value as any)[props.prop!] }</>
+                <>{ (internalProps.type && internalProps.type === 'index') ? tableRowIndex.value! + 1 : (tableRow.value as any)[internalProps.prop!] }</>
               )
             )
           }
