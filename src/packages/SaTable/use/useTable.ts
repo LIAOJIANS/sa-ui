@@ -2,17 +2,21 @@ import { CheckboxStatus } from "src/hooks";
 import { reactive } from "vue";
 import { TableColumnRow } from "../cros/table.type";
 
-export function useTable() {
+export function useTable(
+  data: TableColumnRow[], 
+  rowKey?: string
+) {
 
   let state = reactive({
     checks: [],
-    selectAll: CheckboxStatus.uncheck
+    selectAll: CheckboxStatus.uncheck,
+    tableData: []
   } as {
     checks: any[],
-    selectAll: CheckboxStatus
+    selectAll: CheckboxStatus,
+    tableData: TableColumnRow[]
   })
 
-  
   const methods = {
     setCheckAll: (
       status: CheckboxStatus, 
@@ -28,7 +32,7 @@ export function useTable() {
 
       if(status === CheckboxStatus.uncheck) {
         state.checks.indexOf(id) > -1 && (
-          state.checks = state.checks.filter(c => c !== id)
+          state.checks.splice(state.checks.findIndex(c => c === id), 1)
         )
       }
 
@@ -36,11 +40,30 @@ export function useTable() {
         CheckboxStatus.check : 
           state.checks.length > 0 ? CheckboxStatus.minus : CheckboxStatus.uncheck
     },
-    
-    formatTableData: (data: TableColumnRow[], rowKey?: string) => {
-      rowKey = rowKey || '_id'
 
-      return data.map(c => ({ ...c, _id: methods.randomId() + methods.randomId() }))
+    checkAll: (
+      status: CheckboxStatus
+    ) => {
+      
+      if(status === CheckboxStatus.check) {  // 
+        state.tableData.forEach(c => {
+          !state.checks.includes(c._id) && (
+            state.checks.push(c._id)
+          )
+        })
+      } else if(status === CheckboxStatus.uncheck) {
+        state.checks.splice(0, state.checks.length)
+      }
+    },
+    
+    formatTableData: () => {
+      return data.map((c, i) => ({
+        row: c, 
+        _id: rowKey ? (c as any)[rowKey!] : methods.randomId() + methods.randomId(),
+        columnIndex: i + 1,
+        $index: i,
+        props: {}
+      }))
     },
 
     
@@ -48,9 +71,23 @@ export function useTable() {
     
   }
 
+  const exposeMethods = {
+    setCheckByRaw: (raw: any, status: boolean) => {
+      
+    },
+
+    setCheckByRawKey: (rawKey: any, status: boolean) => {
+
+    }
+  }
+
+  state.tableData = methods.formatTableData() as any[]
+
   return {
     state,
-    methods
+    methods,
+    tableData: state.tableData,
+    exposeMethods
   }
   
 }

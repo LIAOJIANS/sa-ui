@@ -1,5 +1,5 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { PropType } from "vue";
+import { PropType, watch } from "vue";
 import SaTableColumn from "../SaTableColumn/SaTableColumn";
 import SaTbody from './SaTbody'
 import SaThead from './SaThead'
@@ -21,6 +21,9 @@ const SaTable = designComponent({
   },
 
   slots: ['default'],
+  
+  emits: {
+  },
 
   setup({ props, slots }) {
 
@@ -29,7 +32,7 @@ const SaTable = designComponent({
       tbody: HTMLElement
     })
 
-    const { methods: TableMethods, state } = useTable()
+    const { methods: tableMethods, state, tableData, exposeMethods } = useTable(props.data! as any, props.rowKey)
 
     SaTableCollect.parent()
 
@@ -37,8 +40,8 @@ const SaTable = designComponent({
     
     const tableRows = computed(() => {
       return (slots.default() as any).map((row: VNode, i: number) => ({
-        $index: i,
-        row
+        rcolumnIndex: i,
+        props: row.props
       }))
     })
 
@@ -54,7 +57,7 @@ const SaTable = designComponent({
 
       checkStautsCheck: (e: CheckboxStatus, checkId: string) => {
 
-        TableMethods
+        tableMethods
           .setCheckAll(
            e,
            checkId,
@@ -68,7 +71,8 @@ const SaTable = designComponent({
         refs,
         props,
         methods,
-        tableData: TableMethods.formatTableData(props.data! as any, props.rowKey)
+        tableData,
+        checks: state.checks
       },
 
       render: () => (
@@ -79,6 +83,7 @@ const SaTable = designComponent({
               thRows={tableRows.value}
               style={props.tableStyle?.thead}
               selectAll={state.selectAll}
+              onCheckAll={ tableMethods.checkAll }
             />
 
             <SaTbody

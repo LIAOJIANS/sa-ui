@@ -12,8 +12,12 @@ const SaThead = designComponent({
     selectAll: { type: String as PropType<CheckboxStatus> }               // 是否全局选中
   },
 
-  setup({ props }) {
+  emits: {
+    onCheckAll: (e: CheckboxStatus) => true
+  },
 
+  setup({ props, event: { emit } }) {
+    
     return {
       render: () => (
         <thead >
@@ -22,11 +26,11 @@ const SaThead = designComponent({
               .thRows
               .map((c: TableColumnRow) => (
                 <th>
-                  <div class="sa-table-item sa-table-head" style={{ textAlign: c.row.props.align }}>
+                  <div class="sa-table-item sa-table-head" style={{ textAlign: c.props.align }}>
                     {
-                      c.row.props.selected ? (
-                        <SaCheckbox checkStatus={ props.selectAll } /> 
-                      ) : c.row.props.label
+                      c.props.selected ? (
+                        <SaCheckbox checkStatus={ props.selectAll } onChangeStatus={ (e: CheckboxStatus) => emit.onCheckAll(e) } /> 
+                      ) : c.props.label
                     }
                   </div>
                 </th>

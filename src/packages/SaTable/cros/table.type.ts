@@ -11,15 +11,17 @@ export interface ColumnProp {
   type?: string,
   width?: number | string,
   align?: TableAlignEnum,
-  selected?: boolean,
-  check?: boolean
+  selected?: boolean
 }
 
 export type TableColumnRow = {
   $index: number,
-  row: Record<string, any>,
-  _id: string
-} & ColumnProp
+  columnIndex: number,
+  row: Record<string, string>,
+  props: ColumnProp
+  _id: string,
+  check?: boolean
+}
 
 export enum TableAlignEnum {
   Left = 'left',

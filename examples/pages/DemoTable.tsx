@@ -61,7 +61,7 @@ export default defineComponent({
           prop="test5"
           align="right"
           v-slots={{
-            default: (row: Record<string, string>) => <>{ row.test5 }</>
+            default: ({ $index }: { $index: number }) => <>{ $index }</>
           }}
         >
         </SaTableColumn>

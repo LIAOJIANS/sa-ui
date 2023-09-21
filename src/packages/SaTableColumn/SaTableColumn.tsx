@@ -1,5 +1,5 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { PropType, computed, VNode, reactive } from "vue";
+import { PropType, computed, VNode, reactive, watch, toRaw } from "vue";
 
 import { CheckboxStatus, getElement, useRefs, useStyles } from "src/hooks";
 import { ColumnProp, TableAlignEnum } from "../SaTable/cros/table.type";
@@ -27,18 +27,22 @@ const SaTableColumn = designComponent({
       tableColumn: HTMLElement
     })
 
-    let internalProps = reactive({...props} as ColumnProp)
-
-    if(props.selected) {
-      internalProps = {
-        ...internalProps,
-        check: false
-      }
-    }
+    let internalProps = reactive({...props, check: false} as any)
 
     const group = SaTableCollect.child()
 
-    const tableRow = computed(() => (!!tableRowIndex.value || tableRowIndex.value == 0) ? group.tableData![tableRowIndex.value] : {})
+    const tableRow = computed(() => (!!tableRowIndex.value || tableRowIndex.value == 0) ? {
+      ...group.tableData![tableRowIndex.value],
+      props: toRaw(props),
+      check: internalProps.check
+    } : {
+      row: {}
+    })
+  
+    watch(() => group.checks, () => {
+      
+      internalProps.check = group.checks.includes((tableRow.value as any)[group.props.rowKey || '_id'])
+    }, { deep: true })
 
     const tableRowIndex = computed(() => {
       const childrens = getElement(group.refs.tbody)?.children || []
@@ -88,7 +92,8 @@ const SaTableColumn = designComponent({
               />
             ) : (
               scopeSlots.default(tableRow.value,
-                <>{ (internalProps.type && internalProps.type === 'index') ? tableRowIndex.value! + 1 : (tableRow.value as any)[internalProps.prop!] }</>
+                <>{ (internalProps.type && internalProps.type === 'index') ? 
+                  tableRowIndex.value! + 1 : (tableRow.value as any).row[internalProps.prop!]}</>
               )
             )
           }
