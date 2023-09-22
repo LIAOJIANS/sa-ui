@@ -1,3 +1,4 @@
+import { typeOf } from "js-hodgepodge";
 import { CheckboxStatus } from "src/hooks";
 import { reactive } from "vue";
 import { TableColumnRow } from "../cros/table.type";
@@ -66,18 +67,55 @@ export function useTable(
       }))
     },
 
+    getRawKey: () => (rowKey || '_id') as keyof TableColumnRow,
+
     
     randomId: () => Math.random().toString(16).slice(2, 40),
     
   }
 
   const exposeMethods = {
-    setCheckByRaw: (raw: any, status: boolean) => {
-      
+
+    setCheckByRawKeys: (keys: any, status?: boolean) => {
+
+      if(!rowKey) {
+        return console.error('Must be bound RawKey!!!')
+      }
+
+      if(typeOf(keys) !== 'array') {
+        keys = [keys]
+      }
+
+      keys
+        .forEach((k: any) =>  {
+          
+          status = (status === false || status === true ) ? status : !state.checks.includes(k)
+
+          status === true ? (
+            !state.checks.includes(k) && 
+              state.checks.push(k)
+          ) : (
+            state.checks.includes(k) && (
+              state.checks.splice(state.checks.findIndex(c => c === k), 1)
+            )
+          )
+
+        })
     },
 
-    setCheckByRawKey: (rawKey: any, status: boolean) => {
+    getCheckedRaw: () => {
 
+      if(state.selectAll === CheckboxStatus.check) {
+        return state.tableData
+      }
+
+      if(state.selectAll === CheckboxStatus.uncheck) {
+        return []
+      }
+
+      const key = methods.getRawKey()
+
+      return state.tableData.filter((c: TableColumnRow) => state.checks.includes(c[key]))
     }
   }
 

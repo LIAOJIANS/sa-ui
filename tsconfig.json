@@ -17,6 +17,9 @@
     "paths": {
       "sa-ui": [
         "src/packages"
+      ],
+      "sa-ui@hooks": [
+        "src/hooks"
       ]
     },
     "lib": [

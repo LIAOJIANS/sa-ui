@@ -39,6 +39,7 @@ module.exports = {
       .set('examples', resolve('examples'))
       .set('src', resolve('src'))
       .set('sa-ui', resolve('src/packages'))
+      .set('sa-ui@hooks', resolve('src/hooks'))
 
     const fontRule = config.module.rule('fonts')
     fontRule.uses.clear()

@@ -6,3 +6,5 @@ declare module '*.vue' {
 }
 
 declare module 'sa-ui'
+
+declare module 'sa-ui@hooks'

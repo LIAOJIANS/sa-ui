@@ -9,6 +9,7 @@ import { CheckboxStatus, classname, useCollect, useRefs } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
 import { ColumnProp, TabelStyle } from "./cros/table.type";
 import { useTable } from "./use/useTable";
+import { typeOf } from "js-hodgepodge";
 
 const SaTable = designComponent({
   name: 'sa-table',
@@ -21,7 +22,7 @@ const SaTable = designComponent({
   },
 
   slots: ['default'],
-  
+
   emits: {
   },
 
@@ -37,7 +38,7 @@ const SaTable = designComponent({
     SaTableCollect.parent()
 
     // const selects = computed(() => childs.filter(({ props: c }) => c.selected).map(({ props: c }) => c))
-    
+
     const tableRows = computed(() => {
       return (slots.default() as any).map((row: VNode, i: number) => ({
         rcolumnIndex: i,
@@ -59,11 +60,42 @@ const SaTable = designComponent({
 
         tableMethods
           .setCheckAll(
-           e,
-           checkId,
-           props.data?.length || 0
+            e,
+            checkId,
+            props.data?.length || 0
           )
-      }
+      },
+
+      getCheckedRaw: () => exposeMethods.getCheckedRaw(),
+
+      getCheckByKey: () => {
+        if (!props.rowKey) {
+          console.error('Please set the Key, otherwise use the internal key!')
+        }
+
+        return state.checks
+      },
+
+      setCheckByRawKeys: (keys: any, status?: boolean) => exposeMethods.setCheckByRawKeys(keys, status),
+
+      setCheckByRaws: (raw: any, status?: boolean) => { // 传参类型---数组则批量添加，单个子直接追加
+
+        if (!props.rowKey) {
+          return console.error('Must be bound RawKey!!!')
+        }
+
+        const key = tableMethods.getRawKey()
+
+        if (typeOf(raw) !== 'array') {
+          raw = [raw]
+        }
+
+        methods
+          .setCheckByRawKeys(
+            raw.map((c: any) => c[key]),
+            status
+          )
+      },
     }
 
     return {
@@ -83,7 +115,7 @@ const SaTable = designComponent({
               thRows={tableRows.value}
               style={props.tableStyle?.thead}
               selectAll={state.selectAll}
-              onCheckAll={ tableMethods.checkAll }
+              onCheckAll={tableMethods.checkAll}
             />
 
             <SaTbody
