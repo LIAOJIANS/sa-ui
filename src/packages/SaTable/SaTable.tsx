@@ -1,5 +1,5 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { PropType, watch } from "vue";
+import { PropType, toRaw, watch } from "vue";
 import SaTableColumn from "../SaTableColumn/SaTableColumn";
 import SaTbody from './SaTbody'
 import SaThead from './SaThead'
@@ -7,7 +7,7 @@ import './saTable.scss'
 
 import { CheckboxStatus, classname, useCollect, useRefs } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
-import { ColumnProp, TabelStyle } from "./cros/table.type";
+import { TabelStyle, TableColumnRow } from "./cros/table.type";
 import { useTable } from "./use/useTable";
 import { typeOf } from "js-hodgepodge";
 
@@ -23,15 +23,22 @@ const SaTable = designComponent({
 
   slots: ['default'],
 
+  provideRefer: true,
+
   emits: {
+    onClickRow: (row: TableColumnRow) => true,
+    
+    onUpdateModelValue: (val: any[]) => true,
   },
 
-  setup({ props, slots }) {
+  setup({ props, slots, event: { emit } }) {
 
     const { onRef, refs } = useRefs({
       table: HTMLTableElement,
       tbody: HTMLElement
     })
+    
+   
 
     const { methods: tableMethods, state, tableData, exposeMethods } = useTable(props.data! as any, props.rowKey)
 
@@ -96,6 +103,15 @@ const SaTable = designComponent({
             status
           )
       },
+    } 
+
+    const handler = {
+      handleRowClick: (index: number) => {
+        const row = state.tableData[index]
+        
+        emit.onClickRow(toRaw(row))
+      }
+
     }
 
     return {
@@ -104,7 +120,8 @@ const SaTable = designComponent({
         props,
         methods,
         tableData,
-        checks: state.checks
+        checks: state.checks,
+        handler
       },
 
       render: () => (

@@ -75,6 +75,7 @@ export const SaCheckbox = designComponent({
 
     const handler = {
       clickEl: (e?: MouseEvent) => {
+        
         if (!!e) {
           e.stopPropagation()
         }
@@ -88,9 +89,15 @@ export const SaCheckbox = designComponent({
         if (!!checkboxGroup) {
           return checkboxGroup.handler.clickCheckbox(refer)
         }
-        
-        model.value = checkStatus.value === CheckboxStatus.check ? props.falseValue : props.tureValue
-        
+
+        if(checkStatus.value === CheckboxStatus.minus) {
+          emit.onChangeStatus(CheckboxStatus.check)
+        } else if(checkStatus.value === CheckboxStatus.uncheck && model.value === true) {
+          emit.onChangeStatus(CheckboxStatus.check)
+        } else {
+          model.value = checkStatus.value === CheckboxStatus.check ? props.falseValue : props.tureValue
+        }
+
         if (!!e) {
           e.stopPropagation()
           e.preventDefault()
@@ -98,7 +105,11 @@ export const SaCheckbox = designComponent({
       }
     }
 
-    watch(() => model.value, (isCheck) => emit.onChangeStatus(isCheck === props.tureValue ? CheckboxStatus.check : CheckboxStatus.uncheck))
+    watch(() => model.value, (isCheck) => {
+      emit.onChangeStatus(isCheck === props.tureValue ? CheckboxStatus.check : CheckboxStatus.uncheck)
+      console.log(isCheck);
+      
+    })
 
     const styles = useStyles(style => {
       if(!!checkboxGroup) {

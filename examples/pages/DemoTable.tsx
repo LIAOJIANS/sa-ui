@@ -23,6 +23,10 @@ export default defineComponent({
     })
 
     const methods = {
+      changeTableData() {
+        state.tableList.push(...state.tableList)
+      },
+
       getChekcs() {
         $message.info(
           JSON.stringify(
@@ -68,6 +72,8 @@ export default defineComponent({
         <SaButton onClick={ methods.getCheckByKeys }>获取选中Key</SaButton>
         <SaButton onClick={ methods.setRowKeyByKey }>根据rowKey设置选中状态</SaButton>
         <SaButton onClick={ methods.setRowKeyByRow }>根据row设置选中状态</SaButton>
+        
+        <SaButton onClick={ methods.changeTableData }>切换TableData</SaButton>
 
         <SaTable
           data={state.tableList}
@@ -77,6 +83,8 @@ export default defineComponent({
             thead: { 'text-align': 'center' },
             tbody: { 'text-align': 'center' }
           }}
+          onClickRow={ (row: Record<string, any>) => console.log(row)}
+          selectCache
         >
           <SaTableColumn
             selected

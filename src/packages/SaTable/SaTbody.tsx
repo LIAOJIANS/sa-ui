@@ -1,4 +1,6 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
+import { computed, watch } from "vue";
+import SaTable from './SaTable'
 
 const SaTbody = designComponent({
   props: {
@@ -6,18 +8,31 @@ const SaTbody = designComponent({
   },
 
   slots: ['default'],
+
+  emits: {
+
+  },
+
   setup({ props, slots }) {
 
-    const methods = {
-      toArray: (len: number) => new Array(len || 0).fill('')
+    const table = SaTable.use.inject(null)!
+    
+    const layoutLen = computed(() => new Array(props.layout?.trLen || 0).fill(''))
+
+    const handler = {
+      handleClick: (e: MouseEvent, i: number) => {
+        e.stopPropagation()
+
+        table.handler.handleRowClick(i)
+      }
     }
 
     return {
       render: () => (
         <tbody>
           {
-            methods.toArray(props.layout?.trLen).map(() => (
-              <tr class="sa-table-column--hover">
+            layoutLen.value.map((c, i) => (
+              <tr class="sa-table-column--hover" onClick={ (e) => handler.handleClick(e, i) }>
                  { slots.default() }
               </tr>
             ))

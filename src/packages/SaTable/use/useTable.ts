@@ -1,10 +1,10 @@
 import { typeOf } from "js-hodgepodge";
 import { CheckboxStatus } from "src/hooks";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import { TableColumnRow } from "../cros/table.type";
 
 export function useTable(
-  data: TableColumnRow[], 
+  data: TableColumnRow[],
   rowKey?: string
 ) {
 
@@ -20,46 +20,49 @@ export function useTable(
 
   const methods = {
     setCheckAll: (
-      status: CheckboxStatus, 
-      id: string, 
+      status: CheckboxStatus,
+      id: string,
       dataLen: number
     ) => {
-      
-      if(status === CheckboxStatus.check) {
+
+      if (status === CheckboxStatus.check) {
         state.checks.indexOf(id) === -1 && (
           state.checks.push(id)
         )
       }
 
-      if(status === CheckboxStatus.uncheck) {
+      if (status === CheckboxStatus.uncheck) {
         state.checks.indexOf(id) > -1 && (
           state.checks.splice(state.checks.findIndex(c => c === id), 1)
         )
       }
 
-      state.selectAll = state.checks.length === dataLen ? 
-        CheckboxStatus.check : 
-          state.checks.length > 0 ? CheckboxStatus.minus : CheckboxStatus.uncheck
+      state.selectAll = state.checks.length === dataLen ?
+        CheckboxStatus.check :
+        state.checks.length > 0 ? CheckboxStatus.minus : CheckboxStatus.uncheck
     },
 
     checkAll: (
       status: CheckboxStatus
     ) => {
+
+      console.log(status);
       
-      if(status === CheckboxStatus.check) {  // 
+
+      if (status === CheckboxStatus.check) {  // 
         state.tableData.forEach(c => {
           !state.checks.includes(c._id) && (
             state.checks.push(c._id)
           )
         })
-      } else if(status === CheckboxStatus.uncheck) {
+      } else if (status === CheckboxStatus.uncheck) {
         state.checks.splice(0, state.checks.length)
       }
     },
-    
+
     formatTableData: () => {
       return data.map((c, i) => ({
-        row: c, 
+        row: c,
         _id: rowKey ? (c as any)[rowKey!] : methods.randomId() + methods.randomId(),
         columnIndex: i + 1,
         $index: i,
@@ -69,31 +72,30 @@ export function useTable(
 
     getRawKey: () => (rowKey || '_id') as keyof TableColumnRow,
 
-    
     randomId: () => Math.random().toString(16).slice(2, 40),
-    
+
   }
 
   const exposeMethods = {
 
     setCheckByRawKeys: (keys: any, status?: boolean) => {
 
-      if(!rowKey) {
+      if (!rowKey) {
         return console.error('Must be bound RawKey!!!')
       }
 
-      if(typeOf(keys) !== 'array') {
+      if (typeOf(keys) !== 'array') {
         keys = [keys]
       }
 
       keys
-        .forEach((k: any) =>  {
-          
-          status = (status === false || status === true ) ? status : !state.checks.includes(k)
+        .forEach((k: any) => {
+
+          status = typeOf(status) === 'boolean' ? status : !state.checks.includes(k)
 
           status === true ? (
-            !state.checks.includes(k) && 
-              state.checks.push(k)
+            !state.checks.includes(k) &&
+            state.checks.push(k)
           ) : (
             state.checks.includes(k) && (
               state.checks.splice(state.checks.findIndex(c => c === k), 1)
@@ -105,11 +107,11 @@ export function useTable(
 
     getCheckedRaw: () => {
 
-      if(state.selectAll === CheckboxStatus.check) {
+      if (state.selectAll === CheckboxStatus.check) {
         return state.tableData
       }
 
-      if(state.selectAll === CheckboxStatus.uncheck) {
+      if (state.selectAll === CheckboxStatus.uncheck) {
         return []
       }
 
@@ -119,7 +121,16 @@ export function useTable(
     }
   }
 
-  state.tableData = methods.formatTableData() as any[]
+
+  watch(
+    () => data,
+    () => {
+      state.tableData.splice(0, state.tableData.length, ...methods.formatTableData() as any[])
+      state.checks.splice(0, state.checks.length)
+      state.selectAll = CheckboxStatus.uncheck
+    },
+    { deep: true, immediate: true }
+  )
 
   return {
     state,
@@ -127,5 +138,5 @@ export function useTable(
     tableData: state.tableData,
     exposeMethods
   }
-  
+
 }
