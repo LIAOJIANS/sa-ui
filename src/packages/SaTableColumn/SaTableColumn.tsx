@@ -5,6 +5,7 @@ import { CheckboxStatus, getElement, useRefs, useStyles } from "src/hooks";
 import { TableAlignEnum, TableColumnRow } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
+import { typeOf } from "js-hodgepodge";
 
 const SaTableColumn = designComponent({
   name: 'sa-table-column',
@@ -27,16 +28,21 @@ const SaTableColumn = designComponent({
       tableColumn: HTMLElement
     })
 
-    let internalProps = reactive({...props, check: false} as any)
+    let internalProps = reactive({ ...props, check: false } as any)
+
+    const state = reactive({
+      rowspan: 1,
+      colspan: 1
+    })
 
     const group = SaTableCollect.child()
 
     const tableRow = computed(() => {
 
-      if(!!tableRowIndex.value || tableRowIndex.value == 0) {
-        
+      if (!!tableRowIndex.value || tableRowIndex.value == 0) {
+
         const column = {
-          ...(group.tableData![tableRowIndex.value] || {row:{}}),
+          ...(group.tableData![tableRowIndex.value] || { row: {} }),
           props: toRaw(props),
           check: internalProps.check
         }
@@ -48,24 +54,30 @@ const SaTableColumn = designComponent({
         row: {}
       }
     })
-  
+
     const tableRowIndex = computed(() => {
       const childrens = getElement(group.refs.tbody)?.children || []
 
-      if(childrens.length < 1) {
+      if (childrens.length < 1) {
         return null
       }
 
       return methods.getColumnIndex(childrens, refs.tableColumn?.parentElement)
     })
 
+    const rowIndex = computed(() => {
+      const trs = getElement(refs.tableColumn?.parentElement)?.children
+
+      return methods.getColumnIndex(trs, refs.tableColumn)
+    })
+
     const columStyle = useStyles(style => {
 
-      if(props.width) {
+      if (props.width) {
         style.width = `${props.width}`.indexOf('px') > -1 ? props.width : `${props.width}px`
       }
 
-      if(props.align) {
+      if (props.align) {
         style["text-align"] = props.align
       }
 
@@ -76,43 +88,95 @@ const SaTableColumn = designComponent({
       getColumnIndex: (
         childrens: any,
         child: any
-      ) => [].indexOf.call(childrens, child as never)
+      ) => [].indexOf.call(childrens, child as never),
+
+
+      getSpan: () => {
+        let rowspan = 1
+        let colspan = 1
+
+        if (typeOf(group.props.spanMethods) === 'function') {
+          const result = group.props.spanMethods?.(
+            toRaw(tableRow.value.row),
+            (tableRow.value as any).props,
+            (tableRow.value as any).columnIndex - 1,
+            rowIndex.value,
+          )!
+
+          if (typeOf(result) === 'array') {
+            rowspan = result[0]
+            colspan = result[1]
+          } else if (typeOf(result) === 'object') {
+            rowspan = result.rowspan
+            colspan = result.colspan
+          }
+        }
+
+        state.colspan = colspan
+        state.rowspan = rowspan
+
+        console.log(state);
+
+
+        return {
+          rowspan,
+          colspan
+        }
+      }
     }
 
     watch(() => group.checks, () => {
-      
+
       internalProps.check = group.checks.includes((tableRow.value as any)[group.props.rowKey || '_id'])
     }, { deep: true })
-    
+
     onMounted(() => { // 更新内部data的数据状态
       group.tableData.splice(tableRowIndex.value!, 1, tableRow.value as TableColumnRow)
+
+      // 合并单元格操作
+      if (group.props.spanMethods) {
+        methods
+          .getSpan()
+      }
+
     })
-    
+
     return {
       refer: {
         props: {
           ...internalProps
         }
       },
-      render: () => <td ref={ onRef.tableColumn } style={{ ...columStyle.value }}>
-        <div class="sa-table-item">
-          {
-            internalProps.selected! ? (
-              <SaCheckbox 
-                v-model={ internalProps.check }
-                onChangeStatus={ (e: CheckboxStatus) => {
-                  group.methods.checkStautsCheck(e, (tableRow.value as any)[group.props.rowKey || '_id'])
-                } }
-              />
-            ) : (
-              scopeSlots.default(tableRow.value,
-                <>{ (internalProps.type && internalProps.type === 'index') ? 
-                  tableRowIndex.value! + 1 : (tableRow.value as any).row[internalProps.prop!]}</>
-              )
-            )
-          }
-        </div>
-      </td>
+      render: () => <>
+        {
+          (!state.colspan || !state.rowspan) ? null : (
+            <td
+              ref={onRef.tableColumn}
+              style={{ ...columStyle.value }}
+              colspan={state.colspan}
+              rowspan={state.rowspan}
+            >
+              <div class="sa-table-item">
+                {
+                  internalProps.selected! ? (
+                    <SaCheckbox
+                      v-model={internalProps.check}
+                      onChangeStatus={(e: CheckboxStatus) => {
+                        group.methods.checkStautsCheck(e, (tableRow.value as any)[group.props.rowKey || '_id'])
+                      }}
+                    />
+                  ) : (
+                    scopeSlots.default(tableRow.value,
+                      <>{(internalProps.type && internalProps.type === 'index') ?
+                        tableRowIndex.value! + 1 : (tableRow.value as any).row[internalProps.prop!]}</>
+                    )
+                  )
+                }
+              </div>
+            </td>
+          )
+        }
+      </>
     }
   }
 })

@@ -7,18 +7,20 @@ import './saTable.scss'
 
 import { CheckboxStatus, classname, useCollect, useRefs } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
-import { TabelStyle, TableColumnRow } from "./cros/table.type";
+import { SpanMethods, TabelStyle, TableColumnRow } from "./cros/table.type";
 import { useTable } from "./use/useTable";
 import { typeOf } from "js-hodgepodge";
+import { onMounted } from "vue";
 
 const SaTable = designComponent({
   name: 'sa-table',
 
   props: {
     data: { type: Array },                                                                  // 表格绑定值
-    border: { type: Boolean, default: true },                                               // 表格的边框
+    border: { type: Boolean, default: false },                                              // 表格的边框
     tableStyle: { type: Object as PropType<TabelStyle> },                                   // 自定义表格样式
-    rowKey: { type: String }                                                                // 没有默认绑定自定义key（_id）
+    rowKey: { type: String },                                                               // 没有默认绑定自定义key（_id）
+    spanMethods: { type: Function as PropType<SpanMethods> },                               // 用于合并表格行列单元格  
   },
 
   slots: ['default'],
@@ -37,8 +39,6 @@ const SaTable = designComponent({
       table: HTMLTableElement,
       tbody: HTMLElement
     })
-    
-   
 
     const { methods: tableMethods, state, tableData, exposeMethods } = useTable(props.data! as any, props.rowKey)
 

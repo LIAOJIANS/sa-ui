@@ -94,6 +94,8 @@ export const SaCheckbox = designComponent({
           emit.onChangeStatus(CheckboxStatus.check)
         } else if(checkStatus.value === CheckboxStatus.uncheck && model.value === true) {
           emit.onChangeStatus(CheckboxStatus.check)
+        } else if(checkStatus.value === CheckboxStatus.check && model.value === false) {
+          emit.onChangeStatus(CheckboxStatus.uncheck)
         } else {
           model.value = checkStatus.value === CheckboxStatus.check ? props.falseValue : props.tureValue
         }
@@ -105,11 +107,9 @@ export const SaCheckbox = designComponent({
       }
     }
 
-    watch(() => model.value, (isCheck) => {
+    watch(() => model.value, (isCheck) => 
       emit.onChangeStatus(isCheck === props.tureValue ? CheckboxStatus.check : CheckboxStatus.uncheck)
-      console.log(isCheck);
-      
-    })
+    )
 
     const styles = useStyles(style => {
       if(!!checkboxGroup) {

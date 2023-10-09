@@ -24,7 +24,7 @@ export function useTable(
       id: string,
       dataLen: number
     ) => {
-
+      
       if (status === CheckboxStatus.check) {
         state.checks.indexOf(id) === -1 && (
           state.checks.push(id)
@@ -45,9 +45,6 @@ export function useTable(
     checkAll: (
       status: CheckboxStatus
     ) => {
-
-      console.log(status);
-      
 
       if (status === CheckboxStatus.check) {  // 
         state.tableData.forEach(c => {

@@ -63,6 +63,17 @@ export default defineComponent({
             [ { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
               { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 }]
           )
+      },
+
+      //@ts-ignore
+      spanMethods(row, column, rowIndex, columnIndex) {
+        if (rowIndex % 2 === 0) {
+          if (columnIndex === 0) {
+            return [1, 2];
+          } else if (columnIndex === 1) {
+            return [0, 0];
+          }
+        }
       }
     }
 
@@ -73,7 +84,7 @@ export default defineComponent({
         <SaButton onClick={ methods.setRowKeyByKey }>根据rowKey设置选中状态</SaButton>
         <SaButton onClick={ methods.setRowKeyByRow }>根据row设置选中状态</SaButton>
         
-        <SaButton onClick={ methods.changeTableData }>切换TableData</SaButton>
+        <SaButton onClick={ methods.changeTableData }>追加TableData</SaButton>
 
         <SaTable
           data={state.tableList}
@@ -85,6 +96,8 @@ export default defineComponent({
           }}
           onClickRow={ (row: Record<string, any>) => console.log(row)}
           selectCache
+          border
+          spanMethods={ methods.spanMethods }
         >
           <SaTableColumn
             selected

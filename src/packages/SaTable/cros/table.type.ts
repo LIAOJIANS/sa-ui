@@ -1,4 +1,4 @@
-import { CSSProperties, VNode } from "vue";
+import { CSSProperties } from "vue";
 
 export interface TabelStyle {
   thead: CSSProperties,
@@ -27,4 +27,9 @@ export enum TableAlignEnum {
   Left = 'left',
   cneter = 'center',
   right = 'right'
+}
+
+export type SpanMethods = ( row: Record<string, string>, column: any, rowIndex: number, columnIndex: number ) => number[] & {
+  rowspan: number,
+  colspan: number
 }
