@@ -1,6 +1,7 @@
 import { SaUpload, SaButton, SaIcon } from 'sa-ui'
 import { defineComponent, reactive } from 'vue'
 import './scss/DemoUpload.scss'
+import DemoContainer from '../components/container'
 
 export default defineComponent({
   setup() {
@@ -10,22 +11,27 @@ export default defineComponent({
         name: "logo.png",
         uid: 1680769149990,
         url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
-      }]
-    })
+      }],
 
-    return () => (
-      <div>
-        <p>File List</p>
+      initTimeText1: `
         <SaUpload
           action="https://jsonplaceholder.typicode.com/posts/"
           class="upload-demo"
           multiple
           v-slots={{ uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} /> }}
         >
-          {/* <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> */}
         </SaUpload>
+      `,
 
-        <p>img List</p>
+      initTimeText2: `
+        const state = reactive({
+          fileList: [{
+            name: "logo.png",
+            uid: 1680769149990,
+            url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
+          }],
+        })
+
         <SaUpload
           multiple
           listType="image"
@@ -37,8 +43,17 @@ export default defineComponent({
           ) }}
         >
         </SaUpload>
+      `,
 
-        <p>img Card List</p>
+      initTimeText3: `
+        const state = reactive({
+          fileList: [{
+            name: "logo.png",
+            uid: 1680769149990,
+            url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
+          }],
+        })
+
         <SaUpload
           class="upload-demo"
           multiple
@@ -53,10 +68,9 @@ export default defineComponent({
         >
           <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </SaUpload>
+      `,
 
-        
-        <p>Drag Upload</p>
-
+      initTimeText4: `
         <SaUpload
           action="https://jsonplaceholder.typicode.com/posts/"
           class="upload-demo"
@@ -68,6 +82,98 @@ export default defineComponent({
           <SaIcon class="sa-icon-upload" icon="el-icon-upload" size={ 67 } />
           <div class="sa-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </SaUpload>
+      `
+    })
+
+    return () => (
+      <div>
+
+        <h1 style={{ color: '#333' }}>Upload 上传</h1>
+        <span style={{ color: '#666', fontSize: '14px' }}>通过点击或者拖拽上传文件</span>
+
+        <DemoContainer
+          label="基础文件列表"
+          describe="显示上传之后的文件名称组成的列表"
+          codeText={state.initTimeText1}
+        >
+          {/* @ts-ignore */}
+          <div slot="title">
+            <SaUpload
+              action="https://jsonplaceholder.typicode.com/posts/"
+              class="upload-demo"
+              multiple
+              v-slots={{ uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} /> }}
+            >
+              {/* <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> */}
+            </SaUpload>
+          </div>
+        </DemoContainer>
+
+        <DemoContainer
+          label="照片墙"
+          describe="使用 list-type 属性来设置文件列表的样式。"
+          codeText={state.initTimeText2}
+        >
+          {/* @ts-ignore */}
+          <div slot="title">
+            <SaUpload
+              multiple
+              listType="image"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              fileList={state.fileList}
+              beforeRomve={ (file: any) => file.name="111" }
+              v-slots={{ tip: () => (
+                <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              ) }}
+            >
+            </SaUpload>
+          </div>
+        </DemoContainer>
+
+        <DemoContainer
+          label="基础图片文件列表"
+          describe="显示上传之后的图片、文件名称组成的列表"
+          codeText={state.initTimeText3}
+        >
+          {/* @ts-ignore */}
+          <div slot="title">
+            <SaUpload
+              class="upload-demo"
+              multiple
+              listType="image-card"
+              v-slots={{ 
+                uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} />,
+                tip: () => (
+                  <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                )
+              }}
+              fileList={state.fileList}
+            >
+              <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </SaUpload>
+          </div>
+        </DemoContainer>
+        
+        <DemoContainer
+          label="拖拽上传"
+          describe="用户拖拽到指定区域上传"
+          codeText={state.initTimeText4}
+        >
+          {/* @ts-ignore */}
+          <div slot="title">
+            <SaUpload
+              action="https://jsonplaceholder.typicode.com/posts/"
+              class="upload-demo"
+              drag
+              v-slots={{ tip: () => (
+                <div class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              ) }}
+            > 
+              <SaIcon class="sa-icon-upload" icon="el-icon-upload" size={ 67 } />
+              <div class="sa-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </SaUpload>
+          </div>
+        </DemoContainer>
       </div>
     )
   }

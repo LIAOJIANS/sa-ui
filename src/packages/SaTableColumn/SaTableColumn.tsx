@@ -90,7 +90,6 @@ const SaTableColumn = designComponent({
         child: any
       ) => [].indexOf.call(childrens, child as never),
 
-
       getSpan: () => {
         let rowspan = 1
         let colspan = 1
@@ -114,9 +113,6 @@ const SaTableColumn = designComponent({
 
         state.colspan = colspan
         state.rowspan = rowspan
-
-        console.log(state);
-
 
         return {
           rowspan,
