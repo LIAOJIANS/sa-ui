@@ -10,7 +10,6 @@ import { computed, VNode } from "@vue/runtime-core";
 import { SpanMethods, TabelStyle, TableColumnRow } from "./cros/table.type";
 import { useTable } from "./use/useTable";
 import { typeOf } from "js-hodgepodge";
-import { onMounted } from "vue";
 
 const SaTable = designComponent({
   name: 'sa-table',
@@ -20,7 +19,8 @@ const SaTable = designComponent({
     border: { type: Boolean, default: false },                                              // 表格的边框
     tableStyle: { type: Object as PropType<TabelStyle> },                                   // 自定义表格样式
     rowKey: { type: String },                                                               // 没有默认绑定自定义key（_id）
-    spanMethods: { type: Function as PropType<SpanMethods> },                               // 用于合并表格行列单元格  
+    spanMethods: { type: Function as PropType<SpanMethods> },                               // 用于合并表格行列单元格
+    selectCache: { type: Boolean },                                                         // 只有当表格是select状态下才适用，用于是否缓存选择之后的数据
   },
 
   slots: ['default'],
@@ -29,7 +29,7 @@ const SaTable = designComponent({
 
   emits: {
     onClickRow: (row: TableColumnRow) => true,
-    
+
     onUpdateModelValue: (val: any[]) => true,
   },
 
@@ -40,7 +40,7 @@ const SaTable = designComponent({
       tbody: HTMLElement
     })
 
-    const { methods: tableMethods, state, tableData, exposeMethods } = useTable(props.data! as any, props.rowKey)
+    const { methods: tableMethods, state, tableData, exposeMethods } = useTable(props.data! as any, props)
 
     SaTableCollect.parent()
 
@@ -66,7 +66,7 @@ const SaTable = designComponent({
       checkStautsCheck: (e: CheckboxStatus, checkId: string) => {
 
         tableMethods
-          .setCheckAll(
+          .setCheck(
             e,
             checkId,
             props.data?.length || 0
@@ -103,16 +103,31 @@ const SaTable = designComponent({
             status
           )
       },
-    } 
+    }
 
     const handler = {
       handleRowClick: (index: number) => {
         const row = state.tableData[index]
-        
+
         emit.onClickRow(toRaw(row))
       }
 
     }
+
+    watch(
+      () => props.data,
+      () => {
+        state.tableData.splice(0, state.tableData.length, ...tableMethods.formatTableData(props.data))
+
+        if (props.selectCache && tableMethods.getRawKey() !== '_id') { // 自定义Key并且开启了选择缓存, 内置随机id不支持选择缓存！
+          tableMethods.cacheCheck()
+        } else {
+          state.checks.splice(0, state.checks.length)
+          state.selectAll = CheckboxStatus.uncheck
+        }
+      },
+      { deep: true, immediate: true }
+    )
 
     return {
       refer: {

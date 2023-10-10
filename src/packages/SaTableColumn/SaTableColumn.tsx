@@ -123,7 +123,7 @@ const SaTableColumn = designComponent({
 
     watch(() => group.checks, () => {
 
-      internalProps.check = group.checks.includes((tableRow.value as any)[group.props.rowKey || '_id'])
+      internalProps.check = group.checks.includes((tableRow.value as any)['_id'])
     }, { deep: true })
 
     onMounted(() => { // 更新内部data的数据状态
@@ -158,7 +158,7 @@ const SaTableColumn = designComponent({
                     <SaCheckbox
                       v-model={internalProps.check}
                       onChangeStatus={(e: CheckboxStatus) => {
-                        group.methods.checkStautsCheck(e, (tableRow.value as any)[group.props.rowKey || '_id'])
+                        group.methods.checkStautsCheck(e, (tableRow.value as any)['_id'])
                       }}
                     />
                   ) : (

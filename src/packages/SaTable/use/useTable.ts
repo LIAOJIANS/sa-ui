@@ -5,7 +5,13 @@ import { TableColumnRow } from "../cros/table.type";
 
 export function useTable(
   data: TableColumnRow[],
-  rowKey?: string
+  {
+    rowKey,
+    selectCache
+  }: {
+    rowKey?: string,
+    selectCache?: boolean
+  }
 ) {
 
   let state = reactive({
@@ -17,9 +23,9 @@ export function useTable(
     selectAll: CheckboxStatus,
     tableData: TableColumnRow[]
   })
-
+  
   const methods = {
-    setCheckAll: (
+    setCheck: (
       status: CheckboxStatus,
       id: string,
       dataLen: number
@@ -46,7 +52,7 @@ export function useTable(
       status: CheckboxStatus
     ) => {
 
-      if (status === CheckboxStatus.check) {  // 
+      if (status === CheckboxStatus.check) {
         state.tableData.forEach(c => {
           !state.checks.includes(c._id) && (
             state.checks.push(c._id)
@@ -55,16 +61,28 @@ export function useTable(
       } else if (status === CheckboxStatus.uncheck) {
         state.checks.splice(0, state.checks.length)
       }
+      
     },
 
-    formatTableData: () => {
-      return data.map((c, i) => ({
+    cacheCheck: () => { // 开启选择缓存时改变全选状态
+      if(state.selectAll === CheckboxStatus.uncheck) {
+        return
+      }
+
+      if(state.checks.length < state.tableData.length && state.selectAll !== CheckboxStatus.minus) {
+        state.selectAll = CheckboxStatus.minus
+      }
+    },
+
+    formatTableData: (tableList: any) => {
+      return tableList.map((c: any, i: number) => ({
         row: c,
         _id: rowKey ? (c as any)[rowKey!] : methods.randomId() + methods.randomId(),
         columnIndex: i + 1,
         $index: i,
         props: {}
       }))
+      
     },
 
     getRawKey: () => (rowKey || '_id') as keyof TableColumnRow,
@@ -118,16 +136,6 @@ export function useTable(
     }
   }
 
-
-  watch(
-    () => data,
-    () => {
-      state.tableData.splice(0, state.tableData.length, ...methods.formatTableData() as any[])
-      state.checks.splice(0, state.checks.length)
-      state.selectAll = CheckboxStatus.uncheck
-    },
-    { deep: true, immediate: true }
-  )
 
   return {
     state,

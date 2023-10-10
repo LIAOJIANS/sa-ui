@@ -23,11 +23,11 @@ export default defineComponent({
       ],
 
       tableList: [
-        { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
-        { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 },
-        { test1: 31, test2: 32, test3: 33,test4: 34,test5: 35 },
-        { test1: 41, test2: 42, test3: 43,test4: 44,test5: 45 },
-        { test1: 51, test2: 52, test3: 53,test4: 54,test5: 55 },
+        { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15, id: 0 },
+        { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25, id: 1 },
+        { test1: 31, test2: 32, test3: 33,test4: 34,test5: 35, id: 2 },
+        { test1: 41, test2: 42, test3: 43,test4: 44,test5: 45, id: 3 },
+        { test1: 51, test2: 52, test3: 53,test4: 54,test5: 55, id: 4 },
       ],
 
       initTimeText: `
@@ -137,7 +137,8 @@ export default defineComponent({
 
     const methods = {
       changeTableData() {
-        state.tableList.push(...state.tableList)
+        //@ts-ignore
+        state.tableList = [...state.tableList, ...state.tableList].map((c, i) => ({...c, id: i}))
       },
 
       getChekcs() {
@@ -164,8 +165,10 @@ export default defineComponent({
       },
 
       setRowKeyByKey() {
-        // methods
-        //   .setCheckByRawKeys()
+        refs
+        .table
+        ?.methods
+          .setCheckByRawKeys([0, 1, 4, 9])
       },
 
       setRowKeyByRow() {
@@ -173,8 +176,8 @@ export default defineComponent({
         .table
         ?.methods
           .setCheckByRaws(
-            [ { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
-              { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 }]
+            [ { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15, id: 9 },
+              { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25, id: 1 }]
           )
       },
 
@@ -298,6 +301,7 @@ export default defineComponent({
             onClickRow={ (row: Record<string, any>) => console.log(row)}
             selectCache
             border
+            rowKey="id"
           >
             <SaTableColumn
               selected
