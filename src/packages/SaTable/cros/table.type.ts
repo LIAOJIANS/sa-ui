@@ -11,7 +11,8 @@ export interface ColumnProp {
   type?: string,
   width?: number | string,
   align?: TableAlignEnum,
-  selected?: boolean
+  selected?: boolean,
+  sortable?: boolean
 }
 
 export type TableColumnRow = {
@@ -27,6 +28,11 @@ export enum TableAlignEnum {
   Left = 'left',
   cneter = 'center',
   right = 'right'
+}
+
+export enum SortableStatusEnum {
+  Asce = "ascending",
+  Desc = 'descending'
 }
 
 export type SpanMethods = ( row: Record<string, string>, column: any, rowIndex: number, columnIndex: number ) => number[] & {

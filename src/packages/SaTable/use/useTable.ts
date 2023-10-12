@@ -1,7 +1,7 @@
 import { typeOf } from "js-hodgepodge";
 import { CheckboxStatus } from "src/hooks";
 import { reactive, watch } from "vue";
-import { TableColumnRow } from "../cros/table.type";
+import { SortableStatusEnum, TableColumnRow } from "../cros/table.type";
 
 export function useTable(
   data: TableColumnRow[],
@@ -91,6 +91,24 @@ export function useTable(
 
   }
 
+  const handler = {
+    tableDataSortable: (
+      sortStatus: SortableStatusEnum, 
+      prop: string
+    ) => {
+      if(sortStatus === SortableStatusEnum.Asce) { // 升序
+        // @ts-ignore
+        state.tableData = state.tableData.sort((a, b) => (a.row[prop] - b.row[prop]))
+      }
+
+      if(sortStatus === SortableStatusEnum.Desc) { // 降序
+        // @ts-ignore
+        state.tableData = state.tableData.sort((a, b) => (b.row[prop] - a.row[prop]))
+      }
+
+    },
+  }
+
   const exposeMethods = {
 
     setCheckByRawKeys: (keys: any, status?: boolean) => {
@@ -141,7 +159,8 @@ export function useTable(
     state,
     methods,
     tableData: state.tableData,
-    exposeMethods
+    exposeMethods,
+    handler
   }
 
 }

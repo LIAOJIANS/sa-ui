@@ -7,7 +7,7 @@ import './saTable.scss'
 
 import { CheckboxStatus, classname, useCollect, useRefs } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
-import { SpanMethods, TabelStyle, TableColumnRow } from "./cros/table.type";
+import { ColumnProp, SpanMethods, TabelStyle, TableColumnRow } from "./cros/table.type";
 import { useTable } from "./use/useTable";
 import { typeOf } from "js-hodgepodge";
 
@@ -40,15 +40,27 @@ const SaTable = designComponent({
       tbody: HTMLElement
     })
 
-    const { methods: tableMethods, state, tableData, exposeMethods } = useTable(props.data! as any, props)
+    const { methods: tableMethods, handler: tableHandle, state, tableData, exposeMethods } = useTable(props.data! as any, props)
 
     SaTableCollect.parent()
 
     // const selects = computed(() => childs.filter(({ props: c }) => c.selected).map(({ props: c }) => c))
 
+    const sortableIndexs = computed(() => {
+      const sortables: number[] = []
+
+      ;(slots.default() as any).forEach(({ props: c }: { props: ColumnProp }, index: number) => {
+        if(!!c.sortable) {
+          sortables.push(index)
+        }
+      })
+      
+      return sortables
+    })
+
     const tableRows = computed(() => {
       return (slots.default() as any).map((row: VNode, i: number) => ({
-        rcolumnIndex: i,
+        rowIndex: i,
         props: row.props
       }))
     })
@@ -148,6 +160,8 @@ const SaTable = designComponent({
               style={props.tableStyle?.thead}
               selectAll={state.selectAll}
               onCheckAll={tableMethods.checkAll}
+              sortableIndexs={ sortableIndexs.value }
+              onSortable={ tableHandle.tableDataSortable }
             />
 
             <SaTbody

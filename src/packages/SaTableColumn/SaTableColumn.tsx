@@ -17,6 +17,7 @@ const SaTableColumn = designComponent({
     width: { type: [String, Number] },                                         // 单个单元格宽度
     align: { type: String as PropType<TableAlignEnum> },                       // 当前单元格的对齐方式
     selected: { type: Boolean },                                               // 是否开启选择表格
+    sortable: { type: Boolean },                                               // 是否开启表头排序，默认为否
   },
 
   scopeSlots: {

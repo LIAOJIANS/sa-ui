@@ -14,6 +14,7 @@ export default defineComponent({
     const $message = useMessage()
 
     const state = reactive({
+      sort: false,
       tableList1: [
         { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
         { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 },
@@ -181,6 +182,10 @@ export default defineComponent({
           )
       },
 
+      openSort() {
+        state.sort = true
+      },
+
       //@ts-ignore
       spanMethods(row, column, rowIndex, columnIndex) {
         if (rowIndex % 2 === 0) {
@@ -290,6 +295,7 @@ export default defineComponent({
           <SaButton onClick={ methods.setRowKeyByRow }>根据row设置选中状态</SaButton>
           
           <SaButton onClick={ methods.changeTableData }>选中状态缓存</SaButton>
+          <SaButton onClick={ methods.openSort }>开启sort排序</SaButton>
           <SaTable
             data={state.tableList}
             ref={ onRef.table }
@@ -320,11 +326,13 @@ export default defineComponent({
               prop="test1"
               align="left"
               width="180"
+              sortable={ state.sort }
             />
             <SaTableColumn 
               label="测试表格2"
               prop="test2"
               width="180"
+              sortable={ state.sort }
             />
             <SaTableColumn 
               label="测试表格3"
