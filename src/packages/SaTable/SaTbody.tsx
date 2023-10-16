@@ -16,7 +16,7 @@ const SaTbody = designComponent({
   setup({ props, slots }) {
 
     const table = SaTable.use.inject(null)!
-    
+
     const layoutLen = computed(() => new Array(props.layout?.trLen || 0).fill(''))
 
     const handler = {
@@ -29,11 +29,13 @@ const SaTbody = designComponent({
 
     return {
       render: () => (
+
         <tbody>
+
           {
             layoutLen.value.map((c, i) => (
-              <tr class="sa-table-column--hover" onClick={ (e) => handler.handleClick(e, i) }>
-                 { slots.default() }
+              <tr class="sa-table-column--hover" onClick={(e) => handler.handleClick(e, i)}>
+                {slots.default()}
               </tr>
             ))
           }

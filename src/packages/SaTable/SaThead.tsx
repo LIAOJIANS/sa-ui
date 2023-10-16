@@ -66,7 +66,7 @@ const SaThead = designComponent({
             props
               .thRows
               .map((c: TableColumnRow, i: number) => (
-                <th>
+                <th style={{ width: `${c.props.width}`.indexOf('px') > -1 ? c.props.width : `${c.props.width}px`, textAlign: c.props.align }}>
                   <div 
                     class={ 
                       `sa-table-item sa-table-head ${ props.sortableIndexs?.includes(i) ? ' sa-table-head--sortable' : '' } ${ !!state.sortIndexStatus[i] ? 'sa-' + state.sortIndexStatus[i] : '' }` 

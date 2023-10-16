@@ -15,6 +15,7 @@ export default defineComponent({
 
     const state = reactive({
       sort: false,
+      tableHeight: 0,
       tableList1: [
         { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
         { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 },
@@ -195,6 +196,10 @@ export default defineComponent({
             return [0, 0];
           }
         }
+      },
+
+      regularGaug() {
+        state.tableHeight = 500
       }
     }
 
@@ -296,6 +301,7 @@ export default defineComponent({
           
           <SaButton onClick={ methods.changeTableData }>选中状态缓存</SaButton>
           <SaButton onClick={ methods.openSort }>开启sort排序</SaButton>
+          <SaButton onClick={ methods.regularGaug }>固定表头</SaButton>
           <SaTable
             data={state.tableList}
             ref={ onRef.table }
@@ -307,6 +313,7 @@ export default defineComponent({
             onClickRow={ (row: Record<string, any>) => console.log(row)}
             selectCache
             border
+            maxHeight={ state.tableHeight }
             rowKey="id"
           >
             <SaTableColumn

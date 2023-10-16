@@ -5,7 +5,7 @@ import SaTbody from './SaTbody'
 import SaThead from './SaThead'
 import './saTable.scss'
 
-import { CheckboxStatus, classname, useCollect, useRefs } from "src/hooks";
+import { CheckboxStatus, classname, unit, useCollect, useRefs, useStyles } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
 import { ColumnProp, SpanMethods, TabelStyle, TableColumnRow } from "./cros/table.type";
 import { useTable } from "./use/useTable";
@@ -21,6 +21,8 @@ const SaTable = designComponent({
     rowKey: { type: String },                                                               // 没有默认绑定自定义key（_id）
     spanMethods: { type: Function as PropType<SpanMethods> },                               // 用于合并表格行列单元格
     selectCache: { type: Boolean },                                                         // 只有当表格是select状态下才适用，用于是否缓存选择之后的数据
+    maxHeight: { type: [ Number, String ] },                                                // 表格table最大高度
+    minHeight: { type: [ Number, String ] }                                                 // 表格table最小高度
   },
 
   slots: ['default'],
@@ -64,6 +66,22 @@ const SaTable = designComponent({
         props: row.props
       }))
     })
+    
+    const stayles = useStyles(style => {
+
+      if(!!props.minHeight || !!props.maxHeight) {
+        style.overflow = 'auto'
+      }
+      
+      if (!!props.maxHeight) {
+        style.maxHeight = unit(props.maxHeight)
+      }
+
+      if (!!props.minHeight) {
+        style.minHeight = unit(props.minHeight)
+      }
+    })
+
 
     const tableClasses = computed(() => classname([
       'sa-table',
@@ -163,19 +181,24 @@ const SaTable = designComponent({
               sortableIndexs={ sortableIndexs.value }
               onSortable={ tableHandle.tableDataSortable }
             />
-
-            <SaTbody
-              ref={onRef.tbody}
-              class="sa-tbody"
-              style={props.tableStyle?.tbody}
-              layout={{
-                trLen: props.data?.length,
-                tdLen: tableRows.value.length
-              }}
-            >
-              {slots.default()}
-            </SaTbody>
+            
           </table>
+          
+          <div style={{ ...stayles.value }}>
+            <table>
+              <SaTbody
+                ref={onRef.tbody}
+                class="sa-tbody"
+                style={props.tableStyle?.tbody}
+                layout={{
+                  trLen: props.data?.length,
+                  tdLen: tableRows.value.length
+                }}
+              >
+                {slots.default()}
+              </SaTbody>
+            </table>
+          </div>
         </div>
       )
     }
