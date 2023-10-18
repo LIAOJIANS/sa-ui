@@ -1,4 +1,9 @@
+
+
 @include theme {
+  $click_bgc:#DFE7FA;
+  $hover_bgc: rgba($color: $border, $alpha: 0.5);
+
   .sa-table {
     position: relative;
 
@@ -17,7 +22,7 @@
         padding: 16px 0;
         box-sizing: border-box;
 
-        border-bottom: 1px solid $border;
+        border-bottom: 1px solid $hover_bgc;
       }
     }
 
@@ -85,12 +90,12 @@
   }
 
   .sa-table-border {
-    border-top: 1px solid $border;
-    border-left: 1px solid $border;
+    border-top: 1px solid $hover_bgc;
+    border-left: 1px solid $hover_bgc;
 
    th,
    td {
-      border-right: 1px solid $border;
+      border-right: 1px solid $hover_bgc;
     }
   }
 
@@ -102,7 +107,11 @@
     // box-shadow: 0 0 8px 0 rgba(232,237,250, .6), 0 2px 4px 0 rgba(232,237,250, .5);
 
     &:hover {
-      background-color: $border;
+      background-color: $hover_bgc;
     }
+  }
+
+  .sa-table-column--click {
+    background-color: rgba($color: $click_bgc, $alpha: .8);
   }
 }

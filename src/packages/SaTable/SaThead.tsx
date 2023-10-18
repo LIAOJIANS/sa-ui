@@ -13,7 +13,7 @@ const SaThead = designComponent({
   props: {
     thRows: { type: Array as PropType<TableColumnRow[]>, default: [] },                 // row 数组
     selectAll: { type: String as PropType<CheckboxStatus> },                            // 是否全局选中
-    sortableIndexs: { type: Array as PropType<number[]> }                               // 开启排序表头索引
+    funPropIndexs: { type: Object as PropType<Record<string, number[]>> }               // 开启排序表头索引
   },
 
   emits: {
@@ -29,9 +29,12 @@ const SaThead = designComponent({
       sortIndexStatus: Record<string, SortableStatusEnum | null>
     })
 
+    const sortableIndexs = computed(() => props.funPropIndexs!.sortableIndexs)
+    const fixedes = computed(() => props.funPropIndexs!.fixedes)
+
     const handler = {
       clickSort: (e: MouseEvent, index: number, prop: string) => {
-        if(!props.sortableIndexs?.includes(index)) {
+        if(!sortableIndexs.value?.includes(index)) {
           return
         }
 
@@ -51,11 +54,11 @@ const SaThead = designComponent({
         )
       }
     }
+    
+    watch(() => sortableIndexs.value, () => {
 
-    watch(() => props.sortableIndexs, () => {
-
-      if(props.sortableIndexs && props.sortableIndexs.length > 0) {
-        props.sortableIndexs.forEach(index => ({ [ `${index}`]: null }))
+      if(sortableIndexs.value && sortableIndexs.value.length > 0) {
+        sortableIndexs.value.forEach(index => ({ [ `${index}`]: null }))
       }
     }, { deep: true, immediate: true })
 
@@ -66,10 +69,12 @@ const SaThead = designComponent({
             props
               .thRows
               .map((c: TableColumnRow, i: number) => (
-                <th style={{ width: `${c.props.width}`.indexOf('px') > -1 ? c.props.width : `${c.props.width}px`, textAlign: c.props.align }}>
+                <th style={{ 
+                  width: `${c.props.width}`.indexOf('px') > -1 ? c.props.width : `${c.props.width}px`, textAlign: c.props.align
+                }}>
                   <div 
                     class={ 
-                      `sa-table-item sa-table-head ${ props.sortableIndexs?.includes(i) ? ' sa-table-head--sortable' : '' } ${ !!state.sortIndexStatus[i] ? 'sa-' + state.sortIndexStatus[i] : '' }` 
+                      `sa-table-item sa-table-head ${ sortableIndexs.value?.includes(i) ? ' sa-table-head--sortable' : '' } ${ !!state.sortIndexStatus[i] ? 'sa-' + state.sortIndexStatus[i] : '' }` 
                     } 
                     style={{ textAlign: c.props.align }}
                     onClick={ e => handler.clickSort(e, i, c.props.prop) }
@@ -80,7 +85,7 @@ const SaThead = designComponent({
                       ) : <>
                         { c.props.label }
                         {
-                          props.sortableIndexs?.includes(i) && (
+                          sortableIndexs.value?.includes(i) && (
                             <span class="caret-wrapper">
                               <SaIcon icon="el-icon-caret-top" size={ 16 } class="sort-caret ascending"></SaIcon>
                               <SaIcon icon="el-icon-caret-bottom" size={ 16 } class="sort-caret descending"></SaIcon>

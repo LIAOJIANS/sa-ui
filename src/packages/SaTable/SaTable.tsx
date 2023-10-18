@@ -22,7 +22,8 @@ const SaTable = designComponent({
     spanMethods: { type: Function as PropType<SpanMethods> },                               // 用于合并表格行列单元格
     selectCache: { type: Boolean },                                                         // 只有当表格是select状态下才适用，用于是否缓存选择之后的数据
     maxHeight: { type: [ Number, String ] },                                                // 表格table最大高度
-    minHeight: { type: [ Number, String ] }                                                 // 表格table最小高度
+    minHeight: { type: [ Number, String ] },                                                // 表格table最小高度
+    highlightCurrentRow: { type: Boolean },                                                 // 高亮当前点击行
   },
 
   slots: ['default'],
@@ -48,16 +49,25 @@ const SaTable = designComponent({
 
     // const selects = computed(() => childs.filter(({ props: c }) => c.selected).map(({ props: c }) => c))
 
-    const sortableIndexs = computed(() => {
+    const funPropIndexs = computed(() => {
       const sortables: number[] = []
+      
+      const fixedes: number[] = []
 
       ;(slots.default() as any).forEach(({ props: c }: { props: ColumnProp }, index: number) => {
         if(!!c.sortable) {
           sortables.push(index)
         }
+
+        if(!!c.fixed) {
+          fixedes.push(index)
+        }
       })
       
-      return sortables
+      return {
+        sortables,
+        fixedes
+      }
     })
 
     const tableRows = computed(() => {
@@ -115,7 +125,7 @@ const SaTable = designComponent({
 
       setCheckByRawKeys: (keys: any, status?: boolean) => exposeMethods.setCheckByRawKeys(keys, status),
 
-      setCheckByRaws: (raw: any, status?: boolean) => { // 传参类型---数组则批量添加，单个子直接追加
+      setCheckByRaws: (row: any, status?: boolean) => { // 传参类型---数组则批量添加，单个子直接追加
 
         if (!props.rowKey) {
           return console.error('Must be bound RawKey!!!')
@@ -123,21 +133,46 @@ const SaTable = designComponent({
 
         const key = tableMethods.getRawKey()
 
-        if (typeOf(raw) !== 'array') {
-          raw = [raw]
+        if (typeOf(row) !== 'array') {
+          row = [row]
         }
 
         methods
           .setCheckByRawKeys(
-            raw.map((c: any) => c[key]),
+            row.map((c: any) => c[key]),
             status
           )
       },
+
+      setCurrentRow: (row: any) => {
+        if (!props.rowKey) {
+          return console.error('Must be bound RawKey!!!')
+        }
+
+        if(typeOf(row) !== 'object') {
+          return console.error('Please pass in the correct row!!!')
+        }
+
+        if(!props.highlightCurrentRow) {
+          return console.error('Please enable the highlightCurrentRow property!!!')
+        }
+
+        const key = tableMethods.getRawKey()
+
+        const index = state.tableData.findIndex(c => c['_id'] === row[key])
+        
+        tableMethods
+          .setCurrentRow(index)
+          
+      }
     }
 
     const handler = {
       handleRowClick: (index: number) => {
         const row = state.tableData[index]
+
+        tableMethods
+          .setCurrentRow(index)
 
         emit.onClickRow(toRaw(row))
       }
@@ -178,7 +213,7 @@ const SaTable = designComponent({
               style={props.tableStyle?.thead}
               selectAll={state.selectAll}
               onCheckAll={tableMethods.checkAll}
-              sortableIndexs={ sortableIndexs.value }
+              funPropIndexs={ funPropIndexs.value }
               onSortable={ tableHandle.tableDataSortable }
             />
             
@@ -190,6 +225,7 @@ const SaTable = designComponent({
                 ref={onRef.tbody}
                 class="sa-tbody"
                 style={props.tableStyle?.tbody}
+                clickIndex={ state.clickIndex }
                 layout={{
                   trLen: props.data?.length,
                   tdLen: tableRows.value.length

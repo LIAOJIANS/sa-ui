@@ -16,6 +16,7 @@ export default defineComponent({
     const state = reactive({
       sort: false,
       tableHeight: 0,
+      highlightCurrentRow: false,
       tableList1: [
         { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
         { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 },
@@ -302,6 +303,8 @@ export default defineComponent({
           <SaButton onClick={ methods.changeTableData }>选中状态缓存</SaButton>
           <SaButton onClick={ methods.openSort }>开启sort排序</SaButton>
           <SaButton onClick={ methods.regularGaug }>固定表头</SaButton>
+          <SaButton onClick={ () => state.highlightCurrentRow = true }>高亮点击行</SaButton>
+          <SaButton onClick={ () => refs.table?.methods.setCurrentRow({ test1: 21, test2: 22, test3: 23,test4: 24,test5: 25, id: 1 }) }>根据row设置高亮状态</SaButton>
           <SaTable
             data={state.tableList}
             ref={ onRef.table }
@@ -315,10 +318,12 @@ export default defineComponent({
             border
             maxHeight={ state.tableHeight }
             rowKey="id"
+            highlightCurrentRow={ state.highlightCurrentRow }
           >
             <SaTableColumn
               selected
               width="50"
+              fixed="left"
             />
 
             <SaTableColumn

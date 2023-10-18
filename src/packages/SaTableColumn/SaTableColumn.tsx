@@ -2,7 +2,7 @@ import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { PropType, computed, onMounted, reactive, watch, toRaw } from "vue";
 
 import { CheckboxStatus, getElement, useRefs, useStyles } from "src/hooks";
-import { TableAlignEnum, TableColumnRow } from "../SaTable/cros/table.type";
+import { FixedStatusEnum, TableAlignEnum, TableColumnRow } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
 import { typeOf } from "js-hodgepodge";
@@ -18,6 +18,7 @@ const SaTableColumn = designComponent({
     align: { type: String as PropType<TableAlignEnum> },                       // 当前单元格的对齐方式
     selected: { type: Boolean },                                               // 是否开启选择表格
     sortable: { type: Boolean },                                               // 是否开启表头排序，默认为否
+    fixed: { type: String as PropType<FixedStatusEnum> },                      // 是否固定列,必须明确fixed的位置
   },
 
   scopeSlots: {

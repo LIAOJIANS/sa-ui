@@ -17,11 +17,13 @@ export function useTable(
   let state = reactive({
     checks: [],
     selectAll: CheckboxStatus.uncheck,
-    tableData: []
+    tableData: [],
+    clickIndex: -1
   } as {
     checks: any[],
     selectAll: CheckboxStatus,
-    tableData: TableColumnRow[]
+    tableData: TableColumnRow[],
+    clickIndex: number
   })
   
   const methods = {
@@ -89,6 +91,7 @@ export function useTable(
 
     randomId: () => Math.random().toString(16).slice(2, 40),
 
+    setCurrentRow: (index: number) => state.clickIndex = index
   }
 
   const handler = {
