@@ -201,6 +201,7 @@ const SaTable = designComponent({
         methods,
         tableData,
         checks: state.checks,
+        state,
         handler
       },
 

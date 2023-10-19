@@ -18,12 +18,14 @@ export function useTable(
     checks: [],
     selectAll: CheckboxStatus.uncheck,
     tableData: [],
-    clickIndex: -1
+    clickIndex: -1,
+    sortStatus: null
   } as {
     checks: any[],
     selectAll: CheckboxStatus,
     tableData: TableColumnRow[],
-    clickIndex: number
+    clickIndex: number,
+    sortStatus: SortableStatusEnum | null
   })
   
   const methods = {
@@ -82,7 +84,8 @@ export function useTable(
         _id: rowKey ? (c as any)[rowKey!] : methods.randomId() + methods.randomId(),
         columnIndex: i + 1,
         $index: i,
-        props: {}
+        props: {},
+        check: false
       }))
       
     },
@@ -99,6 +102,10 @@ export function useTable(
       sortStatus: SortableStatusEnum, 
       prop: string
     ) => {
+      if(state.checks.length > 0) {
+        state.sortStatus = sortStatus // 为了触发column更新check数据
+      }
+      
       if(sortStatus === SortableStatusEnum.Asce) { // 升序
         // @ts-ignore
         state.tableData = state.tableData.sort((a, b) => (a.row[prop] - b.row[prop]))

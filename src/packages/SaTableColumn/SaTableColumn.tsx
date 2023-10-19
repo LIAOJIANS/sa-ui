@@ -123,10 +123,10 @@ const SaTableColumn = designComponent({
       }
     }
 
-    watch(() => group.checks, () => {
-
+    watch(() => [group.checks, group.state.sortStatus], () => {
+      
       internalProps.check = group.checks.includes((tableRow.value as any)['_id'])
-    }, { deep: true })
+    }, { deep: true, immediate: true })
 
     onMounted(() => { // 更新内部data的数据状态
       group.tableData.splice(tableRowIndex.value!, 1, tableRow.value as TableColumnRow)

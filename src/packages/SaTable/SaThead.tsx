@@ -6,7 +6,6 @@ import SaCheckbox from "../SaCheckbox/SaCheckbox";
 import SaIcon from '../SaIcon/SaIcon'
 import { SortableStatusEnum, TableColumnRow } from "./cros/table.type";
 
-
 const SaThead = designComponent({
   name: 'sa-thead',
 
@@ -29,7 +28,7 @@ const SaThead = designComponent({
       sortIndexStatus: Record<string, SortableStatusEnum | null>
     })
 
-    const sortableIndexs = computed(() => props.funPropIndexs!.sortableIndexs)
+    const sortableIndexs = computed(() => props.funPropIndexs!.sortables)
     const fixedes = computed(() => props.funPropIndexs!.fixedes)
 
     const handler = {
