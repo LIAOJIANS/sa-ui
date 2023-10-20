@@ -43,7 +43,7 @@ const SaTbody = designComponent({
           {
             layoutLen.value.map((c, i) => (
               <tr class={
-                `sa-table-column--hover ${ clickIndex.value === i ? 'sa-table-column--click' : '' }`
+                `sa-table-column--hover ${ clickIndex.value === i ? 'sa-table-column--click' : '' } ${ (i % 2 !== 0 && table.props.zebra) ? 'sa-table-cell--zebra' : '' }`
               } onClick={(e) => handler.handleClick(e, i)}>
                 {slots.default()}
               </tr>

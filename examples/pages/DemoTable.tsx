@@ -319,6 +319,7 @@ export default defineComponent({
             maxHeight={ state.tableHeight }
             rowKey="id"
             highlightCurrentRow={ state.highlightCurrentRow }
+            zebra
           >
             <SaTableColumn
               selected

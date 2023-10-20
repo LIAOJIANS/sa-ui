@@ -24,6 +24,7 @@ const SaTable = designComponent({
     maxHeight: { type: [ Number, String ] },                                                // 表格table最大高度
     minHeight: { type: [ Number, String ] },                                                // 表格table最小高度
     highlightCurrentRow: { type: Boolean },                                                 // 高亮当前点击行
+    zebra: { type: Boolean },                                                               // 开启偶数斑马行
   },
 
   slots: ['default'],

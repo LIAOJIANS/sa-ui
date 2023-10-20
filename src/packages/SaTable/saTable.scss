@@ -99,8 +99,8 @@
     }
   }
 
-  .sa-table-cell {
-  
+  .sa-table-cell--zebra {
+    background-color: rgba($color: #D3E3FC, $alpha: .3);
   }
 
   .sa-table-column--hover {
