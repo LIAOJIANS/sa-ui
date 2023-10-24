@@ -15,6 +15,7 @@ export default defineComponent({
 
     const state = reactive({
       sort: false,
+      zebra: false,
       tableHeight: 0,
       highlightCurrentRow: false,
       tableList1: [
@@ -299,12 +300,13 @@ export default defineComponent({
           <SaButton onClick={ methods.getCheckByKeys }>获取选中Key</SaButton>
           <SaButton onClick={ methods.setRowKeyByKey }>根据rowKey设置选中状态</SaButton>
           <SaButton onClick={ methods.setRowKeyByRow }>根据row设置选中状态</SaButton>
-          
+          <SaButton onClick={ () => state.highlightCurrentRow = true }>高亮点击行</SaButton>
+          <SaButton onClick={ () => refs.table?.methods.setCurrentRow({ test1: 21, test2: 22, test3: 23,test4: 24,test5: 25, id: 1 }) }>根据row设置高亮状态</SaButton> 
+          <p style={{ padding: '5px 0', margin: 0 }}></p>
           <SaButton onClick={ methods.changeTableData }>选中状态缓存</SaButton>
           <SaButton onClick={ methods.openSort }>开启sort排序</SaButton>
           <SaButton onClick={ methods.regularGaug }>固定表头</SaButton>
-          <SaButton onClick={ () => state.highlightCurrentRow = true }>高亮点击行</SaButton>
-          <SaButton onClick={ () => refs.table?.methods.setCurrentRow({ test1: 21, test2: 22, test3: 23,test4: 24,test5: 25, id: 1 }) }>根据row设置高亮状态</SaButton>
+          <SaButton onClick={ () => state.zebra = true }>开启斑马行</SaButton>
           <SaTable
             data={state.tableList}
             ref={ onRef.table }
@@ -319,7 +321,7 @@ export default defineComponent({
             maxHeight={ state.tableHeight }
             rowKey="id"
             highlightCurrentRow={ state.highlightCurrentRow }
-            zebra
+            zebra={ state.zebra }
           >
             <SaTableColumn
               selected

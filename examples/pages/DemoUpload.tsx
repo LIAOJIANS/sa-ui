@@ -10,12 +10,12 @@ export default defineComponent({
       fileList: [{
         name: "logo.png",
         uid: 1680769149990,
-        url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
+        url: "http://saui.liaojs.cn/logo.ico"
       }],
 
       initTimeText1: `
         <SaUpload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://saui.liaojs.cn"
           class="upload-demo"
           multiple
           v-slots={{ uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} /> }}
@@ -28,14 +28,14 @@ export default defineComponent({
           fileList: [{
             name: "logo.png",
             uid: 1680769149990,
-            url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
+            url: "http://saui.liaojs.cn/logo.ico"
           }],
         })
 
         <SaUpload
           multiple
           listType="image"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://saui.liaojs.cn"
           fileList={state.fileList}
           beforeRomve={ (file: any) => file.name="111" }
           v-slots={{ tip: () => (
@@ -50,7 +50,7 @@ export default defineComponent({
           fileList: [{
             name: "logo.png",
             uid: 1680769149990,
-            url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
+            url: "http://saui.liaojs.cn/logo.ico"
           }],
         })
 
@@ -72,7 +72,7 @@ export default defineComponent({
 
       initTimeText4: `
         <SaUpload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://saui.liaojs.cn"
           class="upload-demo"
           drag
           v-slots={{ tip: () => (
@@ -99,7 +99,7 @@ export default defineComponent({
           {/* @ts-ignore */}
           <div slot="title">
             <SaUpload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://saui.liaojs.cn"
               class="upload-demo"
               multiple
               v-slots={{ uploadLoad: ({ click }: { click: any }) => <SaButton label="上传" onClick={click} /> }}
@@ -119,7 +119,7 @@ export default defineComponent({
             <SaUpload
               multiple
               listType="image"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://saui.liaojs.cn"
               fileList={state.fileList}
               beforeRomve={ (file: any) => file.name="111" }
               v-slots={{ tip: () => (
@@ -162,7 +162,7 @@ export default defineComponent({
           {/* @ts-ignore */}
           <div slot="title">
             <SaUpload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://saui.liaojs.cn"
               class="upload-demo"
               drag
               v-slots={{ tip: () => (
