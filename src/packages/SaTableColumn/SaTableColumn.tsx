@@ -1,9 +1,10 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { PropType, computed, onMounted, reactive, watch, toRaw } from "vue";
+import { PropType, computed, onMounted, reactive, watch, toRaw, createApp, h } from "vue";
 
 import { CheckboxStatus, getElement, useRefs, useStyles } from "src/hooks";
 import { FixedStatusEnum, TableAlignEnum, TableColumnRow } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
+import SaIcon from '../SaIcon/SaIcon'
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
 import { typeOf } from "js-hodgepodge";
 
@@ -22,7 +23,8 @@ const SaTableColumn = designComponent({
   },
 
   scopeSlots: {
-    default: (row: any) => { }
+    default: (row: any) => { },
+    expand: (row: any) => {}
   },
 
   setup({ props, scopeSlots }) {
@@ -30,7 +32,7 @@ const SaTableColumn = designComponent({
       tableColumn: HTMLElement
     })
 
-    let internalProps = reactive({ ...props, check: false } as any)
+    let internalProps = reactive({ ...props, check: false, expand: '0' } as any)
 
     const state = reactive({
       rowspan: 1,
@@ -86,6 +88,16 @@ const SaTableColumn = designComponent({
       return style
     })
 
+    const expendStyle = useStyles(style => {
+
+      style.cursor = 'pointer'
+
+      if(internalProps.expand === '2') {
+        style.transform = 'rotate(90deg)'
+      }
+
+    })
+
     const methods = {
       getColumnIndex: (
         childrens: any,
@@ -120,6 +132,48 @@ const SaTableColumn = designComponent({
           rowspan,
           colspan
         }
+      },
+
+      addExpandTr: () => { // 获取tbody虚拟dom 根据当前索引往下一位插入tr
+        
+        const tr = document.createElement('tr')
+
+        // @ts-ignore
+        const content = scopeSlots.expand(tableRow.value)![0]
+        
+        const app = createApp({
+          render() {
+            return h(
+              'div',
+              null,
+              content
+            )
+          }
+        })
+        
+        app.mount(tr) // 挂载并转为真实Dom
+
+        const borderDom = refs.tableColumn?.parentElement!.nextSibling
+
+        const tobdy = getElement(group.refs.tbody)
+        if(borderDom) {
+          
+          tobdy!.insertBefore(
+            tr,
+            borderDom!
+          )
+        }
+      },
+
+      delExpandTr: () => refs.tableColumn?.parentElement!.nextSibling?.remove()
+    }
+
+    const handler = {
+      handleOpenTableColl: (e: MouseEvent) => {
+        e.stopPropagation()
+
+        internalProps.expand = (internalProps.expand === '0' || internalProps.expand === '1') ? '2' : '1'
+        internalProps.expand === '2' ? methods.addExpandTr() : methods.delExpandTr()
       }
     }
 
@@ -165,8 +219,21 @@ const SaTableColumn = designComponent({
                     />
                   ) : (
                     scopeSlots.default(tableRow.value,
-                      <>{(internalProps.type && internalProps.type === 'index') ?
-                        tableRowIndex.value! + 1 : (tableRow.value as any).row[internalProps.prop!]}</>
+                      <>
+                        {
+                          (internalProps.type && internalProps.type === 'index') 
+                          ? tableRowIndex.value! + 1 
+                          : internalProps.type === 'expand' 
+                          ? <SaIcon 
+                              icon="el-icon-caret-right" 
+                              style={{ ...expendStyle.value }}
+                              class="sa-table-item--expand"
+                              size={ 22 }
+                              onClick={ (e: MouseEvent) => handler.handleOpenTableColl(e) } 
+                            />
+                          : (tableRow.value as any).row[internalProps.prop!]
+                        }
+                      </>
                     )
                   )
                 }

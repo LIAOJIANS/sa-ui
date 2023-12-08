@@ -323,6 +323,18 @@ export default defineComponent({
             highlightCurrentRow={ state.highlightCurrentRow }
             zebra={ state.zebra }
           >
+             <SaTableColumn
+              width="50"
+              type="expand"
+              v-slots={{
+                expand: () => <div>1
+                  <p>2
+                    <span>3</span>
+                  </p>
+                </div>
+              }}
+            />
+
             <SaTableColumn
               selected
               width="50"

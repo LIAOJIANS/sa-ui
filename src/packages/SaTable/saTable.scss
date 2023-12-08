@@ -31,6 +31,10 @@
 
       color: #909399;
       font-size: 14px;
+
+      .sa-table-item--expand {
+        color: $colorPrimary
+      }
     }
 
     .sa-table-head {

@@ -83,7 +83,7 @@ export const SaCollapse = designComponent({
     return {
       render: () => <div class={classes.value}>
         {
-          (slots.head.isExist() || props.title) &&
+          
           <div class={'sa-collapse-title ' + (props.customClass || '')} >
             <div style={{ width: '100%' }} onClick={handler.onClickTitle}>{slots.head((
               <>
