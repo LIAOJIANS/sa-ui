@@ -38,6 +38,8 @@ import SaTree from './SaTree/SaTree'
 import SaUpload from './SaUpload/Saupload'
 import SaTable from './SaTable/SaTable'
 import SaTableColumn from './SaTableColumn/SaTableColumn'
+import SaTabs from './SaTabs/SaTabs'
+import SaTabPane from './SaTabPane/SaTabPane'
 
 import { useMessage } from './SaMessage/index'
 
@@ -85,6 +87,8 @@ export {
   SaUpload,
   SaTable,
   SaTableColumn,
+  SaTabs,
+  SaTabPane,
 
   useMessage,
   clipboard

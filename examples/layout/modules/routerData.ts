@@ -55,6 +55,7 @@ const routes: IRoutesData[] = [
       { name: 'TimeLine', title: '时间线', page: '/DemoTimeLine.tsx', complete: true },
       { name: 'Tree', title: '树形', page: '/DemoTree.tsx', complete: true },
       { name: 'Table', title: '表格', page: '/DemoTable.tsx', complete: true },
+      { name: 'Tabs', title: '标签页', page: '/DemoTabs.tsx', complete: true },
       { name: 'Upload', title: '上传组件', page: '/DemoUpload.tsx', complete: true },
     ]
   },

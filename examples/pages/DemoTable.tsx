@@ -326,10 +326,11 @@ export default defineComponent({
              <SaTableColumn
               width="50"
               type="expand"
+              fixed="left"
               v-slots={{
-                expand: () => <div>1
-                  <p>2
-                    <span>3</span>
+                expand: ({ row }: any) => <div>1
+                  <p>
+                    <span>test1：{ row.test1 }</span>
                   </p>
                 </div>
               }}
@@ -338,7 +339,6 @@ export default defineComponent({
             <SaTableColumn
               selected
               width="50"
-              fixed="left"
             />
 
             <SaTableColumn
@@ -375,6 +375,7 @@ export default defineComponent({
               label="测试表格5"
               prop="test5"
               align="right"
+              fixed="right"
               v-slots={{
                 default: ({ $index }: { $index: number }) => <>{ $index }</>
               }}

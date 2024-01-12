@@ -1,12 +1,14 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { PropType, computed, onMounted, reactive, watch, toRaw, createApp, h } from "vue";
 
-import { CheckboxStatus, getElement, useRefs, useStyles } from "src/hooks";
+import { CheckboxStatus, classname, getElement, useRefs, useStyles } from "src/hooks";
 import { FixedStatusEnum, TableAlignEnum, TableColumnRow } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
 import SaIcon from '../SaIcon/SaIcon'
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
 import { typeOf } from "js-hodgepodge";
+
+// 下午攻克fixed 列固定
 
 const SaTableColumn = designComponent({
   name: 'sa-table-column',
@@ -74,6 +76,12 @@ const SaTableColumn = designComponent({
 
       return methods.getColumnIndex(trs, refs.tableColumn)
     })
+
+    const columnClasses = computed(() => classname([
+      {
+        'sa-table-cell--fiexd': !!props.fixed 
+      }
+    ]))
 
     const columStyle = useStyles(style => {
 
@@ -168,7 +176,7 @@ const SaTableColumn = designComponent({
       delExpandTr: () => refs.tableColumn?.parentElement!.nextSibling?.remove()
     }
 
-    const handler = {
+    const handler = { 
       handleOpenTableColl: (e: MouseEvent) => {
         e.stopPropagation()
 
@@ -207,6 +215,7 @@ const SaTableColumn = designComponent({
               style={{ ...columStyle.value }}
               colspan={state.colspan}
               rowspan={state.rowspan}
+              class={ columnClasses.value }
             >
               <div class="sa-table-item">
                 {
