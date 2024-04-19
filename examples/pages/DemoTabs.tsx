@@ -12,7 +12,7 @@ export default defineComponent({
     }
 
     const state = reactive({
-      panesValue: 'button',
+      panesValue: 'Button',
 
       data1: [
         {
@@ -67,33 +67,26 @@ export default defineComponent({
       ],
 
       tableList1: [
-        { test1: 11, test2: 12, test3: 13,test4: 14,test5: 15 },
-        { test1: 21, test2: 22, test3: 23,test4: 24,test5: 25 },
-        { test1: 31, test2: 32, test3: 33,test4: 34,test5: 35 },
-        { test1: 41, test2: 42, test3: 43,test4: 44,test5: 45 },
-        { test1: 51, test2: 52, test3: 53,test4: 54,test5: 55 },
+        { test1: 11, test2: 12, test3: 13, test4: 14, test5: 15 },
+        { test1: 21, test2: 22, test3: 23, test4: 24, test5: 25 },
+        { test1: 31, test2: 32, test3: 33, test4: 34, test5: 35 },
+        { test1: 41, test2: 42, test3: 43, test4: 44, test5: 45 },
+        { test1: 51, test2: 52, test3: 53, test4: 54, test5: 55 },
       ],
-
-      panes: [
-        { name: 'Tab' },
-        { name: 'Tab' },
-        { name: 'Tab' },
-        { name: 'Tab' }
-      ]
     })
     return () => <div>
       <SaTabs v-model={state.panesValue} onChange={handler.handlePanesChange}>
-        <SaTabPane label="SaButton" paneKey="button">
+        <SaTabPane label="SaButton按钮" paneKey="Button">
           <SaButton>Button</SaButton>
         </SaTabPane>
 
-        <SaTabPane label="SaRadio" paneKey="Radio">
+        <SaTabPane label="SaRadio单选" paneKey="Radio">
           <SaRadio>SaRadio</SaRadio>
         </SaTabPane>
 
-        <SaTabPane label="SaTree" paneKey="Tree">
+        <SaTabPane label="SaTree树" paneKey="Tree">
           <SaTree
-            data={ state.data1 }
+            data={state.data1}
             props={{
               label: 'title',
               childrens: 'data'
@@ -103,38 +96,51 @@ export default defineComponent({
           />
         </SaTabPane>
 
-        <SaTabPane label="SaTable" paneKey="table">
+        <SaTabPane label="SaTable表格" paneKey="Table">
           <SaTable
             data={state.tableList1}
             border
           >
-            <SaTableColumn 
+            <SaTableColumn
               label="测试表格1"
               prop="test1"
               width="180"
             />
-            <SaTableColumn 
+            <SaTableColumn
               label="测试表格2"
               prop="test2"
               width="180"
             />
-            <SaTableColumn 
+            <SaTableColumn
               label="测试表格3"
               prop="test3"
               width="180"
             />
-            <SaTableColumn 
+            <SaTableColumn
               label="测试表格4"
               prop="test4"
               width="180"
             />
-            <SaTableColumn 
+            <SaTableColumn
               label="测试表格5"
               prop="test5"
             >
             </SaTableColumn>
           </SaTable>
         </SaTabPane>
+      </SaTabs>
+
+
+      Card
+      <SaTabs v-model={state.panesValue} type="card">
+        <SaTabPane label="SaButton按钮" paneKey="Button">
+          <SaButton>Button</SaButton>
+        </SaTabPane>
+
+        <SaTabPane label="SaRadio单选" paneKey="Radio">
+          <SaRadio>SaRadio</SaRadio>
+        </SaTabPane>
+
       </SaTabs>
     </div>
   }

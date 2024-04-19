@@ -35,7 +35,7 @@ export const SaTabPane = designComponent({
 
     return {
       render: () => (
-        <div class={ classes.value } onClick={ handler.handleClickPane }>
+        <div class={ classes.value } onClick={ handler.handleClickPane } data-pane={ props.paneKey }>
           { props.label }
         </div>
       )
