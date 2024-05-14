@@ -33,6 +33,7 @@
 
       .sa-scroll-content {
         display: inline-block;
+        vertical-align: top;
 
         ::-webkit-scrollbar {
           background: #f1f1f1;
@@ -121,6 +122,14 @@
 }
 
 .sa-auto-scroll-indicator-vertical {
+  position: absolute;
+  left: 0;
+  right: 0;
+  opacity: 0.1;
+  height: 20px;
+  pointer-events: auto;
+  z-index: 100;
+
   &.sa-auto-scroll-indicator-start {
     background: linear-gradient(to top, rgba(255, 255, 255, 0), #ddd);
   }
@@ -131,6 +140,14 @@
 }
 
 .sa-auto-scroll-indicator-horizontal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0.1;
+  width: 20px;
+  pointer-events: auto;
+  z-index: 100;
+  
   &.sa-auto-scroll-indicator-start {
     background: linear-gradient(to left, rgba(255, 255, 255, 0), #ddd);
   }

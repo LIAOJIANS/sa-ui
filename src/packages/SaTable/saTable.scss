@@ -7,9 +7,18 @@
 
     width: 100%;
 
+    .sa-table-scroll {
+      width: calc(100% + 17px);
+      overflow: scroll;
+      overflow-y: unset;
+      display: inline-block;
+    }
+
     table {
-      width: 100%;
+      // width: 3000px;
       border-collapse: collapse;
+      overflow-x: auto; 
+      min-width: 100%;
 
       > thead {
         text-align: left;
@@ -105,19 +114,69 @@
     }
   }
 
+  .sa-table-cell {
+    @include alginMixin(table)
+  }
+
   .sa-table-cell--zebra {
     background-color: rgba($color: #D3E3FC, $alpha: .3);
   }
 
-  .sa-table-cell--fiexd {
-    position: sticky;
+  .sa-table-cell--fixed {
+    position: sticky; // sticky
+    z-index: 3;
+
+    background-color: #fff;
+  }
+
+  .sa-cell-last-fixed-left, 
+  .sa-cell-first-fixed-right {
+
+    $inset-size: 3px;
+    
+    &:before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: $inset-size;
+      pointer-events: none;
+      content: '' !important;
+      z-index: 4;
+      background-color: transparent;
+
+      left: initial;
+      right: initial;
+      transform: none;
+    }
+
+    &.sa-cell-last-fixed-left {
+      &:before {
+        right: 0;
+        box-shadow: inset $inset-size 0 $inset-size -#{$inset-size} plv(gray-5);
+      }
+    }
+
+    &.sa-cell-first-fixed-right {
+      &:before {
+        left: 0;
+        box-shadow: inset -#{$inset-size} 0 $inset-size -#{$inset-size} plv(gray-5);
+      }
+    }
+  }
+
+  .sa-table-cell--fixed-left {
+    left: 0;
+  }
+
+  .sa-table-cell--fixed-right {
+    right: 0;
   }
 
   .sa-table-column--hover {
     // box-shadow: 0 0 8px 0 rgba(232,237,250, .6), 0 2px 4px 0 rgba(232,237,250, .5);
 
     &:hover {
-      background-color: $hover_bgc;
+      background-color: $hover_bgc!important;
     }
   }
 

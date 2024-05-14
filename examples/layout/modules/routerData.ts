@@ -28,6 +28,7 @@ const routes: IRoutesData[] = [
   {
     name: '组件',
     childrens: [
+      { name: 'Test', title: '测试', page: '/DemoTest', complete: true },
       { name: 'Buttom', title: '按钮', page: '/DemoButton', complete: true },
 
       { name: 'CheckBox', title: 'CheckBox多选框', page: '/DemoCheckBox', complete: true },

@@ -293,14 +293,9 @@ export const SaScroll = designComponent({
           state.contentWidth = width
         }
 
-        // state.contentWidth = refs.host?.offsetWidth!
-
-
         if (height != null) {
           state.contentHeight = height
         }
-
-        // console.log(data);
 
       },
 
@@ -362,6 +357,7 @@ export const SaScroll = designComponent({
 
     useResizeDetector({ elGetter: () => refs.host, onResize: handler.hostResize })
     useResizeDetector({ elGetter: () => refs.content, onResize: handler.contentResize })
+    
 
     return {
 

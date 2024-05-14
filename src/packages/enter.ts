@@ -40,6 +40,7 @@ import SaTable from './SaTable/SaTable'
 import SaTableColumn from './SaTableColumn/SaTableColumn'
 import SaTabs from './SaTabs/SaTabs'
 import SaTabPane from './SaTabPane/SaTabPane'
+import SaTest from './SaTest/SaText'
 
 import { useMessage } from './SaMessage/index'
 
@@ -47,6 +48,7 @@ import { useMessage } from './SaMessage/index'
 import { clipboard } from '../hooks'
 
 export {
+  SaTest,
   SaInput,
   SaIcon,
   SaTitle,

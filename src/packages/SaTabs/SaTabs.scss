@@ -6,7 +6,7 @@
     .sa-tabs-nav {
       position: relative;
 
-      @include flexMixin('');
+      @include flexMixin(null);
     }
 
     .sa-pane-content {
@@ -14,6 +14,10 @@
     }
 
     &-pane {
+      min-width: 50px;
+
+      @include ellipsis();
+
       cursor: pointer;
       font-size: 14px;
       color: #000;
@@ -29,6 +33,10 @@
           padding: 10px 20px;
           border-left: 1px solid $border;
         }
+      }
+
+      .sa-tabs-pane__active {
+        background: $border;
       }
     }
 

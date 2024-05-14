@@ -75,10 +75,10 @@ export const HorizontalScrollbar = designComponent({
 
         return {
             render: () => {
-                let content = <div class="pl-horizontal-scrollbar" style={styles.value} onMousedown={handler.onMousedown}/>
-                if (!!props.tooltip) {content = (<SaTooltip message={props.tooltip}>{content}</SaTooltip>)}
+                let content = <div class="sa-horizontal-scrollbar" style={styles.value} onMousedown={handler.onMousedown}/>
+                if (!!props.tooltip) {content = (<SaTooltip tooltip={props.tooltip}>{content}</SaTooltip>)}
                 return (
-                    <div class="pl-horizontal-scrollbar-wrapper">
+                    <div class="sa-horizontal-scrollbar-wrapper">
                         {content}
                     </div>
                 )

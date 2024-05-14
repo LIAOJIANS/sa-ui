@@ -77,23 +77,41 @@ const SaTableColumn = designComponent({
       return methods.getColumnIndex(trs, refs.tableColumn)
     })
 
-    const columnClasses = computed(() => classname([
-      {
-        'sa-table-cell--fiexd': !!props.fixed 
-      }
-    ]))
+    const columnClasses = computed(() => {
 
-    const columStyle = useStyles(style => {
+      // 待优化
 
-      if (props.width) {
-        style.width = `${props.width}`.indexOf('px') > -1 ? props.width : `${props.width}px`
+      let fixedClass = []
+
+      if(!!props.fixed && props.fixed === 'right') {
+        fixedClass.push('sa-cell-first-fixed-right')
       }
 
-      if (props.align) {
-        style["text-align"] = props.align
+      if(group.scrollState.scrollFiexdType === TableAlignEnum.center) {
+        fixedClass = []
+        if(props.fixed === FixedStatusEnum.left) {
+          fixedClass.push(`sa-cell-last-fixed-${props.fixed}`)
+        } else if (props.fixed === FixedStatusEnum.right) {
+          fixedClass.push(`sa-cell-first-fixed-${props.fixed}`)
+        }
+      } else if (group.scrollState.scrollFiexdType === TableAlignEnum.left) {
+        fixedClass = []
+       
+        props.fixed === FixedStatusEnum.left && fixedClass.push(`sa-cell-last-fixed-left`)
+      } else if(group.scrollState.scrollFiexdType === TableAlignEnum.right) {
+        fixedClass = []
+        props.fixed === FixedStatusEnum.right && fixedClass.push(`sa-cell-first-fixed-right`)
       }
 
-      return style
+      return classname([
+        'sa-table-cell',
+        {
+          [`sa-table-cell--fixed-${props.fixed}`]: !!props.fixed,
+          'sa-table-cell--fixed': !!props.fixed,
+          [`sa-table-algin-${props.align}`]: !!props.align
+        },
+        ...fixedClass
+      ])
     })
 
     const expendStyle = useStyles(style => {
@@ -212,7 +230,6 @@ const SaTableColumn = designComponent({
           (!state.colspan || !state.rowspan) ? null : (
             <td
               ref={onRef.tableColumn}
-              style={{ ...columStyle.value }}
               colspan={state.colspan}
               rowspan={state.rowspan}
               class={ columnClasses.value }

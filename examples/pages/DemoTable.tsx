@@ -376,6 +376,7 @@ export default defineComponent({
               prop="test5"
               align="right"
               fixed="right"
+              width="180"
               v-slots={{
                 default: ({ $index }: { $index: number }) => <>{ $index }</>
               }}

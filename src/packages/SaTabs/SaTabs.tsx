@@ -87,15 +87,17 @@ export const SaTabs = designComponent({
       },
       render: () => (
         <div class={classes.value}>
-          <SaScroll fitHostWidth fitHostHeight>
-            <div class="sa-tabs-nav" ref={ onRef.pane }>
-              { props.type === SaTabType.Default && (
-                <div class="sa-tabs-active__bar" style={{ ...barStyles.value }}></div>
-              ) }
-              
-              { slots.default.isExist() && slots.default() }
-            </div>
-          </SaScroll>
+          <div style={{ height: '56px', width: 'calc(100%)' }}>
+            <SaScroll scrollX scrollY={false}>
+              <div class="sa-tabs-nav" ref={ onRef.pane }>
+                { props.type === SaTabType.Default && (
+                  <div class="sa-tabs-active__bar" style={{ ...barStyles.value }}></div>
+                ) }
+                
+                { slots.default.isExist() && slots.default() }
+              </div>
+            </SaScroll>
+          </div>
           
           <div class="sa-pane-content">
             { curPanContent.value() }

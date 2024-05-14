@@ -68,6 +68,18 @@ $generate_default: true;
   }
 }
 
+@mixin alginMixin($component) {
+  @each $key in (Left, Center, Right) {
+
+    $name: to-lower-case($key) !global;
+
+    &.sa-#{$component}-algin-#{$name} {
+      text-align: $name;
+      @content;
+    }
+  }
+} 
+
 @mixin shapeMixin($component) {
   @each $key in (Fillet, Round, Square) {
 
@@ -112,4 +124,10 @@ $generate_default: true;
   }
   
   align-items: center;
+}
+
+@mixin ellipsis() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

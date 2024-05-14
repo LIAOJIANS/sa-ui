@@ -1,13 +1,14 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { PropType, toRaw, watch } from "vue";
+import { PropType, onMounted, reactive, toRaw, watch } from "vue";
 import SaTableColumn from "../SaTableColumn/SaTableColumn";
 import SaTbody from './SaTbody'
 import SaThead from './SaThead'
+import SaTbaleVScroll from './SaTableVScroll'
 import './saTable.scss'
 
 import { CheckboxStatus, classname, unit, useCollect, useRefs, useStyles } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
-import { ColumnProp, SpanMethods, TabelStyle, TableColumnRow } from "./cros/table.type";
+import { ColumnProp, FixedStatusEnum, SpanMethods, TabelStyle, TableAlignEnum, TableColumnRow } from "./cros/table.type";
 import { useTable } from "./use/useTable";
 import { typeOf } from "js-hodgepodge";
 
@@ -21,8 +22,8 @@ const SaTable = designComponent({
     rowKey: { type: String },                                                               // 没有默认绑定自定义key（_id）
     spanMethods: { type: Function as PropType<SpanMethods> },                               // 用于合并表格行列单元格
     selectCache: { type: Boolean },                                                         // 只有当表格是select状态下才适用，用于是否缓存选择之后的数据
-    maxHeight: { type: [ Number, String ] },                                                // 表格table最大高度
-    minHeight: { type: [ Number, String ] },                                                // 表格table最小高度
+    maxHeight: { type: [Number, String] },                                                // 表格table最大高度
+    minHeight: { type: [Number, String] },                                                // 表格table最小高度
     highlightCurrentRow: { type: Boolean },                                                 // 高亮当前点击行
     zebra: { type: Boolean },                                                               // 开启偶数斑马行
   },
@@ -39,8 +40,14 @@ const SaTable = designComponent({
 
   setup({ props, slots, event: { emit } }) {
 
+    const scrollState = reactive<{
+      scrollFiexdType: TableAlignEnum | null
+    }>({
+      scrollFiexdType: null
+    })
+
     const { onRef, refs } = useRefs({
-      table: HTMLTableElement,
+      table: HTMLElement,
       tbody: HTMLElement
     })
 
@@ -52,38 +59,63 @@ const SaTable = designComponent({
 
     const funPropIndexs = computed(() => {
       const sortables: number[] = []
-      
+
       const fixedes: number[] = []
 
-      ;(slots.default() as any).forEach(({ props: c }: { props: ColumnProp }, index: number) => {
-        if(!!c.sortable) {
-          sortables.push(index)
-        }
+        ; (slots.default() as any)
+          .forEach(({ props: c }: { props: ColumnProp }, index: number) => {
+            if (!!c.sortable) {
+              sortables.push(index)
+            }
 
-        if(!!c.fixed) {
-          fixedes.push(index)
-        }
-      })
-      
+            if (!!c.fixed) {
+              fixedes.push(index)
+            }
+          })
+
       return {
         sortables,
         fixedes
       }
     })
 
-    const tableRows = computed(() => {
+    const tableRows = computed<{ rowIndex: number, props: ColumnProp }[]>(() => {
+
       return (slots.default() as any).map((row: VNode, i: number) => ({
         rowIndex: i,
         props: row.props
       }))
     })
-    
+
+    const tableWidht = computed(() => {
+      let width = refs.table?.offsetWidth || 0
+
+      let childWidth = 0
+      let notWidht = 0
+
+      tableRows.value
+        .forEach(({ props }) => {
+          childWidth += Number(props.width || 0)
+
+          if(!props.width) {
+            notWidht += 1
+          }
+        })
+      
+      return {
+        width: width > childWidth ? width : childWidth,
+        difference: width - childWidth,
+        notWidht,
+        isGreater: width < childWidth
+      }
+    })
+
     const stayles = useStyles(style => {
 
-      if(!!props.minHeight || !!props.maxHeight) {
+      if (!!props.minHeight || !!props.maxHeight) {
         style.overflow = 'auto'
       }
-      
+
       if (!!props.maxHeight) {
         style.maxHeight = unit(props.maxHeight)
       }
@@ -93,7 +125,6 @@ const SaTable = designComponent({
       }
     })
 
-
     const tableClasses = computed(() => classname([
       'sa-table',
       {
@@ -102,7 +133,51 @@ const SaTable = designComponent({
     ]))
 
     const methods = {
-      getTableRow: (index: number) => tableRows.value[index].prop,
+      setChildWidth() {
+
+        if(tableWidht.value.isGreater) {
+          return 80
+        }
+
+        const avgWidth = Math.floor(tableWidht.value.difference / tableWidht.value.notWidht)
+
+        return avgWidth > 80 ? avgWidth : 80
+      },
+
+      getRowByIndex: (index: number[]) => {
+        let widths = [] as number[]
+        let widthNum = 0
+        tableRows.value.forEach(({ props }, i) => {
+          if(index.includes(i)) {
+            const width = Number(props.width)
+
+            widths.push(width)
+            widthNum += width
+          }
+        })
+
+        return {
+          widths,
+          widthNum
+        }
+      },
+
+      getFiexdAlign: () => {
+        let obj = {} as { left: ColumnProp[], right: ColumnProp[] }
+        
+        tableRows.value.forEach(({ props }) => {
+          if(props.fixed === FixedStatusEnum.left) {
+            obj.left.push({
+              ...props,
+              width: props.width || methods.setChildWidth()
+            })
+          }
+        })
+
+        return obj
+      },
+
+      getTableRow: (index: number) => tableRows.value[index].props,
 
       checkStautsCheck: (e: CheckboxStatus, checkId: string) => {
 
@@ -150,21 +225,21 @@ const SaTable = designComponent({
           return console.error('Must be bound RawKey!!!')
         }
 
-        if(typeOf(row) !== 'object') {
+        if (typeOf(row) !== 'object') {
           return console.error('Please pass in the correct row!!!')
         }
 
-        if(!props.highlightCurrentRow) {
+        if (!props.highlightCurrentRow) {
           return console.error('Please enable the highlightCurrentRow property!!!')
         }
 
         const key = tableMethods.getRawKey()
 
         const index = state.tableData.findIndex(c => c['_id'] === row[key])
-        
+
         tableMethods
           .setCurrentRow(index)
-          
+
       }
     }
 
@@ -176,6 +251,22 @@ const SaTable = designComponent({
           .setCurrentRow(index)
 
         emit.onClickRow(toRaw(row))
+      },
+
+      handleTableScroll: (e: Event) => {
+        const target = e.target as HTMLDivElement
+        /*
+          如果滚动left 大于0 且等于差值，则为left
+          如果滚动left 大于0 且小于差值，则为center
+          如果滚动left = 0 则为left
+        */
+          
+        if(target.scrollLeft === 0) {
+          scrollState.scrollFiexdType = TableAlignEnum.right
+        } else {
+          scrollState.scrollFiexdType = target.scrollLeft === Math.abs(tableWidht.value.difference)
+            ? TableAlignEnum.left : TableAlignEnum.center
+        }
       }
 
     }
@@ -203,42 +294,57 @@ const SaTable = designComponent({
         tableData,
         checks: state.checks,
         state,
-        handler
+        handler,
+        scrollState
       },
 
-      render: () => (
-        <div class={tableClasses.value}>
+      render: () => {
 
-          <table ref={onRef.table}>
-            <SaThead
-              thRows={tableRows.value}
-              style={props.tableStyle?.thead}
-              selectAll={state.selectAll}
-              onCheckAll={tableMethods.checkAll}
-              funPropIndexs={ funPropIndexs.value }
-              onSortable={ tableHandle.tableDataSortable }
-            />
-            
-          </table>
-          
-          <div style={{ ...stayles.value }}>
-            <table>
-              <SaTbody
-                ref={onRef.tbody}
-                class="sa-tbody"
-                style={props.tableStyle?.tbody}
-                clickIndex={ state.clickIndex }
-                layout={{
-                  trLen: props.data?.length,
-                  tdLen: tableRows.value.length
-                }}
-              >
-                {slots.default()}
-              </SaTbody>
-            </table>
+        const colgroup = () => tableRows.value.map((
+          c,
+          index
+        ) => (<col key={index} width={c.props.width || methods.setChildWidth()} />))
+
+
+        return (
+          <div class={tableClasses.value} ref={onRef.table}>
+            <SaTbaleVScroll
+              onScroll={handler.handleTableScroll}
+            >
+              <table style={{ width: unit(tableWidht.value.width)! }}>
+                <colgroup>{colgroup()}</colgroup>
+                <SaThead
+                  thRows={tableRows.value}
+                  style={props.tableStyle?.thead}
+                  selectAll={state.selectAll}
+                  onCheckAll={tableMethods.checkAll}
+                  funPropIndexs={funPropIndexs.value}
+                  onSortable={tableHandle.tableDataSortable}
+                />
+
+              </table>
+
+              <div style={{ ...stayles.value }}>
+                <table style={{ width: unit(tableWidht.value.width)! }}>
+                  <colgroup>{colgroup()}</colgroup>
+                  <SaTbody
+                    ref={onRef.tbody}
+                    class="sa-tbody"
+                    style={props.tableStyle?.tbody}
+                    clickIndex={state.clickIndex}
+                    layout={{
+                      trLen: props.data?.length,
+                      tdLen: tableRows.value.length
+                    }}
+                  >
+                    {slots.default()}
+                  </SaTbody>
+                </table>
+              </div>
+            </SaTbaleVScroll>
           </div>
-        </div>
-      )
+        )
+      }
     }
   }
 })

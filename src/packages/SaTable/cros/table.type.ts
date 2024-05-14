@@ -26,8 +26,8 @@ export type TableColumnRow = {
 }
 
 export enum TableAlignEnum {
-  Left = 'left',
-  cneter = 'center',
+  left = 'left',
+  center = 'center',
   right = 'right'
 }
 
