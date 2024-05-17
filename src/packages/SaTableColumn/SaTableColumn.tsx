@@ -79,30 +79,6 @@ const SaTableColumn = designComponent({
 
     const columnClasses = computed(() => {
 
-      // 待优化
-
-      let fixedClass = []
-
-      if(!!props.fixed && props.fixed === 'right') {
-        fixedClass.push('sa-cell-first-fixed-right')
-      }
-
-      if(group.scrollState.scrollFiexdType === TableAlignEnum.center) {
-        fixedClass = []
-        if(props.fixed === FixedStatusEnum.left) {
-          fixedClass.push(`sa-cell-last-fixed-${props.fixed}`)
-        } else if (props.fixed === FixedStatusEnum.right) {
-          fixedClass.push(`sa-cell-first-fixed-${props.fixed}`)
-        }
-      } else if (group.scrollState.scrollFiexdType === TableAlignEnum.left) {
-        fixedClass = []
-       
-        props.fixed === FixedStatusEnum.left && fixedClass.push(`sa-cell-last-fixed-left`)
-      } else if(group.scrollState.scrollFiexdType === TableAlignEnum.right) {
-        fixedClass = []
-        props.fixed === FixedStatusEnum.right && fixedClass.push(`sa-cell-first-fixed-right`)
-      }
-
       return classname([
         'sa-table-cell',
         {
@@ -110,7 +86,7 @@ const SaTableColumn = designComponent({
           'sa-table-cell--fixed': !!props.fixed,
           [`sa-table-algin-${props.align}`]: !!props.align
         },
-        ...fixedClass
+        ...group.tableFixed.fixedClass(props.fixed!)
       ])
     })
 

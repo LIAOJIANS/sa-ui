@@ -129,8 +129,8 @@
     background-color: #fff;
   }
 
-  .sa-cell-last-fixed-left, 
-  .sa-cell-first-fixed-right {
+  .sa-cell-fixed-left, 
+  .sa-cell-fixed-right {
 
     $inset-size: 3px;
     
@@ -149,17 +149,17 @@
       transform: none;
     }
 
-    &.sa-cell-last-fixed-left {
+    &.sa-cell-fixed-left {
       &:before {
         right: 0;
-        box-shadow: inset $inset-size 0 $inset-size -#{$inset-size} plv(gray-5);
+        box-shadow: inset $inset-size 0 $inset-size -#{$inset-size} plv(gray-3);
       }
     }
 
-    &.sa-cell-first-fixed-right {
+    &.sa-cell-fixed-right {
       &:before {
         left: 0;
-        box-shadow: inset -#{$inset-size} 0 $inset-size -#{$inset-size} plv(gray-5);
+        box-shadow: inset -#{$inset-size} 0 $inset-size -#{$inset-size} plv(gray-3);
       }
     }
   }

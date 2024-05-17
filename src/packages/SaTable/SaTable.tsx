@@ -5,6 +5,7 @@ import SaTbody from './SaTbody'
 import SaThead from './SaThead'
 import SaTbaleVScroll from './SaTableVScroll'
 import './saTable.scss'
+import { useTableFixed } from './use/useTableFixed' 
 
 import { CheckboxStatus, classname, unit, useCollect, useRefs, useStyles } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
@@ -40,17 +41,10 @@ const SaTable = designComponent({
 
   setup({ props, slots, event: { emit } }) {
 
-    const scrollState = reactive<{
-      scrollFiexdType: TableAlignEnum | null
-    }>({
-      scrollFiexdType: null
-    })
-
     const { onRef, refs } = useRefs({
       table: HTMLElement,
       tbody: HTMLElement
     })
-
     const { methods: tableMethods, handler: tableHandle, state, tableData, exposeMethods } = useTable(props.data! as any, props)
 
     SaTableCollect.parent()
@@ -110,6 +104,11 @@ const SaTable = designComponent({
       }
     })
 
+    
+    const tableFixed = useTableFixed({
+      tableWidht
+    })
+
     const stayles = useStyles(style => {
 
       if (!!props.minHeight || !!props.maxHeight) {
@@ -160,21 +159,6 @@ const SaTable = designComponent({
           widths,
           widthNum
         }
-      },
-
-      getFiexdAlign: () => {
-        let obj = {} as { left: ColumnProp[], right: ColumnProp[] }
-        
-        tableRows.value.forEach(({ props }) => {
-          if(props.fixed === FixedStatusEnum.left) {
-            obj.left.push({
-              ...props,
-              width: props.width || methods.setChildWidth()
-            })
-          }
-        })
-
-        return obj
       },
 
       getTableRow: (index: number) => tableRows.value[index].props,
@@ -253,21 +237,6 @@ const SaTable = designComponent({
         emit.onClickRow(toRaw(row))
       },
 
-      handleTableScroll: (e: Event) => {
-        const target = e.target as HTMLDivElement
-        /*
-          如果滚动left 大于0 且等于差值，则为left
-          如果滚动left 大于0 且小于差值，则为center
-          如果滚动left = 0 则为left
-        */
-          
-        if(target.scrollLeft === 0) {
-          scrollState.scrollFiexdType = TableAlignEnum.right
-        } else {
-          scrollState.scrollFiexdType = target.scrollLeft === Math.abs(tableWidht.value.difference)
-            ? TableAlignEnum.left : TableAlignEnum.center
-        }
-      }
 
     }
 
@@ -295,7 +264,7 @@ const SaTable = designComponent({
         checks: state.checks,
         state,
         handler,
-        scrollState
+        tableFixed
       },
 
       render: () => {
@@ -305,11 +274,10 @@ const SaTable = designComponent({
           index
         ) => (<col key={index} width={c.props.width || methods.setChildWidth()} />))
 
-
         return (
           <div class={tableClasses.value} ref={onRef.table}>
             <SaTbaleVScroll
-              onScroll={handler.handleTableScroll}
+              onScroll={tableFixed.handleTableScroll}
             >
               <table style={{ width: unit(tableWidht.value.width)! }}>
                 <colgroup>{colgroup()}</colgroup>
@@ -320,6 +288,7 @@ const SaTable = designComponent({
                   onCheckAll={tableMethods.checkAll}
                   funPropIndexs={funPropIndexs.value}
                   onSortable={tableHandle.tableDataSortable}
+                  fixedClass={tableFixed.fixedClass}
                 />
 
               </table>

@@ -12,7 +12,8 @@ const SaThead = designComponent({
   props: {
     thRows: { type: Array as PropType<TableColumnRow[]>, default: [] },                 // row 数组
     selectAll: { type: String as PropType<CheckboxStatus> },                            // 是否全局选中
-    funPropIndexs: { type: Object as PropType<Record<string, number[]>> }               // 开启排序表头索引
+    funPropIndexs: { type: Object as PropType<Record<string, number[]>> },               // 开启排序表头索引
+    fixedClass: { type: Function as PropType<(fixed: FixedStatusEnum) => string[]> },    // 开启fixed之后的表头动样式
   },
 
   emits: {
@@ -60,7 +61,8 @@ const SaThead = designComponent({
             'sa-table-cell--fixed': !!fixed,
             [`sa-table-cell--fixed-${fixed}`]: !!fixed,
             [`sa-table-algin-${algin}`]: !!algin
-          }
+          },
+          ...props.fixedClass!(fixed)
         ])
       },
 
