@@ -5,7 +5,7 @@ import SaTbody from './SaTbody'
 import SaThead from './SaThead'
 import SaTbaleVScroll from './SaTableVScroll'
 import './saTable.scss'
-import { useTableFixed } from './use/useTableFixed' 
+import { useTableFixed } from './use/useTableFixed'
 
 import { CheckboxStatus, classname, unit, useCollect, useRefs, useStyles } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
@@ -45,33 +45,9 @@ const SaTable = designComponent({
       table: HTMLElement,
       tbody: HTMLElement
     })
-    const { methods: tableMethods, handler: tableHandle, state, tableData, exposeMethods } = useTable(props.data! as any, props)
+    const { methods: tableMethods, handler: tableHandle, state, tableData, exposeMethods } = useTable(props)
 
     SaTableCollect.parent()
-
-    // const selects = computed(() => childs.filter(({ props: c }) => c.selected).map(({ props: c }) => c))
-
-    const funPropIndexs = computed(() => {
-      const sortables: number[] = []
-
-      const fixedes: number[] = []
-
-        ; (slots.default() as any)
-          .forEach(({ props: c }: { props: ColumnProp }, index: number) => {
-            if (!!c.sortable) {
-              sortables.push(index)
-            }
-
-            if (!!c.fixed) {
-              fixedes.push(index)
-            }
-          })
-
-      return {
-        sortables,
-        fixedes
-      }
-    })
 
     const tableRows = computed<{ rowIndex: number, props: ColumnProp }[]>(() => {
 
@@ -81,33 +57,46 @@ const SaTable = designComponent({
       }))
     })
 
-    const tableWidht = computed(() => {
-      let width = refs.table?.offsetWidth || 0
+    const funPropIndexs = computed(() => {
+      const sortables: number[] = []
 
-      let childWidth = 0
-      let notWidht = 0
+      const fixedes: number[] = []
 
-      tableRows.value
-        .forEach(({ props }) => {
-          childWidth += Number(props.width || 0)
+      tableRows
+        .value
+        .forEach(({ props: c }, index: number) => {
+          if (!!c.sortable) {
+            sortables.push(index)
+          }
 
-          if(!props.width) {
-            notWidht += 1
+          if (!!c.fixed) {
+            fixedes.push(index)
           }
         })
-      
+
       return {
-        width: width > childWidth ? width : childWidth,
-        difference: width - childWidth,
-        notWidht,
-        isGreater: width < childWidth
+        sortables,
+        fixedes
       }
     })
 
-    
+    // const tableWidht = computed(() => {
+      
+    // })
+
     const tableFixed = useTableFixed({
-      tableWidht
+      tableRows,
+      isFixed: funPropIndexs
     })
+
+    onMounted(() => {
+      tableFixed.freeWidth.tableWidth(refs.table!)
+    })
+
+    // if(funPropIndexs.value.fixedes.length > 0) {
+    //   console.log(1);
+      
+    // }
 
     const stayles = useStyles(style => {
 
@@ -132,22 +121,12 @@ const SaTable = designComponent({
     ]))
 
     const methods = {
-      setChildWidth() {
-
-        if(tableWidht.value.isGreater) {
-          return 80
-        }
-
-        const avgWidth = Math.floor(tableWidht.value.difference / tableWidht.value.notWidht)
-
-        return avgWidth > 80 ? avgWidth : 80
-      },
 
       getRowByIndex: (index: number[]) => {
         let widths = [] as number[]
         let widthNum = 0
         tableRows.value.forEach(({ props }, i) => {
-          if(index.includes(i)) {
+          if (index.includes(i)) {
             const width = Number(props.width)
 
             widths.push(width)
@@ -269,18 +248,18 @@ const SaTable = designComponent({
 
       render: () => {
 
-        const colgroup = () => tableRows.value.map((
+        const colgroup = () => <colgroup>{tableRows.value.map((
           c,
           index
-        ) => (<col key={index} width={c.props.width || methods.setChildWidth()} />))
+        ) => (<col key={index} width={c.props.width || tableFixed.childWidth.value} />))}</colgroup>
 
         return (
           <div class={tableClasses.value} ref={onRef.table}>
             <SaTbaleVScroll
               onScroll={tableFixed.handleTableScroll}
             >
-              <table style={{ width: unit(tableWidht.value.width)! }}>
-                <colgroup>{colgroup()}</colgroup>
+              <table style={{ width: unit(tableFixed.scrollState.width)! }}>
+                {colgroup()}
                 <SaThead
                   thRows={tableRows.value}
                   style={props.tableStyle?.thead}
@@ -294,8 +273,8 @@ const SaTable = designComponent({
               </table>
 
               <div style={{ ...stayles.value }}>
-                <table style={{ width: unit(tableWidht.value.width)! }}>
-                  <colgroup>{colgroup()}</colgroup>
+                <table style={{ width: unit(tableFixed.scrollState.width)! }}>
+                  {colgroup()}
                   <SaTbody
                     ref={onRef.tbody}
                     class="sa-tbody"

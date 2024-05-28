@@ -4,10 +4,8 @@ import { reactive, watch } from "vue";
 import { SortableStatusEnum, TableColumnRow } from "../cros/table.type";
 
 export function useTable(
-  data: TableColumnRow[],
   {
-    rowKey,
-    selectCache
+    rowKey
   }: {
     rowKey?: string,
     selectCache?: boolean

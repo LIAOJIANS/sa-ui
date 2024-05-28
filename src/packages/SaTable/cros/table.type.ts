@@ -41,7 +41,12 @@ export enum FixedStatusEnum {
   right = 'right'
 }
 
-export type SpanMethods = ( row: Record<string, string>, column: any, rowIndex: number, columnIndex: number ) => number[] & {
+export type SpanMethods = ( 
+  row: Record<string, string>, 
+  column: any, 
+  rowIndex: number, 
+  columnIndex: number 
+) => number[] & {
   rowspan: number,
   colspan: number
 }
