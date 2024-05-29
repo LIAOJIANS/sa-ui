@@ -339,6 +339,7 @@ export default defineComponent({
             <SaTableColumn
               selected
               width="50"
+              fixed="left"
             />
 
             <SaTableColumn
@@ -365,10 +366,12 @@ export default defineComponent({
               label="测试表格3"
               prop="test3"
               width="180"
+              fixed="right"
             />
             <SaTableColumn 
               label="测试表格4"
               prop="test4"
+              fixed="right"
               width="180"
             />
             <SaTableColumn 

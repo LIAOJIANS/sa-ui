@@ -1,12 +1,12 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
-import { PropType, computed, onMounted, reactive, watch, toRaw, createApp, h } from "vue";
+import { PropType, computed, onMounted, reactive, watch, toRaw, createApp, h, ref } from "vue";
 
-import { CheckboxStatus, classname, getElement, useRefs, useStyles } from "src/hooks";
+import { CheckboxStatus, classname, getElement, unit, useRefs, useStyles } from "src/hooks";
 import { FixedStatusEnum, TableAlignEnum, TableColumnRow } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
 import SaIcon from '../SaIcon/SaIcon'
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
-import { typeOf } from "js-hodgepodge";
+import { delay, typeOf } from "js-hodgepodge";
 
 // 下午攻克fixed 列固定
 
@@ -36,6 +36,8 @@ const SaTableColumn = designComponent({
 
     let internalProps = reactive({ ...props, check: false, expand: '0' } as any)
 
+    const classes = ref({})
+
     const state = reactive({
       rowspan: 1,
       colspan: 1
@@ -61,7 +63,7 @@ const SaTableColumn = designComponent({
       }
     })
 
-    const tableRowIndex = computed(() => {
+    const tableRowIndex = computed(() => { // 列行
       const childrens = getElement(group.refs.tbody)?.children || []
 
       if (childrens.length < 1) {
@@ -72,6 +74,7 @@ const SaTableColumn = designComponent({
     })
 
     const rowIndex = computed(() => {
+      
       const trs = getElement(refs.tableColumn?.parentElement)?.children
 
       return methods.getColumnIndex(trs, refs.tableColumn)
@@ -82,7 +85,6 @@ const SaTableColumn = designComponent({
       return classname([
         'sa-table-cell',
         {
-          [`sa-table-cell--fixed-${props.fixed}`]: !!props.fixed,
           'sa-table-cell--fixed': !!props.fixed,
           [`sa-table-algin-${props.align}`]: !!props.align
         },
@@ -99,6 +101,8 @@ const SaTableColumn = designComponent({
       }
 
     })
+
+    
 
     const methods = {
       getColumnIndex: (
@@ -193,6 +197,9 @@ const SaTableColumn = designComponent({
           .getSpan()
       }
 
+      console.log(group.tableFixed.classes(props.fixed!, rowIndex).value );
+      
+      classes.value = group.tableFixed.classes(props.fixed!, rowIndex).value
     })
 
     return {
@@ -209,6 +216,7 @@ const SaTableColumn = designComponent({
               colspan={state.colspan}
               rowspan={state.rowspan}
               class={ columnClasses.value }
+              style={{ ...classes.value }}
             >
               <div class="sa-table-item">
                 {

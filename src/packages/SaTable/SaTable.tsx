@@ -60,7 +60,7 @@ const SaTable = designComponent({
     const funPropIndexs = computed(() => {
       const sortables: number[] = []
 
-      const fixedes: number[] = []
+      const fixedMap = new Map()
 
       tableRows
         .value
@@ -70,33 +70,23 @@ const SaTable = designComponent({
           }
 
           if (!!c.fixed) {
-            fixedes.push(index)
+            if (fixedMap.has(c.fixed)) {
+
+              fixedMap.set(c.fixed, [...fixedMap.get(c.fixed), index])
+
+              return
+            }
+            
+            fixedMap.set(c.fixed, [index])
           }
         })
 
       return {
         sortables,
-        fixedes
+        isFixed: fixedMap.size > 0,
+        fixedes: fixedMap
       }
     })
-
-    // const tableWidht = computed(() => {
-      
-    // })
-
-    const tableFixed = useTableFixed({
-      tableRows,
-      isFixed: funPropIndexs
-    })
-
-    onMounted(() => {
-      tableFixed.freeWidth.tableWidth(refs.table!)
-    })
-
-    // if(funPropIndexs.value.fixedes.length > 0) {
-    //   console.log(1);
-      
-    // }
 
     const stayles = useStyles(style => {
 
@@ -123,13 +113,16 @@ const SaTable = designComponent({
     const methods = {
 
       getRowByIndex: (index: number[]) => {
-        let widths = [] as number[]
+        let widths = {} as Record<number, number> 
         let widthNum = 0
         tableRows.value.forEach(({ props }, i) => {
           if (index.includes(i)) {
             const width = Number(props.width)
 
-            widths.push(width)
+            widths = {
+              ...widths,
+              [i]: tableRows.value.length - 1 === i || i === 0 ? 0 : width
+            }
             widthNum += width
           }
         })
@@ -219,6 +212,21 @@ const SaTable = designComponent({
 
     }
 
+    const tableFixed = useTableFixed({
+      tableRows,
+      funPropIndexs,
+      getRowByIndex: methods.getRowByIndex,
+    })
+
+    onMounted(() => {
+      tableFixed
+        .freeWidth
+        .tableWidth(refs.table!) // set 表格默认宽高
+
+      tableFixed
+        .freeWidth.windowResize(refs.table!)
+    })
+
     watch(
       () => props.data,
       () => {
@@ -243,7 +251,8 @@ const SaTable = designComponent({
         checks: state.checks,
         state,
         handler,
-        tableFixed
+        tableFixed,
+        funPropIndexs
       },
 
       render: () => {
