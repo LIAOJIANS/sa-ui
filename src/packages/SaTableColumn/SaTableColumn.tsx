@@ -1,12 +1,12 @@
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { PropType, computed, onMounted, reactive, watch, toRaw, createApp, h, ref } from "vue";
 
-import { CheckboxStatus, classname, getElement, unit, useRefs, useStyles } from "src/hooks";
+import { CheckboxStatus, classname, getElement, useRefs, useStyles } from "src/hooks";
 import { FixedStatusEnum, TableAlignEnum, TableColumnRow } from "../SaTable/cros/table.type";
 import { SaTableCollect } from "../SaTable/SaTable";
 import SaIcon from '../SaIcon/SaIcon'
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
-import { delay, typeOf } from "js-hodgepodge";
+import { typeOf } from "js-hodgepodge";
 
 // 下午攻克fixed 列固定
 
@@ -26,7 +26,7 @@ const SaTableColumn = designComponent({
 
   scopeSlots: {
     default: (row: any) => { },
-    expand: (row: any) => {}
+    expand: (row: any) => { }
   },
 
   setup({ props, scopeSlots }) {
@@ -36,7 +36,8 @@ const SaTableColumn = designComponent({
 
     let internalProps = reactive({ ...props, check: false, expand: '0' } as any)
 
-    const classes = ref({})
+    const classes = ref<string>('')
+    const styles = ref({})
 
     const state = reactive({
       rowspan: 1,
@@ -74,37 +75,24 @@ const SaTableColumn = designComponent({
     })
 
     const rowIndex = computed(() => {
-      
+
       const trs = getElement(refs.tableColumn?.parentElement)?.children
 
       return methods.getColumnIndex(trs, refs.tableColumn)
-    })
-
-    const columnClasses = computed(() => {
-
-      return classname([
-        'sa-table-cell',
-        {
-          'sa-table-cell--fixed': !!props.fixed,
-          [`sa-table-algin-${props.align}`]: !!props.align
-        },
-        ...group.tableFixed.fixedClass(props.fixed!)
-      ])
     })
 
     const expendStyle = useStyles(style => {
 
       style.cursor = 'pointer'
 
-      if(internalProps.expand === '2') {
+      if (internalProps.expand === '2') {
         style.transform = 'rotate(90deg)'
       }
 
     })
 
-    
-
     const methods = {
+
       getColumnIndex: (
         childrens: any,
         child: any
@@ -141,12 +129,12 @@ const SaTableColumn = designComponent({
       },
 
       addExpandTr: () => { // 获取tbody虚拟dom 根据当前索引往下一位插入tr
-        
+
         const tr = document.createElement('tr')
 
         // @ts-ignore
         const content = scopeSlots.expand(tableRow.value)![0]
-        
+
         const app = createApp({
           render() {
             return h(
@@ -156,14 +144,14 @@ const SaTableColumn = designComponent({
             )
           }
         })
-        
+
         app.mount(tr) // 挂载并转为真实Dom
 
         const borderDom = refs.tableColumn?.parentElement!.nextSibling
 
         const tobdy = getElement(group.refs.tbody)
-        if(borderDom) {
-          
+        if (borderDom) {
+
           tobdy!.insertBefore(
             tr,
             borderDom!
@@ -174,7 +162,7 @@ const SaTableColumn = designComponent({
       delExpandTr: () => refs.tableColumn?.parentElement!.nextSibling?.remove()
     }
 
-    const handler = { 
+    const handler = {
       handleOpenTableColl: (e: MouseEvent) => {
         e.stopPropagation()
 
@@ -184,9 +172,11 @@ const SaTableColumn = designComponent({
     }
 
     watch(() => [group.checks, group.state.sortStatus], () => {
-      
+
       internalProps.check = group.checks.includes((tableRow.value as any)['_id'])
     }, { deep: true, immediate: true })
+
+
 
     onMounted(() => { // 更新内部data的数据状态
       group.tableData.splice(tableRowIndex.value!, 1, tableRow.value as TableColumnRow)
@@ -197,9 +187,24 @@ const SaTableColumn = designComponent({
           .getSpan()
       }
 
-      console.log(group.tableFixed.classes(props.fixed!, rowIndex).value );
-      
-      classes.value = group.tableFixed.classes(props.fixed!, rowIndex).value
+      if (!!props.fixed) {
+        watch(
+          group.tableFixed.fixedClass(props.fixed!, rowIndex),
+          val => {
+
+            classes.value = classname([
+              'sa-table-cell',
+              {
+                'sa-table-cell--fixed': !!props.fixed,
+                [`sa-table-algin-${props.align}`]: !!props.align
+              }
+            ],
+            ...val
+            )
+          })
+      }
+
+      styles.value = group.tableFixed.styles(props.fixed!, rowIndex).value
     })
 
     return {
@@ -211,14 +216,16 @@ const SaTableColumn = designComponent({
       render: () => <>
         {
           (!state.colspan || !state.rowspan) ? null : (
+
             <td
               ref={onRef.tableColumn}
               colspan={state.colspan}
               rowspan={state.rowspan}
-              class={ columnClasses.value }
-              style={{ ...classes.value }}
+              class={classes.value}
+              style={{ ...styles.value }}
             >
               <div class="sa-table-item">
+                {/* {JSON.stringify(classes.value)} */}
                 {
                   internalProps.selected! ? (
                     <SaCheckbox
@@ -231,17 +238,17 @@ const SaTableColumn = designComponent({
                     scopeSlots.default(tableRow.value,
                       <>
                         {
-                          (internalProps.type && internalProps.type === 'index') 
-                          ? tableRowIndex.value! + 1 
-                          : internalProps.type === 'expand' 
-                          ? <SaIcon 
-                              icon="el-icon-caret-right" 
-                              style={{ ...expendStyle.value }}
-                              class="sa-table-item--expand"
-                              size={ 22 }
-                              onClick={ (e: MouseEvent) => handler.handleOpenTableColl(e) } 
-                            />
-                          : (tableRow.value as any).row[internalProps.prop!]
+                          (internalProps.type && internalProps.type === 'index')
+                            ? tableRowIndex.value! + 1
+                            : internalProps.type === 'expand'
+                              ? <SaIcon
+                                icon="el-icon-caret-right"
+                                style={{ ...expendStyle.value }}
+                                class="sa-table-item--expand"
+                                size={22}
+                                onClick={(e: MouseEvent) => handler.handleOpenTableColl(e)}
+                              />
+                              : (tableRow.value as any).row[internalProps.prop!]
                         }
                       </>
                     )

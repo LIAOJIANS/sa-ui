@@ -1,6 +1,6 @@
 import { SaTable, SaTableColumn, SaButton, useMessage } from "sa-ui";
 import { useRefs } from "sa-ui@hooks";
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, computed, ref } from "vue";
 import DemoContainer from '../components/container'
 
 export default defineComponent({
@@ -205,8 +205,26 @@ export default defineComponent({
       }
     }
 
+    // const num = ref<any>(0)
+
+    // let obj = reactive({
+    //   a: 1, 
+    //   b: 2
+    // })
+
+    // const comp = computed(() => {
+    //   return obj.a + obj.b
+    // })
+
+    // num.value = comp.value
+
+
     return () => (
       <div>
+        {/* { num.value }
+
+        <button onClick={() => (obj.a += obj.b) }>111</button> */}
+
         <h1 style={{ color: '#333' }}>Table 表格</h1>
         <span style={{ color: '#666', fontSize: '14px' }}>用于展示多条结构类似的数据，可对数据进行排序、筛选、对比或其他自定义操作。</span>
         <DemoContainer
@@ -359,27 +377,27 @@ export default defineComponent({
             <SaTableColumn 
               label="测试表格2"
               prop="test2"
-              width="180"
+              width="360"
               sortable={ state.sort }
             />
             <SaTableColumn 
               label="测试表格3"
               prop="test3"
-              width="180"
+              width="110"
               fixed="right"
             />
             <SaTableColumn 
               label="测试表格4"
               prop="test4"
               fixed="right"
-              width="180"
+              width="110"
             />
             <SaTableColumn 
               label="测试表格5"
               prop="test5"
               align="right"
               fixed="right"
-              width="180"
+              width="110"
               v-slots={{
                 default: ({ $index }: { $index: number }) => <>{ $index }</>
               }}
@@ -388,6 +406,9 @@ export default defineComponent({
           </SaTable>
           </div>
         </DemoContainer>
+
+
+
       </div>
     )
   }

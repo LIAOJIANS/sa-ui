@@ -277,6 +277,7 @@ const SaTable = designComponent({
                   funPropIndexs={funPropIndexs.value}
                   onSortable={tableHandle.tableDataSortable}
                   fixedClass={tableFixed.fixedClass}
+                  fixedStyles={ tableFixed.styles }
                 />
 
               </table>

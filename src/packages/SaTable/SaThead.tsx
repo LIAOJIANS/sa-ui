@@ -1,4 +1,4 @@
-import { computed, PropType, reactive, watch } from "vue";
+import { computed, ComputedRef, PropType, reactive, watch } from "vue";
 import { designComponent } from "src/advancedComponentionsApi/designComponent";
 import { CheckboxStatus, classname } from "src/hooks";
 
@@ -13,12 +13,15 @@ const SaThead = designComponent({
     thRows: { type: Array as PropType<TableColumnRow[]>, default: [] },                 // row 数组
     selectAll: { type: String as PropType<CheckboxStatus> },                            // 是否全局选中
     funPropIndexs: { type: Object as PropType<Record<string, number[]>> },               // 开启排序表头索引
-    fixedClass: { type: Function as PropType<(fixed: FixedStatusEnum) => string[]> },    // 开启fixed之后的表头动样式
+    fixedClass: { type: Function as PropType<(fixed: FixedStatusEnum, index: ComputedRef<number>) => 
+        ComputedRef<string[]>> },                                                         // 开启fixed之后的表头动样式
+    fixedStyles: { type: Function as PropType<(fixed: FixedStatusEnum, 
+        columnIndex: ComputedRef<number>) => ComputedRef<{}>> },                          // 开启style行内
   },
 
   emits: {
     onCheckAll: (e: CheckboxStatus) => true,
-    onSortable: (sortStatus: SortableStatusEnum, prop: String) => true
+    onSortable: (sortStatus: SortableStatusEnum, prop: String) => true,
   },
 
   setup({ props, event: { emit } }) {
@@ -54,7 +57,11 @@ const SaThead = designComponent({
         )
       },
 
-      fixedAlgin(fixed: FixedStatusEnum, algin: TableAlignEnum) {
+      fixedAlgin(
+        fixed: FixedStatusEnum, 
+        algin: TableAlignEnum,
+        index: number  
+      ) {
         return classname([
           'sa-table-cell',
           {
@@ -62,7 +69,7 @@ const SaThead = designComponent({
             [`sa-table-cell--fixed-${fixed}`]: !!fixed,
             [`sa-table-algin-${algin}`]: !!algin
           },
-          ...props.fixedClass!(fixed)
+          ...props.fixedClass!(fixed, ({ value: index }) as ComputedRef<number>).value
         ])
       },
 
@@ -94,7 +101,8 @@ const SaThead = designComponent({
                 .thRows
                 .map((c: TableColumnRow, i: number) => (
                   <th
-                    class={handler.fixedAlgin(c.props.fixed, c.props.align!)}
+                    class={handler.fixedAlgin(c.props.fixed, c.props.align!, i)}
+                    style={{ ...props.fixedStyles!(c.props.fixed, ({ value: i }) as ComputedRef<number>).value }}
                   >
                     <div
                       class={handler.tableHeadClass(i)}
