@@ -156,12 +156,11 @@ export function useTable(
         return []
       }
 
-      const key = methods.getRawKey()
+      const key = "_id"
 
       return state.tableData.filter((c: TableColumnRow) => state.checks.includes(c[key]))
     }
   }
-
 
   return {
     state,

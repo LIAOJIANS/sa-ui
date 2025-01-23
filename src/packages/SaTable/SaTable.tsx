@@ -7,11 +7,12 @@ import SaTbaleVScroll from './SaTableVScroll'
 import './saTable.scss'
 import { useTableFixed } from './use/useTableFixed'
 
-import { CheckboxStatus, classname, unit, useCollect, useRefs, useStyles } from "src/hooks";
+import { CheckboxStatus, classname, getElement, unit, useCollect, useRefs, useStyles } from "src/hooks";
 import { computed, VNode } from "@vue/runtime-core";
 import { ColumnProp, FixedStatusEnum, SpanMethods, TabelStyle, TableAlignEnum, TableColumnRow } from "./cros/table.type";
 import { useTable } from "./use/useTable";
 import { typeOf } from "js-hodgepodge";
+import { useDrag } from "./use/useDrag";
 
 const SaTable = designComponent({
   name: 'sa-table',
@@ -27,6 +28,7 @@ const SaTable = designComponent({
     minHeight: { type: [Number, String] },                                                // 表格table最小高度
     highlightCurrentRow: { type: Boolean },                                                 // 高亮当前点击行
     zebra: { type: Boolean },                                                               // 开启偶数斑马行
+    drag: { type: Boolean },                                                                // 是否开启拖拽      
   },
 
   slots: ['default'],
@@ -35,6 +37,7 @@ const SaTable = designComponent({
 
   emits: {
     onClickRow: (row: TableColumnRow) => true,
+    onDragleave: (row: TableColumnRow, index: number) => true,
 
     onUpdateModelValue: (val: any[]) => true,
   },
@@ -43,9 +46,11 @@ const SaTable = designComponent({
 
     const { onRef, refs } = useRefs({
       table: HTMLElement,
-      tbody: HTMLElement
+      tbody: SaTbody
     })
     const { methods: tableMethods, handler: tableHandle, state, tableData, exposeMethods } = useTable(props)
+
+    const { methods: dragMethods, dragState } = useDrag()
 
     SaTableCollect.parent()
 
@@ -209,7 +214,38 @@ const SaTable = designComponent({
         emit.onClickRow(toRaw(row))
       },
 
+      handleDragleave(index: number, e: DragEvent) {
+      
+        // @ts-ignore
+        // const rowHeight = e.target!.clientHeight
+        
+        const row = state.tableData[index]
 
+
+        // dragMethods
+        //   .moveRows(
+        //     index,
+        //     dragMethods.getRowIndexByHeight(rowHeight, ),
+        //     state.tableData
+        //   )
+
+        dragMethods
+          .moveRows(index, refs.tbody, e)
+
+        emit.onDragleave(row, index)
+      },
+
+      handleDrag(index: number, e: DragEvent) {
+        // dragMethods
+        //   .moveRows(index, state.tableData, e)
+      },
+
+      handleDragstart(index: number, e: DragEvent) {
+        const row = state.tableData[index]
+
+        dragMethods
+          .setCurDrag(row, index, e)
+      }
     }
 
     const tableFixed = useTableFixed({
@@ -294,6 +330,7 @@ const SaTable = designComponent({
                       trLen: props.data?.length,
                       tdLen: tableRows.value.length
                     }}
+                    drag={ props.drag }
                   >
                     {slots.default()}
                   </SaTbody>

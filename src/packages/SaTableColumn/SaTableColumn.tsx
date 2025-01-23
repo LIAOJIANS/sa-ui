@@ -8,8 +8,6 @@ import SaIcon from '../SaIcon/SaIcon'
 import SaCheckbox from "../SaCheckbox/SaCheckbox";
 import { typeOf } from "js-hodgepodge";
 
-// 下午攻克fixed 列固定
-
 const SaTableColumn = designComponent({
   name: 'sa-table-column',
 
@@ -177,7 +175,6 @@ const SaTableColumn = designComponent({
     }, { deep: true, immediate: true })
 
 
-
     onMounted(() => { // 更新内部data的数据状态
       group.tableData.splice(tableRowIndex.value!, 1, tableRow.value as TableColumnRow)
 
@@ -225,7 +222,6 @@ const SaTableColumn = designComponent({
               style={{ ...styles.value }}
             >
               <div class="sa-table-item">
-                {/* {JSON.stringify(classes.value)} */}
                 {
                   internalProps.selected! ? (
                     <SaCheckbox

@@ -384,7 +384,6 @@ export default defineComponent({
               label="测试表格3"
               prop="test3"
               width="110"
-              fixed="right"
             />
             <SaTableColumn 
               label="测试表格4"
@@ -408,7 +407,46 @@ export default defineComponent({
         </DemoContainer>
 
 
-
+        
+        <DemoContainer
+          label="拖拽表格"
+          describe="表格开启拖拽功能"
+          codeText='' 
+        >
+          {/* @ts-ignore */}
+          <div slot="title">
+            <SaTable
+              data={state.tableList1}
+              drag
+            >
+              <SaTableColumn 
+                label="测试表格1"
+                prop="test1"
+                width="180"
+              />
+              <SaTableColumn 
+                label="测试表格2"
+                prop="test2"
+                width="180"
+              />
+              <SaTableColumn 
+                label="测试表格3"
+                prop="test3"
+                width="180"
+              />
+              <SaTableColumn 
+                label="测试表格4"
+                prop="test4"
+                width="180"
+              />
+              <SaTableColumn 
+                label="测试表格5"
+                prop="test5"
+              >
+              </SaTableColumn>
+            </SaTable>
+          </div>
+        </DemoContainer>
       </div>
     )
   }

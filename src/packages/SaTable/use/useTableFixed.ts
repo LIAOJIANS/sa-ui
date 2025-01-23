@@ -109,10 +109,6 @@ export function useTableFixed({
         return []
       }
   
-      // if(columnIndex.value > 5) {
-      //   debugger
-      // }
-  
       const isMoreFiexds = funPropIndexs.value.fixedes.get(fixed)?.length! > 1
   
       if (isMoreFiexds && (!!columnIndex?.value || columnIndex?.value === 0)) {
